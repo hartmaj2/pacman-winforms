@@ -91,7 +91,7 @@ namespace Pacman.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to PWGBF.
         /// </summary>
         internal static string map {
             get {
