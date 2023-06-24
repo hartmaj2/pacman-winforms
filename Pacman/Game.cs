@@ -8,27 +8,49 @@ using System.Threading.Tasks;
 namespace Pacman
 {
 
-    static class InputManager
+    public static class InputManager
     {
-        private static readonly Bitmap[] sprites = {Properties.Resources.blank,
-                                  Properties.Resources.wall,
-                                  Properties.Resources.hero,
-                                  Properties.Resources.pellet,
-                                  Properties.Resources.ghost
-                                 };
 
-        private static readonly double scale = 4;
+        private static readonly Bitmap blankSprite = Properties.Resources.blank;
+        private static readonly Bitmap wallSprite = Properties.Resources.wall;
+        private static readonly Bitmap heroSprite = Properties.Resources.hero;
+        private static readonly Bitmap pelletSprite = Properties.Resources.pellet;
+        private static readonly Bitmap ghostSprite = Properties.Resources.ghost;
+         
+        private static readonly int size = 100;
         
         private static readonly string map = Properties.Resources.map;
 
-        public static Bitmap[] GetSprites()
+        public static int GetSize()
         {
-            return sprites;
+            return size;
         }
-                
-        public static double GetScale()
+        public static string GetMap()
         {
-            return scale;
+            return map;
+        }
+        public static Bitmap GetBlankSprite()
+        {
+            return blankSprite;
+        }
+        public static Bitmap GetWallSprite()
+        {
+            return wallSprite;
+        }
+
+        public static Bitmap GetHeroSprite()
+        {
+            return heroSprite;
+        }
+
+        public static Bitmap GetPelletSprite()
+        {
+            return pelletSprite;
+        }
+
+        public static Bitmap GetGhostSprite()
+        {
+            return ghostSprite;
         }
 
 
@@ -42,7 +64,8 @@ namespace Pacman
 
         public GameManager(Graphics formGraphics)
         {
-            this.painter = new Painter(InputManager.GetScale(), InputManager.GetSprites(), formGraphics);
+            this.map = new Map();
+            this.painter = new Painter(formGraphics);
         }
 
         public void Draw()
@@ -50,42 +73,148 @@ namespace Pacman
             painter.Paint(map);
         }
     }
+
+    abstract class GameObject
+    {
+       
+    }
+    class Blank : GameObject
+    {
+
+    }
+    class Wall : GameObject
+    {
+
+    }
+    class Hero : GameObject
+    {
+        
+    }
+    class Pellet : GameObject
+    {
+
+    }
+    class Ghost : GameObject
+    {
+
+    }
     class Map
     {
-        private char[,] grid;
-        private int width;
-        private int height;
+
+        private GameObject[] grid;
+
+        //private int width;
+        //private int height;
+
+        public Map()
+        {
+            readMap();
+        }
 
         private void readMap()
         {
+            string map = InputManager.GetMap();
+            List<GameObject> list = new List<GameObject>();
+            for (int i = 0; i < map.Length; i++)
+            {
+                char gameObjectChar = map[i];
+                switch(gameObjectChar) 
+                {
+                    case 'B':
+                        list.Add(new Blank());
+                        Console.WriteLine($"Adding a blank");
+                        break;
+                    case 'W':
+                        list.Add(new Wall());
+                        break;
+                    case 'H':
+                        list.Add(new Hero());
+                        break;
+                    case 'P':
+                        list.Add(new Pellet());
+                        break;
+                    case 'G':
+                        list.Add(new Ghost());
+                        break;
 
+                }
+            }
+            this.grid = list.ToArray();
+        }
+
+        public int GetSize()
+        {
+            return this.grid.Length;
+        }
+
+        public GameObject GetObjectAt(int index)
+        {
+            return grid[index];
         }
     }
 
     class Painter
     {
         private Graphics formGraphics;
-        private Bitmap[] sprites;
-        public Painter(double imageScale, Bitmap[] inputSprites, Graphics formGraphics)
+
+        private Bitmap blankSprite;
+        private Bitmap wallSprite;
+        private Bitmap heroSprite;
+        private Bitmap pelletSprite;
+        private Bitmap ghostSprite;
+
+        private int spriteSize = InputManager.GetSize();
+        public Painter(Graphics formGraphics)
         {
             this.formGraphics = formGraphics;
-            loadSprites(imageScale, inputSprites);
+            loadSprites();    
+            //MessageBox.Show($"The sprite size is {spriteSize}");
             
         }
 
         public void Paint(Map map)
         {
-            formGraphics.DrawImage(sprites[0], 0, 0);
+            //formGraphics.DrawImage(sprites[0], 0, 0);
+            for (int i = 0; i < map.GetSize();i++)
+            {
+                GameObject gameObject = map.GetObjectAt(i);
+                if (gameObject != null)
+                {
+                    if (gameObject is Blank)
+                    {
+                        formGraphics.DrawImage(blankSprite, spriteSize * i, 0);
+                    }
+                    if (gameObject is Wall)
+                    {
+                        formGraphics.DrawImage(wallSprite, spriteSize * i, 0);
+                    }
+                    if (gameObject is Hero)
+                    {
+                        formGraphics.DrawImage(heroSprite, spriteSize * i, 0);
+                    }
+                    if (gameObject is Pellet)
+                    {
+                        formGraphics.DrawImage(pelletSprite, spriteSize * i, 0);
+                    }
+                    if (gameObject is Ghost)
+                    {
+                        formGraphics.DrawImage(ghostSprite, spriteSize * i, 0);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Encountered a null GameObject reference");
+                }
+            }
         }
 
-        private void loadSprites(double scale, Bitmap[] inputSprites)
+        private void loadSprites()
         {
-            this.sprites = new Bitmap[inputSprites.Length];
-            for (int i = 0; i < inputSprites.Length; i++)
-            {
-                this.sprites[i] = new Bitmap(inputSprites[i], new Size((int)(inputSprites[i].Width * scale), (int)(inputSprites[i].Height * scale)));
-
-            }
+            blankSprite = new Bitmap(InputManager.GetBlankSprite(), new Size(spriteSize,spriteSize));
+            wallSprite = new Bitmap(InputManager.GetWallSprite(), new Size(spriteSize, spriteSize));
+            heroSprite = new Bitmap(InputManager.GetHeroSprite(), new Size(spriteSize, spriteSize));
+            pelletSprite = new Bitmap(InputManager.GetPelletSprite(), new Size(spriteSize, spriteSize));
+            ghostSprite = new Bitmap(InputManager.GetGhostSprite(), new Size(spriteSize, spriteSize));
         }
     }
 }
