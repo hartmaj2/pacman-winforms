@@ -30,6 +30,9 @@ The classes used in the program are:
 The `GameManager` class is the one that puts most of all the other classes together. It takes care of the game logic such as player lives, score, etc. It also has reference to the `Map` object which stores two grids. One for the `StaticGameObject` instances and the second for `DynamicGameObject` instances. The static game objects are the ones, that don't ever change throughout the game like walls etc. The dynamic ones are things that don't move but are going to change like pellets or other power-ups.
 
 ## Specific class information
+### InputManager
+Provides abstraction on the input data. Prepares all the needed data and then provides an interface through which the game classes can fetch this data.
+
 ### GameManager
 Handles all the game logic and provides means of communication with the `Form`.
 
