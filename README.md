@@ -7,8 +7,9 @@ Programming NPRG031
 This program is supposed to be a simplified Pacman game for my university project. I am hoping to be able to implement all the well knows features such as Pacman preemptive direction setting and some simple ghost AI. The game is made in ***C# using Windows Forms***. That is because I didn't have time to think about anything better suited for this task. Later I realized maybe I could have used WPF but I would have to learn to use that.
 
 # Class overview
-The program is composed of two main files. The first one is `Form1.cs` and the second one is `Game.cs`. The former is a necessary file used by Windows Forms to create the form. The second one takes care of all the internal game logic. 
+The program is composed of two main files. The first one is `Form1.cs` and the second one is `Game.cs`. The former is a necessary file used by Windows Forms to create the form. The second one takes care of all the internal game logic.
 
+## Class list
 The classes used in the program are:  
 - InputManager
 - GameManager
@@ -21,6 +22,10 @@ The classes used in the program are:
 - Ghost
 - Map
 - Painter
+
+## Class intercommunication
+The `GameManager` class is the one that puts most of all the other classes together. It takes care of the game logic such as player lives, score, etc. It also stores the Map grid on which the `GameObject` instances reside.
+When a `GameObject` instance needs to communicate with the `Map` for example, the `GameManager` provides a means between those to communicate.
 
 # Input data
 
