@@ -292,13 +292,13 @@
      * it to be null.
      */
     
-    class DynamicBlank : DynamicGameObject
-    {
-
-    }
     class StaticBlank : StaticGameObject
     {
     
+    }
+    class DynamicBlank : DynamicGameObject
+    {
+
     }
     /* 
      * A wall that the player will collide with.
