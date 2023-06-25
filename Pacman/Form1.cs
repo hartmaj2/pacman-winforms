@@ -14,8 +14,7 @@ namespace Pacman
             initializeForm();
         }
         private void initializeForm()
-        {
-            
+        { 
             this.Text = "Pacman Game " + count;
             initializeStartButton();
             initializeEndButton();
