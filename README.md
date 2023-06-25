@@ -6,8 +6,16 @@ Programming NPRG031
 # Introduction
 This program is supposed to be a simplified Pacman game for my university project. I am hoping to be able to implement all the well knows features such as Pacman preemptive direction setting and some simple ghost AI. The game is made in ***C# using Windows Forms***. That is because I didn't have time to think about anything better suited for this task. Later I realized maybe I could have used WPF but I would have to learn to use that first and there is unfortunately no time.
 
-# Class overview
-The program is composed of two main files. The first one is `Form1.cs` and the second one is `Game.cs`. The former is a necessary file used by Windows Forms to create the form. The second one takes care of all the internal game logic.
+# Project overview
+The project is composed of four main code files. These are:
+- Form1.cs
+- GameManager.cs
+- GameObjects.cs
+- HelperClasses.cs
+- InputManger.cs
+
+## File Separation
+The files are meant to separate logically different parts of the program. The main reason I did this was to not have to scroll all the way through the code to get to some parts of the program. This is also the reason why the classes should be separated logically. That will result in clearer orientation which in turn will make my code editing more efficient.
 
 ## Class list
 The classes used in the program are:  
