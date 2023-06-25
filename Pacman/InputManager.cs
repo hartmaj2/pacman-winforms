@@ -31,10 +31,10 @@
 
         private static readonly string map = Properties.Resources.map;
 
-        private static StaticGameObject[,] staticGrid;
-        private static DynamicGameObject[,] dynamicGrid;
-        private static List<MovableGameObject> movableGameObjects;
-        private static Hero hero;
+        private static StaticGameObject[,] staticGrid = GetStaticGrid();
+        private static DynamicGameObject[,] dynamicGrid = GetDynamicGrid();
+        private static List<MovableGameObject> movableGameObjects = GetMovableGameObjects();
+        private static Hero hero = GetHero();
 
         private static bool mapDataLoaded = false;
         private static bool spriteSizeAdjusted = false;
@@ -89,6 +89,10 @@
         }
         public static Hero GetHero()
         {
+            if (hero == null)
+            {
+                prepareMapData();
+            }
             return hero;
         }
         public static DynamicGameObject[,] GetDynamicGrid()
