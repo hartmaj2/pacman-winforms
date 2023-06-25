@@ -1,5 +1,9 @@
 ﻿namespace Pacman
 {
+    /*
+    * Everything that lives inside the game should inherit this. It has to be something that can 
+    * occupy a grid and that can be drawn
+    */
     abstract class GameObject
     {
 

@@ -15,11 +15,6 @@
         }
     }
     /*
-     * Everything that lives inside the game should inherit this. It has to be something that can 
-     * occupy a grid and that can be drawn
-     */
-
-    /*
      * Represents the topological space in which everything in the game lives. Has both a grid like map
      * implemented by two types of grids. Also enables the movable characters to move independently of the grid.
      */
