@@ -9,6 +9,19 @@ This program is supposed to be a simplified Pacman game for my university projec
 # Class overview
 The program is composed of two main files. The first one is `Form1.cs` and the second one is `Game.cs`. The former is a necessary file used by Windows Forms to create the form. The second one takes care of all the internal game logic. 
 
+The classes used in the program are:  
+- InputManager
+- GameManager
+- GameObject
+- MovableGameObject
+- Blank
+- Wall
+- Hero
+- Pellet
+- Ghost
+- Map
+- Painter
+
 # Input data
 
 ## Map
