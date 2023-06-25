@@ -19,7 +19,7 @@ namespace Pacman
         private void initializeStartButton()
         {
             startButton.Visible = true;
-            gameManager = new GameManager(CreateGraphics());
+            gameManager = new GameManager(this);
             startButton.Left = (ClientSize.Width - startButton.Width) / 2;
             startButton.Top = (ClientSize.Height - startButton.Height) / 2;
         }

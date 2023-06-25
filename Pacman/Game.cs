@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -8,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace Pacman
 {
-
-    public static class InputManager
+    static class InputManager
     {
 
         private static readonly Bitmap blankSprite = Properties.Resources.blank;
@@ -63,10 +63,10 @@ namespace Pacman
 
         private int pelletsEaten;
 
-        public GameManager(Graphics formGraphics)
+        public GameManager(Form form)
         {
             this.map = new Map();
-            this.painter = new Painter(formGraphics);
+            this.painter = new Painter(form, map);
         }
 
         public void Draw()
@@ -74,7 +74,6 @@ namespace Pacman
             painter.Paint(map);
         }
     }
-
     abstract class GameObject
     {
        
@@ -168,10 +167,10 @@ namespace Pacman
             return grid[y,x];
         }
     }
-
     class Painter
     {
         private Graphics formGraphics;
+        private Form form;
 
         private Bitmap blankSprite;
         private Bitmap wallSprite;
@@ -180,12 +179,19 @@ namespace Pacman
         private Bitmap ghostSprite;
 
         private int spriteSize = InputManager.GetSize();
-        public Painter(Graphics formGraphics)
+        public Painter(Form form, Map map)
         {
-            this.formGraphics = formGraphics;
-            loadSprites();    
+            this.form = form;
+            adjustFormSize(map);
+            formGraphics = form.CreateGraphics(); 
+            loadSprites();
             //MessageBox.Show($"The sprite size is {spriteSize}");
-            
+
+        }
+
+        private void adjustFormSize(Map map)
+        {
+           form.Size = new Size(spriteSize * map.GetWidth(), spriteSize * map.GetHeight());
         }
 
         public void Paint(Map map)
