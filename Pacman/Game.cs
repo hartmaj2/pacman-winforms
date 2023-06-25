@@ -31,7 +31,8 @@
 
         private static readonly string map = Properties.Resources.map;
 
-        private static GameObject[,] nonMovableGrid;
+        private static StaticGameObject[,] staticGrid;
+        private static DynamicGameObject[,] dynamicGrid;
         private static List<MovableGameObject> movableGameObjects;
         private static Hero hero;
 
@@ -90,14 +91,23 @@
         {
             return hero;
         }
-        public static GameObject[,] GetGrid()
+        public static DynamicGameObject[,] GetDynamicGrid()
         {
             if (!mapDataLoaded)
             {
                 prepareMapData();
                 mapDataLoaded = true;
             }
-            return nonMovableGrid;
+            return dynamicGrid;
+        }
+        public static StaticGameObject[,] GetStaticGrid()
+        {
+            if (!mapDataLoaded)
+            {
+                prepareMapData();
+                mapDataLoaded = true;
+            }
+            return staticGrid;
         }
         public static List<MovableGameObject> GetMovableGameObjects()
         {
@@ -116,7 +126,8 @@
             int height = separated.Length;
             int width = separated[0].Length;
 
-            nonMovableGrid = new GameObject[height, width];
+            staticGrid = new StaticGameObject[height, width];
+            dynamicGrid = new DynamicGameObject[height, width];
             movableGameObjects = new List<MovableGameObject>();
 
             for (int y = 0; y < height; y++)
@@ -125,26 +136,31 @@
                 for (int x = 0; x < width; x++)
                 {
                     char gameObjectChar = lineChars[x];
-                    //Console.WriteLine($"({y},{x}) {gameObjectChar}");
+                   
                     switch (gameObjectChar)
                     {
                         case blankChar:
-                            nonMovableGrid[y, x] = new Blank();
+                            staticGrid[y, x] = new StaticBlank();
+                            dynamicGrid[y, x] = new DynamicBlank();
                             break;
                         case wallChar:
-                            nonMovableGrid[y, x] = new Wall();
+                            staticGrid[y, x] = new Wall();
+                            dynamicGrid[y, x] = new DynamicBlank();
                             break;
                         case heroChar:
                             hero = new Hero(x, y);
                             movableGameObjects.Add(hero);
-                            nonMovableGrid[y, x] = new Blank();
+                            staticGrid[y, x] = new StaticBlank();
+                            dynamicGrid[y, x] = new DynamicBlank();
                             break;
                         case pelletChar:
-                            nonMovableGrid[y, x] = new Pellet();
+                            staticGrid[y, x] = new StaticBlank();
+                            dynamicGrid[y, x] = new Pellet();
                             break;
                         case ghostChar:
                             movableGameObjects.Add(new Ghost(x,y));
-                            nonMovableGrid[y, x] = new Blank();
+                            staticGrid[y, x] = new StaticBlank();
+                            dynamicGrid[y, x] = new DynamicBlank();
                             break;
 
                     }
@@ -194,7 +210,7 @@
 
         public void Draw()
         {
-            painter.PaintGrid(map);
+            painter.PaintGrids(map);
             painter.PaintMovableGameObjects(map);
         }
 
@@ -229,7 +245,15 @@
     /* 
      * Special type of GameObject that can also move around
      */
-    abstract class MovableGameObject : GameObject
+    abstract class StaticGameObject
+    {
+
+    }
+    abstract class DynamicGameObject
+    {
+
+    }
+    abstract class MovableGameObject : DynamicGameObject
     {
         protected int xPos;
         protected int yPos;
@@ -267,14 +291,19 @@
      * Represents a blank space where nothing lives but in case I wanted to add some behavior I din't want 
      * it to be null.
      */
-    class Blank : GameObject
+    
+    class DynamicBlank : DynamicGameObject
+    {
+
+    }
+    class StaticBlank : StaticGameObject
     {
     
     }
     /* 
      * A wall that the player will collide with.
      */
-    class Wall : GameObject
+    class Wall : StaticGameObject
     {
 
     }
@@ -299,7 +328,7 @@
     /*
      * Things that player eats and gets points for that
      */
-    class Pellet : GameObject
+    class Pellet : DynamicGameObject
     {
 
     }
@@ -320,7 +349,8 @@
      */
     class Map
     {
-        private GameObject[,] grid;
+        private StaticGameObject[,] staticGrid;
+        private DynamicGameObject[,] dynamicGrid;
         private List<MovableGameObject> movableObjects;
 
         private int gridWidth;
@@ -330,11 +360,12 @@
 
         public Map()
         {
-            grid = InputManager.GetGrid();
+            staticGrid = InputManager.GetStaticGrid();
+            dynamicGrid = InputManager.GetDynamicGrid();
             movableObjects = InputManager.GetMovableGameObjects();
 
-            gridWidth = grid.GetLength(1);
-            gridHeight = grid.GetLength(0);
+            gridWidth = staticGrid.GetLength(1);
+            gridHeight = staticGrid.GetLength(0);
 
         }
 
@@ -354,13 +385,17 @@
         {
             return gridHeight;
         }
-        public GameObject GetObjectAtCoordinates(int x, int y)
+        public StaticGameObject GetStaticObjectAtCoordinates(int x, int y)
         {
-            return grid[y,x];
+            return staticGrid[y,x];
+        }
+        public DynamicGameObject GetDynamicObjectAtCoordinates(int x,int y)
+        {
+            return dynamicGrid[y,x];
         }
         public bool IsFreeCoordinate(int x, int y)
         {
-            if (grid[y,x] is Blank)
+            if (staticGrid[y,x] is StaticBlank)
             {
                 return true;
             }
@@ -395,33 +430,30 @@
             bufferGraphics = Graphics.FromImage(bufferBitmap);
         }
 
-        public void PaintGrid(Map map)
+        public void PaintGrids(Map map)
         {
             bufferGraphics.Clear(Color.Black);
             for (int dy = 0; dy < map.GetCoordinateHeight();dy++)
             {
                 for (int dx = 0; dx < map.GetCoordinateWidth(); dx++)
                 {
-                    GameObject gameObject = map.GetObjectAtCoordinates(dx,dy);
-                    if (gameObject != null)
+                    StaticGameObject staticGameObject = map.GetStaticObjectAtCoordinates(dx,dy);
+                    if (staticGameObject is StaticBlank)
                     {
-                        if (gameObject is Blank)
-                        {
-                            bufferGraphics.DrawImage(blankSprite, spriteSize * dx, spriteSize * dy);
-                        }
-                        if (gameObject is Wall)
-                        {
-                            bufferGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
-                        }        
-                        if (gameObject is Pellet)
-                        {
-                            bufferGraphics.DrawImage(pelletSprite, spriteSize * dx, spriteSize * dy);
-                        }
+                        bufferGraphics.DrawImage(blankSprite, spriteSize * dx, spriteSize * dy);
                     }
-                    else
+                    else if (staticGameObject is Wall)
                     {
-                        Console.WriteLine("Encountered a null GameObject reference");
+                        bufferGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
+                    }        
+                  
+                    DynamicGameObject dynamicGameObject = map.GetDynamicObjectAtCoordinates(dx,dy);
+                    if (dynamicGameObject is Pellet)
+                    {
+                        bufferGraphics.DrawImage(pelletSprite, spriteSize*dx, spriteSize * dy);
                     }
+                    
+
                 }
             }
         }
