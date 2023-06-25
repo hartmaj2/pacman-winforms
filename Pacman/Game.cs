@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -101,10 +102,10 @@ namespace Pacman
     class Map
     {
 
-        private GameObject[] grid;
+        private GameObject[,] grid;
 
-        //private int width;
-        //private int height;
+        private int width;
+        private int height;
 
         public Map()
         {
@@ -113,43 +114,58 @@ namespace Pacman
 
         private void readMap()
         {
-            string map = InputManager.GetMap();
-            List<GameObject> list = new List<GameObject>();
-            for (int i = 0; i < map.Length; i++)
-            {
-                char gameObjectChar = map[i];
-                switch(gameObjectChar) 
-                {
-                    case 'B':
-                        list.Add(new Blank());
-                        Console.WriteLine($"Adding a blank");
-                        break;
-                    case 'W':
-                        list.Add(new Wall());
-                        break;
-                    case 'H':
-                        list.Add(new Hero());
-                        break;
-                    case 'P':
-                        list.Add(new Pellet());
-                        break;
-                    case 'G':
-                        list.Add(new Ghost());
-                        break;
+            string mapString = InputManager.GetMap();
+            string[] separated = mapString.Split(new[] { "\r\n" },StringSplitOptions.None);
 
+            height = separated.Length;
+            width = separated[0].Length;
+
+            grid = new GameObject[height, width];
+
+            for (int y = 0; y < height; y++)
+            {
+                char[] lineChars = separated[y].ToCharArray();
+                for (int x = 0; x < width; x++)
+                {
+                    char gameObjectChar = lineChars[x];
+                    //Console.WriteLine($"({y},{x}) {gameObjectChar}");
+                    switch (gameObjectChar)
+                    {
+                        case 'B':
+                            grid[y, x] = new Blank();
+                            break;
+                        case 'W':
+                            grid[y, x] = new Wall();
+                            break;
+                        case 'H':
+                            grid[y, x] = new Hero();
+                            break;
+                        case 'P':
+                            grid[y, x] = new Pellet();
+                            break;
+                        case 'G':
+                            grid[y, x] = new Ghost();
+                            break;
+
+                    }
                 }
             }
-            this.grid = list.ToArray();
+
         }
 
-        public int GetSize()
+        public int GetWidth()
         {
-            return this.grid.Length;
+            return width;
         }
 
-        public GameObject GetObjectAt(int index)
+        public int GetHeight()
         {
-            return grid[index];
+            return height;
+        }
+
+        public GameObject GetObjectAt(int x, int y)
+        {
+            return grid[y,x];
         }
     }
 
@@ -174,36 +190,38 @@ namespace Pacman
 
         public void Paint(Map map)
         {
-            //formGraphics.DrawImage(sprites[0], 0, 0);
-            for (int i = 0; i < map.GetSize();i++)
+            for (int dy = 0; dy < map.GetHeight();dy++)
             {
-                GameObject gameObject = map.GetObjectAt(i);
-                if (gameObject != null)
+                for (int dx = 0; dx < map.GetWidth(); dx++)
                 {
-                    if (gameObject is Blank)
+                    GameObject gameObject = map.GetObjectAt(dx,dy);
+                    if (gameObject != null)
                     {
-                        formGraphics.DrawImage(blankSprite, spriteSize * i, 0);
+                        if (gameObject is Blank)
+                        {
+                            formGraphics.DrawImage(blankSprite, spriteSize * dx, spriteSize * dy);
+                        }
+                        if (gameObject is Wall)
+                        {
+                            formGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
+                        }
+                        if (gameObject is Hero)
+                        {
+                            formGraphics.DrawImage(heroSprite, spriteSize * dx, spriteSize * dy);
+                        }
+                        if (gameObject is Pellet)
+                        {
+                            formGraphics.DrawImage(pelletSprite, spriteSize * dx, spriteSize * dy);
+                        }
+                        if (gameObject is Ghost)
+                        {
+                            formGraphics.DrawImage(ghostSprite, spriteSize * dx, spriteSize * dy);
+                        }
                     }
-                    if (gameObject is Wall)
+                    else
                     {
-                        formGraphics.DrawImage(wallSprite, spriteSize * i, 0);
+                        MessageBox.Show("Encountered a null GameObject reference");
                     }
-                    if (gameObject is Hero)
-                    {
-                        formGraphics.DrawImage(heroSprite, spriteSize * i, 0);
-                    }
-                    if (gameObject is Pellet)
-                    {
-                        formGraphics.DrawImage(pelletSprite, spriteSize * i, 0);
-                    }
-                    if (gameObject is Ghost)
-                    {
-                        formGraphics.DrawImage(ghostSprite, spriteSize * i, 0);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Encountered a null GameObject reference");
                 }
             }
         }

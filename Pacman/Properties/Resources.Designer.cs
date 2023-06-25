@@ -101,7 +101,12 @@ namespace Pacman.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BWHPG.
+        ///   Looks up a localized string similar to WWWWWWWWWW
+        ///WBBBBHBBBW
+        ///WBBBBBBBBW
+        ///WBBBBBBBBW
+        ///WBBBBBBBBW
+        ///WWWWWWWWWW.
         /// </summary>
         internal static string map {
             get {
