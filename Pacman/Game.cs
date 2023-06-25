@@ -375,6 +375,8 @@
     {
         private Graphics formGraphics;
         private Graphics bufferGraphics;
+        private Bitmap bufferBitmap;
+
         private Form form;
 
         private Bitmap blankSprite = InputManager.GetBlankSprite();
@@ -387,20 +389,15 @@
         public Painter(Form form, Map map)
         {
             this.form = form;
-            adjustFormSize(map);
+            form.ClientSize = new Size(map.GetPixelWidth(), map.GetPixelHeight());
             formGraphics = form.CreateGraphics();
-            bufferGraphics = Graphics.FromImage(new Bitmap(spriteSize * map.GetCoordinateWidth(), spriteSize * map.GetCoordinateHeight()));
-        }
-
-        private void adjustFormSize(Map map)
-        {
-           
-           form.ClientSize = new Size(spriteSize * map.GetCoordinateWidth(), spriteSize * map.GetCoordinateHeight());
+            bufferBitmap = new Bitmap(map.GetPixelWidth(), map.GetPixelHeight());
+            bufferGraphics = Graphics.FromImage(bufferBitmap);
         }
 
         public void PaintGrid(Map map)
         {
-            formGraphics.Clear(Color.Black);
+            bufferGraphics.Clear(Color.Black);
             for (int dy = 0; dy < map.GetCoordinateHeight();dy++)
             {
                 for (int dx = 0; dx < map.GetCoordinateWidth(); dx++)
@@ -410,15 +407,15 @@
                     {
                         if (gameObject is Blank)
                         {
-                            formGraphics.DrawImage(blankSprite, spriteSize * dx, spriteSize * dy);
+                            bufferGraphics.DrawImage(blankSprite, spriteSize * dx, spriteSize * dy);
                         }
                         if (gameObject is Wall)
                         {
-                            formGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
+                            bufferGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
                         }        
                         if (gameObject is Pellet)
                         {
-                            formGraphics.DrawImage(pelletSprite, spriteSize * dx, spriteSize * dy);
+                            bufferGraphics.DrawImage(pelletSprite, spriteSize * dx, spriteSize * dy);
                         }
                     }
                     else
@@ -439,14 +436,15 @@
                     int yPos = movableGameObject.GetY();
                     if (movableGameObject is Hero)
                     {
-                        formGraphics.DrawImage(heroSprite, spriteSize *  xPos, spriteSize * yPos);
+                        bufferGraphics.DrawImage(heroSprite, spriteSize *  xPos, spriteSize * yPos);
                     }
                     if (movableGameObject is Ghost)
                     {
-                        formGraphics.DrawImage(ghostSprite, spriteSize * xPos, spriteSize * yPos);
+                        bufferGraphics.DrawImage(ghostSprite, spriteSize * xPos, spriteSize * yPos);
                     }
                 }
             }
+            formGraphics.DrawImageUnscaled(bufferBitmap, 0, 0);
         }
 
     }
