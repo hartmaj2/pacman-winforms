@@ -332,15 +332,25 @@
         {
             grid = InputManager.GetGrid();
             movableObjects = InputManager.GetMovableGameObjects();
-            gridHeight = grid.GetLength(0);
+
             gridWidth = grid.GetLength(1);
+            gridHeight = grid.GetLength(0);
+
         }
 
-        public int GetWidth()
+        public int GetPixelWidth()
+        {
+            return gridWidth * cellSize;
+        }
+        public int GetPixelHeight()
+        {
+            return gridHeight * cellSize;
+        }
+        public int GetCoordinateWidth()
         {
             return gridWidth;
         }
-        public int GetHeight()
+        public int GetCoordinateHeight()
         {
             return gridHeight;
         }
@@ -364,6 +374,7 @@
     class Painter
     {
         private Graphics formGraphics;
+        private Graphics bufferGraphics;
         private Form form;
 
         private Bitmap blankSprite = InputManager.GetBlankSprite();
@@ -377,20 +388,22 @@
         {
             this.form = form;
             adjustFormSize(map);
-            formGraphics = form.CreateGraphics(); 
-
+            formGraphics = form.CreateGraphics();
+            bufferGraphics = Graphics.FromImage(new Bitmap(spriteSize * map.GetCoordinateWidth(), spriteSize * map.GetCoordinateHeight()));
         }
 
         private void adjustFormSize(Map map)
         {
-           form.ClientSize = new Size(spriteSize * map.GetWidth(), spriteSize * map.GetHeight());
+           
+           form.ClientSize = new Size(spriteSize * map.GetCoordinateWidth(), spriteSize * map.GetCoordinateHeight());
         }
 
         public void PaintGrid(Map map)
         {
-            for (int dy = 0; dy < map.GetHeight();dy++)
+            formGraphics.Clear(Color.Black);
+            for (int dy = 0; dy < map.GetCoordinateHeight();dy++)
             {
-                for (int dx = 0; dx < map.GetWidth(); dx++)
+                for (int dx = 0; dx < map.GetCoordinateWidth(); dx++)
                 {
                     GameObject gameObject = map.GetObjectAtCoordinates(dx,dy);
                     if (gameObject != null)
