@@ -220,7 +220,7 @@ namespace Pacman
                     }
                     else
                     {
-                        MessageBox.Show("Encountered a null GameObject reference");
+                        Console.WriteLine("Encountered a null GameObject reference");
                     }
                 }
             }
