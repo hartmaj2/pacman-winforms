@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Pacman
 {
@@ -37,6 +38,9 @@ namespace Pacman
 
         private static readonly string map = Properties.Resources.map;
 
+        private static GameObject[,] nonMovableGrid;
+        private static List<MovableGameObject> movableGameObjects;
+
         public static int GetSize()
         {
             return size;
@@ -66,7 +70,7 @@ namespace Pacman
             return ghostSprite;
         }
 
-        public static GameObject[,] GetGrid()
+        private static void PrepareMapData()
         {
             string mapString = GetMap();
             string[] separated = mapString.Split(new[] { "\r\n" }, StringSplitOptions.None);
@@ -74,7 +78,8 @@ namespace Pacman
             int height = separated.Length;
             int width = separated[0].Length;
 
-            GameObject[,] grid = new GameObject[height, width];
+            nonMovableGrid = new GameObject[height, width];
+            movableGameObjects = new List<MovableGameObject>();
 
             for (int y = 0; y < height; y++)
             {
@@ -86,28 +91,47 @@ namespace Pacman
                     switch (gameObjectChar)
                     {
                         case 'B':
-                            grid[y, x] = new Blank();
+                            nonMovableGrid[y, x] = new Blank();
                             break;
                         case 'W':
-                            grid[y, x] = new Wall();
+                            nonMovableGrid[y, x] = new Wall();
                             break;
                         case 'H':
-                            grid[y, x] = new Hero(x, y);
+                            movableGameObjects.Add(new Hero(x, y));
+                            nonMovableGrid[y, x] = new Blank();
                             break;
                         case 'P':
-                            grid[y, x] = new Pellet();
+                            nonMovableGrid[y, x] = new Pellet();
                             break;
                         case 'G':
-                            grid[y, x] = new Ghost();
+                            movableGameObjects.Add(new Ghost(x,y));
+                            nonMovableGrid[y, x] = new Blank();
                             break;
 
                     }
                 }
             }
 
-            return grid;
+            
         }
 
+        public static GameObject[,] GetGrid()
+        {
+            if (movableGameObjects == null)
+            {
+                PrepareMapData();
+            }
+            return nonMovableGrid;
+        }
+
+        public static List<MovableGameObject> GetMovableGameObjects()
+        {
+            if (movableGameObjects == null)
+            {
+                PrepareMapData();
+            }
+            return movableGameObjects;
+        }
 
     }
     /*
@@ -129,7 +153,8 @@ namespace Pacman
 
         public void Draw()
         {
-            painter.Paint(map);
+            painter.PaintGrid(map);
+            painter.PaintMovableGameObjects(map);
         }
     }
     /*
@@ -159,10 +184,19 @@ namespace Pacman
      */
     abstract class MovableGameObject : GameObject
     {
-        protected abstract int xPos { get; set; }
-        protected abstract int yPos { get; set; }
-        protected abstract Direction direction { get; set; }
+        protected int xPos;
+        protected int yPos;
+        protected Direction direction;
         public abstract void Move(Map map);
+
+        public int GetX()
+        {
+            return xPos;
+        }
+        public int GetY()
+        {
+            return yPos;
+        }
 
     }
     /* 
@@ -187,42 +221,22 @@ namespace Pacman
     class Hero : MovableGameObject
     {
 
-        private int _xPos;
-        private int _yPos;
-        private Direction _direction;
-
         public Hero(int x, int y)
         {
-            _xPos = x;
-            _yPos = y;
-            _direction.X = 1;
-            _direction.Y = 0;
+            xPos = x;
+            yPos = y;
+            direction.X = 1;
+            direction.Y = 0;
         }
 
         public override void Move(Map map)
         {
-            int newX = _xPos + _direction.X;
-            int newY = _yPos + _direction.Y;
+            int newX = xPos + direction.X;
+            int newY = yPos + direction.Y;
 
-            
-        }
-
-        protected override int yPos
-        {
-            get { return _yPos; }
-            set { _yPos = value; }
-        }
-        protected override int xPos
-        {
-            get { return _xPos; }
-            set { _xPos = value; }
+            map.MoveObject(xPos,yPos,newX,newY);
         }
 
-        protected override Direction direction
-        {
-            get { return _direction; }
-            set { _direction = value; }
-        }
 
     }
     /*
@@ -235,8 +249,23 @@ namespace Pacman
     /* 
      * Enemies that will be chasing the player
      */
-    class Ghost : GameObject
+    class Ghost : MovableGameObject
     {
+        public Ghost(int x, int y)
+        {
+            xPos = x;
+            yPos = y;
+            direction.X = 0;
+            direction.Y = 1;
+        }
+
+        public override void Move(Map map)
+        {
+            int newX = xPos + direction.X;
+            int newY = yPos + direction.Y;
+
+            map.MoveObject(xPos, yPos, newX, newY);
+        }
 
     }
     //TODO: implement movement of a player, communication with Map
@@ -248,12 +277,15 @@ namespace Pacman
 
         private GameObject[,] grid;
 
+        private List<MovableGameObject> movableObjects;
+
         private int width;
         private int height;
 
         public Map()
         {
             grid = InputManager.GetGrid();
+            movableObjects = InputManager.GetMovableGameObjects();
             height = grid.GetLength(0);
             width = grid.GetLength(1);
         }
@@ -271,6 +303,30 @@ namespace Pacman
         public GameObject GetObjectAt(int x, int y)
         {
             return grid[y,x];
+        }
+
+        private bool IsFree(int x, int y)
+        {
+            if (grid[y,x] is Blank)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void MoveObject(int fromX, int fromY, int toX, int toY)
+        {
+            GameObject movingObject = GetObjectAt(fromX, fromY);
+            if (IsFree(toX, toY))
+            {
+                grid[fromX, fromY] = new Blank();
+                grid[toX, toY] = movingObject;
+            }
+        }
+
+        public List<MovableGameObject> GetMovableGameObjects()
+        {
+            return movableObjects;
         }
     }
     class Painter
@@ -300,7 +356,7 @@ namespace Pacman
            form.ClientSize = new Size(spriteSize * map.GetWidth(), spriteSize * map.GetHeight());
         }
 
-        public void Paint(Map map)
+        public void PaintGrid(Map map)
         {
             for (int dy = 0; dy < map.GetHeight();dy++)
             {
@@ -316,23 +372,35 @@ namespace Pacman
                         if (gameObject is Wall)
                         {
                             formGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
-                        }
-                        if (gameObject is Hero)
-                        {
-                            formGraphics.DrawImage(heroSprite, spriteSize * dx, spriteSize * dy);
-                        }
+                        }        
                         if (gameObject is Pellet)
                         {
                             formGraphics.DrawImage(pelletSprite, spriteSize * dx, spriteSize * dy);
-                        }
-                        if (gameObject is Ghost)
-                        {
-                            formGraphics.DrawImage(ghostSprite, spriteSize * dx, spriteSize * dy);
                         }
                     }
                     else
                     {
                         Console.WriteLine("Encountered a null GameObject reference");
+                    }
+                }
+            }
+        }
+
+        public void PaintMovableGameObjects(Map map)
+        {
+            foreach  (MovableGameObject movableGameObject in map.GetMovableGameObjects())
+            {
+                if (movableGameObject != null)
+                {
+                    int xPos = movableGameObject.GetX();
+                    int yPos = movableGameObject.GetY();
+                    if (movableGameObject is Hero)
+                    {
+                        formGraphics.DrawImage(heroSprite, spriteSize *  xPos, spriteSize * yPos);
+                    }
+                    if (movableGameObject is Ghost)
+                    {
+                        formGraphics.DrawImage(ghostSprite, spriteSize * xPos, spriteSize * yPos);
                     }
                 }
             }
