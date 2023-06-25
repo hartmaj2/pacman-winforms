@@ -170,6 +170,12 @@ namespace Pacman
             painter.PaintGrid(map);
             painter.PaintMovableGameObjects(map);
         }
+
+        public void SetHeroDirection(Direction direction)
+        {
+            hero.SetDirection(direction);
+        }
+
     }
     /*
      * Represents a 2D integer vector
@@ -255,6 +261,11 @@ namespace Pacman
         {
             direction.X = 1;
             direction.Y = 0;
+        }
+
+        public void SetDirection(Direction direction)
+        {
+            this.direction = direction;
         }
 
     }

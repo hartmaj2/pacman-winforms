@@ -58,12 +58,25 @@ namespace Pacman
         {
             base.OnKeyDown(e);
 
+            Direction newDirection = new Direction(0,0);
+
             switch(e.KeyCode)
             {
                 case Keys.Up:
-                    Console.WriteLine("The up key was pressed");
+                    newDirection = new Direction(0,-1);
+                    break;
+                case Keys.Right:
+                    newDirection = new Direction(1, 0);
+                    break;
+                case Keys.Down:
+                    newDirection = new Direction(0, 1);
+                    break;
+                case Keys.Left:
+                    newDirection = new Direction(-1, 0);
                     break;
             }
+
+            gameManager.SetHeroDirection(newDirection);
 
         }
     }
