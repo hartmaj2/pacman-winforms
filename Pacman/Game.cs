@@ -412,9 +412,6 @@
         private Graphics bufferGraphics;
         private Bitmap bufferBitmap;
 
-        private Form form;
-
-        private Bitmap blankSprite = InputManager.GetBlankSprite();
         private Bitmap wallSprite = InputManager.GetWallSprite();
         private Bitmap heroSprite = InputManager.GetHeroSprite();
         private Bitmap pelletSprite = InputManager.GetPelletSprite();
@@ -423,7 +420,6 @@
         private int spriteSize = InputManager.GetCellSize();
         public Painter(Form form, Map map)
         {
-            this.form = form;
             form.ClientSize = new Size(map.GetPixelWidth(), map.GetPixelHeight());
             formGraphics = form.CreateGraphics();
             bufferBitmap = new Bitmap(map.GetPixelWidth(), map.GetPixelHeight());
