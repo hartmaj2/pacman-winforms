@@ -191,7 +191,7 @@ namespace Pacman
 
         private void adjustFormSize(Map map)
         {
-           form.Size = new Size(spriteSize * map.GetWidth(), spriteSize * map.GetHeight());
+           form.ClientSize = new Size(spriteSize * map.GetWidth(), spriteSize * map.GetHeight());
         }
 
         public void Paint(Map map)
