@@ -173,7 +173,6 @@
 
 
         }
-
         private static void adjustSpriteSize()
         {
             blankSprite = new Bitmap(blankSprite, new Size(cellSize, cellSize));
