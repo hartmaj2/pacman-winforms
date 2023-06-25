@@ -11,7 +11,7 @@ namespace Pacman
         private GameManager gameManager;
         private void initializeForm()
         {
-            this.Text = "Pacman Game";
+            this.Text = "Pacman Game " + count;
             initializeStartButton();
             initializeEndButton();
         }
@@ -37,14 +37,17 @@ namespace Pacman
         {
             this.Text = "Pacman Game " + count;
             count++;
+            gameManager.Tick();
+            gameManager.Draw();
+
         }
 
         private void startButton_click(object sender, EventArgs e)
         {
-            //gameLoopTimer.Start();
             startButton.Visible = false;
             endButton.Visible = false;
             gameManager.Draw();
+            gameLoopTimer.Enabled = true;
 
         }
 

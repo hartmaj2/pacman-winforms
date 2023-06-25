@@ -142,13 +142,21 @@ namespace Pacman
     {
         private Map map;
         private Painter painter;
-
+          
         private int pelletsEaten;
-
+        
         public GameManager(Form form)
         {
             this.map = new Map();
             this.painter = new Painter(form, map);
+        }
+
+        public void Tick()
+        {
+            foreach (MovableGameObject movableGameObject in map.GetMovableGameObjects())
+            {
+                movableGameObject.Move(map);
+            }
         }
 
         public void Draw()

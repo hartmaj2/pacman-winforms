@@ -36,7 +36,7 @@
             // 
             // gameLoopTimer
             // 
-            gameLoopTimer.Interval = 16;
+            gameLoopTimer.Interval = 1000;
             gameLoopTimer.Tick += gameLoopTimer_Tick;
             // 
             // startButton
