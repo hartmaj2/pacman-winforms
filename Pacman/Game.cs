@@ -429,7 +429,22 @@
             bufferBitmap = new Bitmap(map.GetPixelWidth(), map.GetPixelHeight());
             bufferGraphics = Graphics.FromImage(bufferBitmap);
         }
-
+        private void PaintStaticObjectAtCoordinate(Map map, int dx, int dy)
+        {
+            StaticGameObject staticGameObject = map.GetStaticObjectAtCoordinates(dx, dy);
+            if (staticGameObject is Wall)
+            {
+                bufferGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
+            }
+        }
+        private void PaintDynamicObjectAtCoordinate(Map map, int dx, int dy)
+        {
+            DynamicGameObject dynamicGameObject = map.GetDynamicObjectAtCoordinates(dx, dy);
+            if (dynamicGameObject is Pellet)
+            {
+                bufferGraphics.DrawImage(pelletSprite, spriteSize * dx, spriteSize * dy);
+            }
+        }
         public void PaintGrids(Map map)
         {
             bufferGraphics.Clear(Color.Black);
@@ -437,23 +452,14 @@
             {
                 for (int dx = 0; dx < map.GetCoordinateWidth(); dx++)
                 {
-                    StaticGameObject staticGameObject = map.GetStaticObjectAtCoordinates(dx,dy);
-                    if (staticGameObject is Wall)
-                    {
-                        bufferGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
-                    }        
-                  
-                    DynamicGameObject dynamicGameObject = map.GetDynamicObjectAtCoordinates(dx,dy);
-                    if (dynamicGameObject is Pellet)
-                    {
-                        bufferGraphics.DrawImage(pelletSprite, spriteSize*dx, spriteSize * dy);
-                    }
                     
-
+                    PaintStaticObjectAtCoordinate(map, dx, dy);
+                    
+                    PaintDynamicObjectAtCoordinate(map, dx, dy);
+                    
                 }
             }
         }
-
         public void PaintMovableGameObjects(Map map)
         {
             foreach  (MovableGameObject movableGameObject in map.GetMovableGameObjects())
