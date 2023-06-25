@@ -74,9 +74,29 @@ namespace Pacman
             painter.Paint(map);
         }
     }
+
+    struct Direction
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        public Direction(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
     abstract class GameObject
     {
        
+    }
+    abstract class MovableGameObject : GameObject
+    {
+        protected abstract int xPos { get; set; }
+        protected abstract int yPos { get; set; }
+        protected abstract Direction direction { get; set; }
+        public abstract void Move(Map map);
+        public abstract void SetDirection(int dx, int dy);
     }
     class Blank : GameObject
     {
@@ -86,9 +106,43 @@ namespace Pacman
     {
 
     }
-    class Hero : GameObject
+    class Hero : MovableGameObject
     {
-        
+
+        public Hero()
+        {
+            direction = new Direction(1, 0);
+        }
+
+        public override void SetDirection(int dx, int dy)
+        {
+            direction = new Direction(dx, dy);
+        }
+        public override void Move(Map map)
+        {
+            int newX = xPos + direction.X;
+            int newY = yPos + direction.Y;
+
+            
+        }
+
+        protected override int yPos
+        {
+            get { return yPos; }
+            set { yPos = value; }
+        }
+        protected override int xPos
+        {
+            get { return xPos; }
+            set { xPos = value; }
+        }
+
+        protected override Direction direction
+        {
+            get { return direction; }
+            set { direction = value; }
+        }
+
     }
     class Pellet : GameObject
     {
@@ -98,6 +152,8 @@ namespace Pacman
     {
 
     }
+    
+    //TODO: implement movement of a player, communication with Map
     class Map
     {
 
