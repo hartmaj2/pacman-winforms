@@ -41,7 +41,7 @@ namespace Pacman
         {
             return size;
         }
-        private static string GetMap()
+        public static string GetMap()
         {
             return map;
         }
@@ -65,45 +65,7 @@ namespace Pacman
         {
             return ghostSprite;
         }
-        public static GameObject[,] GetGrid()
-        {
-            string mapString = GetMap();
-            string[] separated = mapString.Split(new[] { "\r\n" }, StringSplitOptions.None);
 
-            int height = separated.Length;
-            int width = separated[0].Length;
-
-            GameObject[,] grid = new GameObject[height, width];
-
-            for (int y = 0; y < height; y++)
-            {
-                char[] lineChars = separated[y].ToCharArray();
-                for (int x = 0; x < width; x++)
-                {
-                    char gameObjectChar = lineChars[x];
-                    //Console.WriteLine($"({y},{x}) {gameObjectChar}");
-                    switch (gameObjectChar)
-                    {
-                        case 'B':
-                            grid[y, x] = new Blank();
-                            break;
-                        case 'W':
-                            grid[y, x] = new Wall();
-                            break;
-                        case 'H':
-                            grid[y, x] = new Hero();
-                            break;
-                        case 'P':
-                            grid[y, x] = new Pellet();
-                            break;
-                        case 'G':
-                            grid[y, x] = new Ghost();
-                            break;
-
-                    }
-                }
-            }
-        }
 
     }
     /*
@@ -162,7 +124,7 @@ namespace Pacman
         protected abstract int yPos { get; set; }
         protected abstract Direction direction { get; set; }
         public abstract void Move(Map map);
-        public abstract void SetDirection(int dx, int dy);
+
     }
 
     /* 
@@ -189,38 +151,41 @@ namespace Pacman
     class Hero : MovableGameObject
     {
 
-        public Hero()
+        private int _xPos;
+        private int _yPos;
+        private Direction _direction;
+
+        public Hero(int x, int y)
         {
-            direction = new Direction(1, 0);
+            _xPos = x;
+            _yPos = y;
+            _direction.X = 1;
+            _direction.Y = 0;
         }
 
-        public override void SetDirection(int dx, int dy)
-        {
-            direction = new Direction(dx, dy);
-        }
         public override void Move(Map map)
         {
-            int newX = xPos + direction.X;
-            int newY = yPos + direction.Y;
+            int newX = _xPos + _direction.X;
+            int newY = _yPos + _direction.Y;
 
             
         }
 
         protected override int yPos
         {
-            get { return yPos; }
-            set { yPos = value; }
+            get { return _yPos; }
+            set { _yPos = value; }
         }
         protected override int xPos
         {
-            get { return xPos; }
-            set { xPos = value; }
+            get { return _xPos; }
+            set { _xPos = value; }
         }
 
         protected override Direction direction
         {
-            get { return direction; }
-            set { direction = value; }
+            get { return _direction; }
+            set { _direction = value; }
         }
 
     }
@@ -261,7 +226,42 @@ namespace Pacman
         
         private void readMap()
         {
-           
+            string mapString = InputManager.GetMap();
+            string[] separated = mapString.Split(new[] { "\r\n" },StringSplitOptions.None);
+
+            height = separated.Length;
+            width = separated[0].Length;
+
+            grid = new GameObject[height, width];
+
+            for (int y = 0; y < height; y++)
+            {
+                char[] lineChars = separated[y].ToCharArray();
+                for (int x = 0; x < width; x++)
+                {
+                    char gameObjectChar = lineChars[x];
+                    //Console.WriteLine($"({y},{x}) {gameObjectChar}");
+                    switch (gameObjectChar)
+                    {
+                        case 'B':
+                            grid[y, x] = new Blank();
+                            break;
+                        case 'W':
+                            grid[y, x] = new Wall();
+                            break;
+                        case 'H':
+                            grid[y, x] = new Hero(x,y);
+                            break;
+                        case 'P':
+                            grid[y, x] = new Pellet();
+                            break;
+                        case 'G':
+                            grid[y, x] = new Ghost();
+                            break;
+
+                    }
+                }
+            }
 
         }
 
