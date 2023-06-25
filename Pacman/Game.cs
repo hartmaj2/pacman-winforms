@@ -34,7 +34,7 @@ namespace Pacman
         private static readonly char pelletChar = 'P';
         private static readonly char ghostChar = 'G';
 
-        private static readonly int size = 100;
+        private static readonly int cellSize = 100;
 
         private static readonly string map = Properties.Resources.map;
 
@@ -42,9 +42,9 @@ namespace Pacman
         private static List<MovableGameObject> movableGameObjects;
         private static Hero hero;
 
-        public static int GetSize()
+        public static int GetCellSize()
         {
-            return size;
+            return cellSize;
         }
         public static string GetMap()
         {
@@ -228,7 +228,7 @@ namespace Pacman
             int newX = xPos + direction.X;
             int newY = yPos + direction.Y;
 
-            if (map.IsFree(newX, newY))
+            if (map.IsFreeCoordinate(newX, newY))
             {
                 xPos += direction.X;
                 yPos += direction.Y;
@@ -293,38 +293,35 @@ namespace Pacman
      */
     class Map
     {
-
         private GameObject[,] grid;
-
         private List<MovableGameObject> movableObjects;
 
-        private int width;
-        private int height;
+        private int gridWidth;
+        private int gridHeight;
+
+        private int cellSize = InputManager.GetCellSize();
 
         public Map()
         {
             grid = InputManager.GetGrid();
             movableObjects = InputManager.GetMovableGameObjects();
-            height = grid.GetLength(0);
-            width = grid.GetLength(1);
+            gridHeight = grid.GetLength(0);
+            gridWidth = grid.GetLength(1);
         }
 
         public int GetWidth()
         {
-            return width;
+            return gridWidth;
         }
-
         public int GetHeight()
         {
-            return height;
+            return gridHeight;
         }
-
-        public GameObject GetObjectAt(int x, int y)
+        public GameObject GetObjectAtCoordinates(int x, int y)
         {
             return grid[y,x];
         }
-
-        public bool IsFree(int x, int y)
+        public bool IsFreeCoordinate(int x, int y)
         {
             if (grid[y,x] is Blank)
             {
@@ -332,7 +329,6 @@ namespace Pacman
             }
             return false;
         }
-
         public List<MovableGameObject> GetMovableGameObjects()
         {
             return movableObjects;
@@ -349,7 +345,7 @@ namespace Pacman
         private Bitmap pelletSprite;
         private Bitmap ghostSprite;
 
-        private int spriteSize = InputManager.GetSize();
+        private int spriteSize = InputManager.GetCellSize();
         public Painter(Form form, Map map)
         {
             this.form = form;
@@ -371,7 +367,7 @@ namespace Pacman
             {
                 for (int dx = 0; dx < map.GetWidth(); dx++)
                 {
-                    GameObject gameObject = map.GetObjectAt(dx,dy);
+                    GameObject gameObject = map.GetObjectAtCoordinates(dx,dy);
                     if (gameObject != null)
                     {
                         if (gameObject is Blank)
