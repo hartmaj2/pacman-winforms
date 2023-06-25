@@ -9,11 +9,13 @@ namespace Pacman
         public Form1()
         {
             InitializeComponent();
+            gameManager = new GameManager(this);
             this.KeyPreview = true; // makes sure that the form receives key events before their are passed to other components with focus
             initializeForm();
         }
         private void initializeForm()
         {
+            
             this.Text = "Pacman Game " + count;
             initializeStartButton();
             initializeEndButton();
@@ -21,7 +23,6 @@ namespace Pacman
         private void initializeStartButton()
         {
             startButton.Visible = true;
-            gameManager = new GameManager(this);
             startButton.Left = (ClientSize.Width - startButton.Width) / 2;
             startButton.Top = (ClientSize.Height - startButton.Height) / 2;
         }
