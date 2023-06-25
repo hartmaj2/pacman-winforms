@@ -27,6 +27,11 @@ The classes used in the program are:
 The `GameManager` class is the one that puts most of all the other classes together. It takes care of the game logic such as player lives, score, etc. It also stores the Map grid on which the `GameObject` instances reside.
 When a `GameObject` instance needs to communicate with the `Map` for example, the `GameManager` provides a means between those to communicate.
 
+### Map class
+Takes care of almost everything that has to do with the topological locations of different objects. Stores a 2D grid of `GameObject` instances and also a 'List' of 'MovableGameObjects'. The grid is only formed of static non-movable objects and is used to determine if a certain place on the grid is free to be moved to or not.  
+
+On the other hand, the list of movable characters is meant to be changing their locations constantly. This is one thing that the `Map` class doesn't take care of - the locations of these movable objects. They store them themselves.
+
 # Input data
 
 ## Map
