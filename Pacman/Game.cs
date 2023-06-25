@@ -34,7 +34,7 @@ namespace Pacman
         private static readonly char ghostChar = 'G';
 
         private static readonly int size = 100;
-        
+
         private static readonly string map = Properties.Resources.map;
 
         public static int GetSize()
@@ -64,6 +64,48 @@ namespace Pacman
         public static Bitmap GetGhostSprite()
         {
             return ghostSprite;
+        }
+
+        public static GameObject[,] GetGrid()
+        {
+            string mapString = GetMap();
+            string[] separated = mapString.Split(new[] { "\r\n" }, StringSplitOptions.None);
+
+            int height = separated.Length;
+            int width = separated[0].Length;
+
+            GameObject[,] grid = new GameObject[height, width];
+
+            for (int y = 0; y < height; y++)
+            {
+                char[] lineChars = separated[y].ToCharArray();
+                for (int x = 0; x < width; x++)
+                {
+                    char gameObjectChar = lineChars[x];
+                    //Console.WriteLine($"({y},{x}) {gameObjectChar}");
+                    switch (gameObjectChar)
+                    {
+                        case 'B':
+                            grid[y, x] = new Blank();
+                            break;
+                        case 'W':
+                            grid[y, x] = new Wall();
+                            break;
+                        case 'H':
+                            grid[y, x] = new Hero(x, y);
+                            break;
+                        case 'P':
+                            grid[y, x] = new Pellet();
+                            break;
+                        case 'G':
+                            grid[y, x] = new Ghost();
+                            break;
+
+                    }
+                }
+            }
+
+            return grid;
         }
 
 
@@ -220,49 +262,9 @@ namespace Pacman
 
         public Map()
         {
-            readMap();
-        }
-
-        
-        private void readMap()
-        {
-            string mapString = InputManager.GetMap();
-            string[] separated = mapString.Split(new[] { "\r\n" },StringSplitOptions.None);
-
-            height = separated.Length;
-            width = separated[0].Length;
-
-            grid = new GameObject[height, width];
-
-            for (int y = 0; y < height; y++)
-            {
-                char[] lineChars = separated[y].ToCharArray();
-                for (int x = 0; x < width; x++)
-                {
-                    char gameObjectChar = lineChars[x];
-                    //Console.WriteLine($"({y},{x}) {gameObjectChar}");
-                    switch (gameObjectChar)
-                    {
-                        case 'B':
-                            grid[y, x] = new Blank();
-                            break;
-                        case 'W':
-                            grid[y, x] = new Wall();
-                            break;
-                        case 'H':
-                            grid[y, x] = new Hero(x,y);
-                            break;
-                        case 'P':
-                            grid[y, x] = new Pellet();
-                            break;
-                        case 'G':
-                            grid[y, x] = new Ghost();
-                            break;
-
-                    }
-                }
-            }
-
+            grid = InputManager.GetGrid();
+            height = grid.GetLength(0);
+            width = grid.GetLength(1);
         }
 
         public int GetWidth()
