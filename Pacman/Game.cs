@@ -438,10 +438,6 @@
                 for (int dx = 0; dx < map.GetCoordinateWidth(); dx++)
                 {
                     StaticGameObject staticGameObject = map.GetStaticObjectAtCoordinates(dx,dy);
-                    if (staticGameObject is StaticBlank)
-                    {
-                        bufferGraphics.DrawImage(blankSprite, spriteSize * dx, spriteSize * dy);
-                    }
                     else if (staticGameObject is Wall)
                     {
                         bufferGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
