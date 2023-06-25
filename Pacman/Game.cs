@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.DirectoryServices.ActiveDirectory;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-
-namespace Pacman
+﻿namespace Pacman
 {
     /*
      * Takes care of all the input data. It is an abstraction so that if I change the way the data is input
