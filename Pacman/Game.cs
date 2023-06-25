@@ -20,6 +20,17 @@ namespace Pacman
     {
 
         /*
+         * Sets how different game objects are represented in the map.txt file
+         */
+        private const char blankChar = 'B';
+        private const char wallChar = 'W';
+        private const char heroChar = 'H';
+        private const char pelletChar = 'P';
+        private const char ghostChar = 'G';
+
+        private const int cellSize = 100;
+
+        /*
          * The sprites are just PNG images converted to a Bitmap to be rendered by the Painter class later.
          */
         private static readonly Bitmap blankSprite = Properties.Resources.blank;
@@ -27,14 +38,6 @@ namespace Pacman
         private static readonly Bitmap heroSprite = Properties.Resources.hero;
         private static readonly Bitmap pelletSprite = Properties.Resources.pellet;
         private static readonly Bitmap ghostSprite = Properties.Resources.ghost;
-
-        private static readonly char blankChar = 'B';
-        private static readonly char wallChar = 'W';
-        private static readonly char heroChar = 'H';
-        private static readonly char pelletChar = 'P';
-        private static readonly char ghostChar = 'G';
-
-        private static readonly int cellSize = 100;
 
         private static readonly string map = Properties.Resources.map;
 
@@ -110,21 +113,21 @@ namespace Pacman
                     //Console.WriteLine($"({y},{x}) {gameObjectChar}");
                     switch (gameObjectChar)
                     {
-                        case 'B':
+                        case blankChar:
                             nonMovableGrid[y, x] = new Blank();
                             break;
-                        case 'W':
+                        case wallChar:
                             nonMovableGrid[y, x] = new Wall();
                             break;
-                        case 'H':
+                        case heroChar:
                             hero = new Hero(x, y);
                             movableGameObjects.Add(hero);
                             nonMovableGrid[y, x] = new Blank();
                             break;
-                        case 'P':
+                        case pelletChar:
                             nonMovableGrid[y, x] = new Pellet();
                             break;
-                        case 'G':
+                        case ghostChar:
                             movableGameObjects.Add(new Ghost(x,y));
                             nonMovableGrid[y, x] = new Blank();
                             break;
