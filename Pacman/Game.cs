@@ -35,6 +35,8 @@
         private static List<MovableGameObject> movableGameObjects;
         private static Hero hero;
 
+        private static bool mapDataLoaded = false;
+
         public static int GetCellSize()
         {
             return cellSize;
@@ -69,17 +71,19 @@
         }
         public static GameObject[,] GetGrid()
         {
-            if (nonMovableGrid == null)
+            if (!mapDataLoaded)
             {
                 PrepareMapData();
+                mapDataLoaded = true;
             }
             return nonMovableGrid;
         }
         public static List<MovableGameObject> GetMovableGameObjects()
         {
-            if (movableGameObjects == null)
+            if (!mapDataLoaded)
             {
                 PrepareMapData();
+                mapDataLoaded = true;
             }
             return movableGameObjects;
         }
