@@ -12,7 +12,6 @@ namespace Pacman
             this.KeyPreview = true; // makes sure that the form receives key events before their are passed to other components with focus
             initializeForm();
         }
-
         private void initializeForm()
         {
             this.Text = "Pacman Game " + count;
@@ -53,7 +52,6 @@ namespace Pacman
             gameLoopTimer.Stop();
             Application.Exit();
         }
-
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);

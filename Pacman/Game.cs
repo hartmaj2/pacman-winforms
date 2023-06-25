@@ -288,7 +288,6 @@ namespace Pacman
         }
 
     }
-    //TODO: implement movement of a player, communication with Map
     /*
      * Represents the underlying grid on which everything moves
      */
