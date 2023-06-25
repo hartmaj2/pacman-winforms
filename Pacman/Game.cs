@@ -378,8 +378,6 @@
             this.form = form;
             adjustFormSize(map);
             formGraphics = form.CreateGraphics(); 
-            //loadSprites();
-            //MessageBox.Show($"The sprite size is {spriteSize}");
 
         }
 
@@ -438,16 +436,5 @@
             }
         }
 
-        /*
-         * Initializes all the bitmaps for the corresponding GameObjects from the InputManager
-         */
-        //private void loadSprites()
-        //{
-        //    blankSprite = new Bitmap(InputManager.GetBlankSprite(), new Size(spriteSize,spriteSize));
-        //    wallSprite = new Bitmap(InputManager.GetWallSprite(), new Size(spriteSize, spriteSize));
-        //    heroSprite = new Bitmap(InputManager.GetHeroSprite(), new Size(spriteSize, spriteSize));
-        //    pelletSprite = new Bitmap(InputManager.GetPelletSprite(), new Size(spriteSize, spriteSize));
-        //    ghostSprite = new Bitmap(InputManager.GetGhostSprite(), new Size(spriteSize, spriteSize));
-        //}
     }
 }
