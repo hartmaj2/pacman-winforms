@@ -132,7 +132,6 @@ namespace Pacman
             painter.Paint(map);
         }
     }
-
     /*
      * Represents a 2D integer vector
      */
@@ -147,7 +146,6 @@ namespace Pacman
             Y = y;
         }
     }
-
     /*
      * Everything that lives inside the game should inherit this. It has to be something that can 
      * occupy a grid and that can be drawn
@@ -156,7 +154,6 @@ namespace Pacman
     {
        
     }
-
     /* 
      * Special type of GameObject that can also move around
      */
@@ -168,7 +165,6 @@ namespace Pacman
         public abstract void Move(Map map);
 
     }
-
     /* 
      * Represents a blank space where nothing lives but in case I wanted to add some behavior I din't want 
      * it to be null.
@@ -177,7 +173,6 @@ namespace Pacman
     {
     
     }
-
     /* 
      * A wall that the player will collide with.
      */
@@ -185,7 +180,6 @@ namespace Pacman
     {
 
     }
-
     /*
      * Main playable character of the game. So far I will make it non playable but will
      * add controls later.
@@ -231,7 +225,6 @@ namespace Pacman
         }
 
     }
-
     /*
      * Things that player eats and gets points for that
      */
@@ -239,7 +232,6 @@ namespace Pacman
     {
 
     }
-
     /* 
      * Enemies that will be chasing the player
      */
@@ -247,7 +239,6 @@ namespace Pacman
     {
 
     }
-    
     //TODO: implement movement of a player, communication with Map
     /*
      * Represents the underlying grid on which everything moves
