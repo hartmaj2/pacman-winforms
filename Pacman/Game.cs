@@ -187,7 +187,12 @@ namespace Pacman
         protected int xPos;
         protected int yPos;
         protected Direction direction;
-        public abstract void Move(Map map);
+
+        public MovableGameObject(int x, int y)
+        {
+            xPos = x;
+            yPos = y;
+        }
 
         public int GetX()
         {
@@ -196,6 +201,18 @@ namespace Pacman
         public int GetY()
         {
             return yPos;
+        }
+
+        public void Move(Map map)
+        {
+            int newX = xPos + direction.X;
+            int newY = yPos + direction.Y;
+
+            if (map.IsFree(newX, newY))
+            {
+                xPos += direction.X;
+                yPos += direction.Y;
+            }
         }
 
     }
@@ -220,23 +237,11 @@ namespace Pacman
      */
     class Hero : MovableGameObject
     {
-
-        public Hero(int x, int y)
+        public Hero(int x, int y) : base(x,y)
         {
-            xPos = x;
-            yPos = y;
             direction.X = 1;
             direction.Y = 0;
         }
-
-        public override void Move(Map map)
-        {
-            int newX = xPos + direction.X;
-            int newY = yPos + direction.Y;
-
-            map.MoveObject(xPos,yPos,newX,newY);
-        }
-
 
     }
     /*
@@ -251,20 +256,10 @@ namespace Pacman
      */
     class Ghost : MovableGameObject
     {
-        public Ghost(int x, int y)
+        public Ghost(int x, int y) : base (x,y)
         {
-            xPos = x;
-            yPos = y;
             direction.X = 0;
             direction.Y = 1;
-        }
-
-        public override void Move(Map map)
-        {
-            int newX = xPos + direction.X;
-            int newY = yPos + direction.Y;
-
-            map.MoveObject(xPos, yPos, newX, newY);
         }
 
     }
@@ -305,23 +300,13 @@ namespace Pacman
             return grid[y,x];
         }
 
-        private bool IsFree(int x, int y)
+        public bool IsFree(int x, int y)
         {
             if (grid[y,x] is Blank)
             {
                 return true;
             }
             return false;
-        }
-
-        public void MoveObject(int fromX, int fromY, int toX, int toY)
-        {
-            GameObject movingObject = GetObjectAt(fromX, fromY);
-            if (IsFree(toX, toY))
-            {
-                grid[fromX, fromY] = new Blank();
-                grid[toX, toY] = movingObject;
-            }
         }
 
         public List<MovableGameObject> GetMovableGameObjects()
