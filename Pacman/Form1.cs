@@ -9,6 +9,7 @@ namespace Pacman
         public Form1()
         {
             InitializeComponent();
+            this.KeyPreview = true; // makes sure that the form receives key events before their are passed to other components with focus
             initializeForm();
         }
 
@@ -51,6 +52,19 @@ namespace Pacman
         {
             gameLoopTimer.Stop();
             Application.Exit();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            switch(e.KeyCode)
+            {
+                case Keys.Up:
+                    Console.WriteLine("The up key was pressed");
+                    break;
+            }
+
         }
     }
 }

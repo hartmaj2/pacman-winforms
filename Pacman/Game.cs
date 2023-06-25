@@ -40,6 +40,7 @@ namespace Pacman
 
         private static GameObject[,] nonMovableGrid;
         private static List<MovableGameObject> movableGameObjects;
+        private static Hero hero;
 
         public static int GetSize()
         {
@@ -69,7 +70,26 @@ namespace Pacman
         {
             return ghostSprite;
         }
-
+        public static Hero GetHero()
+        {
+            return hero;
+        }
+        public static GameObject[,] GetGrid()
+        {
+            if (nonMovableGrid == null)
+            {
+                PrepareMapData();
+            }
+            return nonMovableGrid;
+        }
+        public static List<MovableGameObject> GetMovableGameObjects()
+        {
+            if (movableGameObjects == null)
+            {
+                PrepareMapData();
+            }
+            return movableGameObjects;
+        }
         private static void PrepareMapData()
         {
             string mapString = GetMap();
@@ -97,7 +117,8 @@ namespace Pacman
                             nonMovableGrid[y, x] = new Wall();
                             break;
                         case 'H':
-                            movableGameObjects.Add(new Hero(x, y));
+                            hero = new Hero(x, y);
+                            movableGameObjects.Add(hero);
                             nonMovableGrid[y, x] = new Blank();
                             break;
                         case 'P':
@@ -115,24 +136,6 @@ namespace Pacman
             
         }
 
-        public static GameObject[,] GetGrid()
-        {
-            if (movableGameObjects == null)
-            {
-                PrepareMapData();
-            }
-            return nonMovableGrid;
-        }
-
-        public static List<MovableGameObject> GetMovableGameObjects()
-        {
-            if (movableGameObjects == null)
-            {
-                PrepareMapData();
-            }
-            return movableGameObjects;
-        }
-
     }
     /*
      * Takes care of all the game logic. Holds the Map, has access to the Painter and all the variables that 
@@ -142,6 +145,8 @@ namespace Pacman
     {
         private Map map;
         private Painter painter;
+
+        private Hero hero;
           
         private int pelletsEaten;
         
@@ -149,6 +154,7 @@ namespace Pacman
         {
             this.map = new Map();
             this.painter = new Painter(form, map);
+            this.hero = InputManager.GetHero();
         }
 
         public void Tick()
