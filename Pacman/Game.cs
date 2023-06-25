@@ -23,11 +23,11 @@
         /*
          * The sprites are just PNG images converted to a Bitmap to be rendered by the Painter class later.
          */
-        private static readonly Bitmap blankSprite = Properties.Resources.blank;
-        private static readonly Bitmap wallSprite = Properties.Resources.wall;
-        private static readonly Bitmap heroSprite = Properties.Resources.hero;
-        private static readonly Bitmap pelletSprite = Properties.Resources.pellet;
-        private static readonly Bitmap ghostSprite = Properties.Resources.ghost;
+        private static Bitmap blankSprite = Properties.Resources.blank;
+        private static Bitmap wallSprite = Properties.Resources.wall;
+        private static Bitmap heroSprite = Properties.Resources.hero;
+        private static Bitmap pelletSprite = Properties.Resources.pellet;
+        private static Bitmap ghostSprite = Properties.Resources.ghost;
 
         private static readonly string map = Properties.Resources.map;
 
@@ -36,6 +36,7 @@
         private static Hero hero;
 
         private static bool mapDataLoaded = false;
+        private static bool spriteSizeAdjusted = false;
 
         public static int GetCellSize()
         {
@@ -47,22 +48,42 @@
         }
         public static Bitmap GetBlankSprite()
         {
+            if (!spriteSizeAdjusted)
+            {
+                adjustSpriteSize();
+            }
             return blankSprite;
         }
         public static Bitmap GetWallSprite()
         {
+            if (!spriteSizeAdjusted)
+            {
+                adjustSpriteSize();
+            }
             return wallSprite;
         }
         public static Bitmap GetHeroSprite()
         {
+            if (!spriteSizeAdjusted)
+            {
+                adjustSpriteSize();
+            }
             return heroSprite;
         }
         public static Bitmap GetPelletSprite()
         {
+            if (!spriteSizeAdjusted)
+            {
+                adjustSpriteSize();
+            }
             return pelletSprite;
         }
         public static Bitmap GetGhostSprite()
         {
+            if (!spriteSizeAdjusted)
+            {
+                adjustSpriteSize();
+            }
             return ghostSprite;
         }
         public static Hero GetHero()
@@ -73,7 +94,7 @@
         {
             if (!mapDataLoaded)
             {
-                PrepareMapData();
+                prepareMapData();
                 mapDataLoaded = true;
             }
             return nonMovableGrid;
@@ -82,12 +103,12 @@
         {
             if (!mapDataLoaded)
             {
-                PrepareMapData();
+                prepareMapData();
                 mapDataLoaded = true;
             }
             return movableGameObjects;
         }
-        private static void PrepareMapData()
+        private static void prepareMapData()
         {
             string mapString = GetMap();
             string[] separated = mapString.Split(new[] { "\r\n" }, StringSplitOptions.None);
@@ -131,6 +152,15 @@
             }
 
             
+        }
+
+        private static void adjustSpriteSize()
+        {
+            blankSprite = new Bitmap(blankSprite, new Size(cellSize, cellSize));
+            wallSprite = new Bitmap(wallSprite, new Size(cellSize, cellSize));
+            heroSprite = new Bitmap(heroSprite, new Size(cellSize, cellSize));
+            pelletSprite = new Bitmap(pelletSprite, new Size(cellSize, cellSize));
+            ghostSprite = new Bitmap(ghostSprite, new Size(cellSize, cellSize));
         }
 
     }
@@ -336,11 +366,11 @@
         private Graphics formGraphics;
         private Form form;
 
-        private Bitmap blankSprite;
-        private Bitmap wallSprite;
-        private Bitmap heroSprite;
-        private Bitmap pelletSprite;
-        private Bitmap ghostSprite;
+        private Bitmap blankSprite = InputManager.GetBlankSprite();
+        private Bitmap wallSprite = InputManager.GetWallSprite();
+        private Bitmap heroSprite = InputManager.GetHeroSprite();
+        private Bitmap pelletSprite = InputManager.GetPelletSprite();
+        private Bitmap ghostSprite = InputManager.GetGhostSprite();
 
         private int spriteSize = InputManager.GetCellSize();
         public Painter(Form form, Map map)
@@ -348,7 +378,7 @@
             this.form = form;
             adjustFormSize(map);
             formGraphics = form.CreateGraphics(); 
-            loadSprites();
+            //loadSprites();
             //MessageBox.Show($"The sprite size is {spriteSize}");
 
         }
@@ -411,13 +441,13 @@
         /*
          * Initializes all the bitmaps for the corresponding GameObjects from the InputManager
          */
-        private void loadSprites()
-        {
-            blankSprite = new Bitmap(InputManager.GetBlankSprite(), new Size(spriteSize,spriteSize));
-            wallSprite = new Bitmap(InputManager.GetWallSprite(), new Size(spriteSize, spriteSize));
-            heroSprite = new Bitmap(InputManager.GetHeroSprite(), new Size(spriteSize, spriteSize));
-            pelletSprite = new Bitmap(InputManager.GetPelletSprite(), new Size(spriteSize, spriteSize));
-            ghostSprite = new Bitmap(InputManager.GetGhostSprite(), new Size(spriteSize, spriteSize));
-        }
+        //private void loadSprites()
+        //{
+        //    blankSprite = new Bitmap(InputManager.GetBlankSprite(), new Size(spriteSize,spriteSize));
+        //    wallSprite = new Bitmap(InputManager.GetWallSprite(), new Size(spriteSize, spriteSize));
+        //    heroSprite = new Bitmap(InputManager.GetHeroSprite(), new Size(spriteSize, spriteSize));
+        //    pelletSprite = new Bitmap(InputManager.GetPelletSprite(), new Size(spriteSize, spriteSize));
+        //    ghostSprite = new Bitmap(InputManager.GetGhostSprite(), new Size(spriteSize, spriteSize));
+        //}
     }
 }
