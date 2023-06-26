@@ -28,38 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            startButton = new Button();
-            endButton = new Button();
             SuspendLayout();
-            // 
-            // startButton
-            // 
-            startButton.Location = new Point(264, 156);
-            startButton.Margin = new Padding(4, 2, 4, 2);
-            startButton.Name = "startButton";
-            startButton.Size = new Size(217, 90);
-            startButton.TabIndex = 0;
-            startButton.Text = "Start Timer";
-            startButton.UseVisualStyleBackColor = true;
-            startButton.Click += startButton_click;
-            // 
-            // endButton
-            // 
-            endButton.Location = new Point(264, 67);
-            endButton.Name = "endButton";
-            endButton.Size = new Size(217, 84);
-            endButton.TabIndex = 1;
-            endButton.Text = "End Game";
-            endButton.UseVisualStyleBackColor = true;
-            endButton.Click += endButton_click;
             // 
             // GameForm
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(endButton);
-            Controls.Add(startButton);
             Margin = new Padding(4, 2, 4, 2);
             Name = "GameForm";
             Text = "Form1";
@@ -67,7 +42,5 @@
         }
 
         #endregion
-        private Button startButton;
-        private Button endButton;
     }
 }

@@ -5,6 +5,7 @@ namespace Pacman
 
         private GameManager gameManager;
         private System.Windows.Forms.Timer gameLoopTimer = new System.Windows.Forms.Timer();
+        private Button startButton = new Button();
         public GameForm()
         {
             InitializeComponent();
@@ -16,43 +17,35 @@ namespace Pacman
         private void initializeTimers()
         {
             gameLoopTimer.Interval = 500;
-            gameLoopTimer.Tick += tweenUpdate;
+            gameLoopTimer.Tick += UpdateGameLoop;
         }
         private void initializeForm()
         {
             initializeTimers();
             initializeStartButton();
-            initializeEndButton();
         }
         private void initializeStartButton()
         {
-            startButton.Visible = true;
+            startButton.Text = "Start Game";
+            startButton.Height = (ClientSize.Height / 10);
+            startButton.Width = (ClientSize.Width / 5);
             startButton.Left = (ClientSize.Width - startButton.Width) / 2;
             startButton.Top = (ClientSize.Height - startButton.Height) / 2;
+            startButton.Click += StartButton_Click;
+            startButton.Visible = true;
+            this.Controls.Add(startButton);
         }
-        private void initializeEndButton()
-        {
-            endButton.Visible = false;
-            endButton.Left = (ClientSize.Width - endButton.Width) / 2;
-            endButton.Top = (ClientSize.Height - endButton.Height) / 2;
-        }
-        private void tweenUpdate(object sender, EventArgs e)
+        private void UpdateGameLoop(object sender, EventArgs e)
         {
             gameManager.Tick();
             gameManager.Draw();
         }
-        private void startButton_click(object sender, EventArgs e)
+        private void StartButton_Click(object sender, EventArgs e)
         {
             startButton.Visible = false;
-            endButton.Visible = false;
             gameManager.Draw();
             gameLoopTimer.Enabled = true;
 
-        }
-        private void endButton_click(object sender, EventArgs e)
-        {
-            gameLoopTimer.Enabled = false;
-            Application.Exit();
         }
         protected override void OnKeyDown(KeyEventArgs e)
         {
