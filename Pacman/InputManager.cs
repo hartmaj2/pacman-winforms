@@ -18,7 +18,9 @@
         private const char pelletChar = 'P';
         private const char ghostChar = 'G';
 
-        private const int cellSize = 50;
+        private const int cellSize = 45;
+        private const int heroSpeed = 7; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
+        private const int ghostSpeed = 10;
 
         /*
          * The sprites are just PNG images converted to a Bitmap to be rendered by the Painter class later.
@@ -163,7 +165,7 @@
                             dynamicGrid[y, x] = new DynamicBlank();
                             break;
                         case heroChar:
-                            hero = new Hero(x, y);
+                            hero = new Hero(x, y, heroSpeed, cellSize);
                             tweeningMovableObjects.Add(hero);
                             staticGrid[y, x] = new StaticBlank();
                             dynamicGrid[y, x] = new DynamicBlank();
@@ -173,7 +175,7 @@
                             dynamicGrid[y, x] = new Pellet();
                             break;
                         case ghostChar:
-                            tweeningMovableObjects.Add(new Ghost(x, y));
+                            tweeningMovableObjects.Add(new Ghost(x, y, ghostSpeed, cellSize));
                             staticGrid[y, x] = new StaticBlank();
                             dynamicGrid[y, x] = new DynamicBlank();
                             break;

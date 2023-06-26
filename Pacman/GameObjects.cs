@@ -72,12 +72,11 @@
 
         protected bool isTweening;
 
-        public TweeningMovableObject(int gridX, int gridY)
+        public TweeningMovableObject(int gridX, int gridY, int speed, int mapCellSize)
         {
-            pixelX = gridX * InputManager.GetCellSize();
-            pixelY = gridY * InputManager.GetCellSize();
-            tweenSpeed = 5;
-            maxTweenFrame = InputManager.GetCellSize() / tweenSpeed;
+            pixelX = gridX * mapCellSize;
+            pixelY = gridY * mapCellSize;
+            SetTweenSpeed(speed, mapCellSize); // automatically adjust movements speed to be a multiple of cell size
             SetNotTweening();
         }
         public override void Move(Map map)
@@ -156,6 +155,19 @@
             isTweening = true;
             tweenFrame = 0;
         }
+        /*
+         * Because each movable object needs to end a tweening cycle at a precise grid location, we need the 
+         * cell size to be a multiple of the speed. This funciton takes care of readjusting the speed corectly.
+         */
+        protected void SetTweenSpeed(int speed,int cellSize)
+        {
+            while (cellSize % speed != 0)
+            {
+                speed--;
+            }
+            tweenSpeed = speed;
+            maxTweenFrame = cellSize / tweenSpeed;
+        }
     }
     /* 
      * Represents a blank space in the static grid. I wanted to be explicit and not relying on null. 
@@ -184,7 +196,7 @@
     {
 
         private Direction nextDirection;
-        public Hero(int x, int y) : base(x, y)
+        public Hero(int x, int y, int speed, int mapCellSize) : base(x, y, speed, mapCellSize)
         {
             direction.X = 1;
             direction.Y = 0;
@@ -229,7 +241,7 @@
      */
     class Ghost : TweeningMovableObject
     {
-        public Ghost(int x, int y) : base(x, y)
+        public Ghost(int x, int y, int speed, int maxCellSize) : base(x, y, speed, maxCellSize)
         {
             direction.X = 1;
             direction.Y = 0;
