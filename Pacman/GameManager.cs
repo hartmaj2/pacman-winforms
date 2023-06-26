@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-
-namespace Pacman
+﻿namespace Pacman
 {
      /*
      * Takes care of all the game logic. Holds the Map, has access to the Painter and all the variables that 
