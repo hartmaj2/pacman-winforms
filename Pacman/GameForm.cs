@@ -1,10 +1,10 @@
 namespace Pacman
 {
-    public partial class Form1 : Form
+    public partial class GameForm : Form
     {
 
         private GameManager gameManager;
-        public Form1()
+        public GameForm()
         {
             InitializeComponent();
             gameManager = new GameManager(this);
@@ -13,7 +13,6 @@ namespace Pacman
         }
         private void initializeForm()
         { 
-            this.Text = "Pacman Game " + count;
             initializeStartButton();
             initializeEndButton();
         }
