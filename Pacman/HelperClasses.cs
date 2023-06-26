@@ -5,6 +5,11 @@
      */
     struct Direction
     {
+        public static Direction Up { get; } = new Direction(0, -1);
+        public static Direction Right { get; } = new Direction(1, 0);
+        public static Direction Down { get; } = new Direction(0, 1);
+        public static Direction Left { get; } = new Direction(-1, 0);
+        public static Direction None { get; } = new Direction(0, 0);
         public int X { get; set; }
         public int Y { get; set; }
 
@@ -26,12 +31,6 @@
             }
             return false;
         }
-
-        public static Direction Up { get; } = new Direction(0, -1);
-        public static Direction Right { get; } = new Direction(1, 0);
-        public static Direction Down { get; } = new Direction(0, 1);
-        public static Direction Left { get; } = new Direction(-1, 0);
-        public static Direction None { get; } = new Direction(0, 0);
 
     }
     /*
