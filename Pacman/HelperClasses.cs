@@ -23,6 +23,7 @@
         private StaticGameObject[,] staticGrid;
         private DynamicGameObject[,] dynamicGrid;
         private List<MovableGameObject> movableObjects;
+        private List<TweeningMovableObject> tweeningMovableObjects;
 
         private int gridWidth;
         private int gridHeight;
@@ -75,6 +76,10 @@
         public List<MovableGameObject> GetMovableGameObjects()
         {
             return movableObjects;
+        }
+        public List<TweeningMovableObject> GetTweeningMovableObjects() 
+        {
+            return tweeningMovableObjects;
         }
     }
     /*
@@ -134,19 +139,16 @@
         {
             foreach  (MovableGameObject movableGameObject in map.GetMovableGameObjects())
             {
-                if (movableGameObject != null)
+                int xPos = movableGameObject.GetX();
+                int yPos = movableGameObject.GetY();
+                if (movableGameObject is Hero)
                 {
-                    int xPos = movableGameObject.GetX();
-                    int yPos = movableGameObject.GetY();
-                    if (movableGameObject is Hero)
-                    {
-                        bufferGraphics.DrawImage(heroSprite, spriteSize *  xPos, spriteSize * yPos);
-                    }
-                    if (movableGameObject is Ghost)
-                    {
-                        bufferGraphics.DrawImage(ghostSprite, spriteSize * xPos, spriteSize * yPos);
-                    }
+                    bufferGraphics.DrawImage(heroSprite, spriteSize *  xPos, spriteSize * yPos);
                 }
+                if (movableGameObject is Ghost)
+                {
+                    bufferGraphics.DrawImage(ghostSprite, spriteSize * xPos, spriteSize * yPos);
+                }  
             }
             formGraphics.DrawImageUnscaled(bufferBitmap, 0, 0);
         }
