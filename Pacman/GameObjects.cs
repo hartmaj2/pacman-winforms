@@ -92,6 +92,7 @@ namespace Pacman
                 TryStartTweenCycle(map);
                 ContinueTween();
             }
+            Wraparound(map);
         }
         protected virtual void TryStartTweenCycle(Map map)
         {
@@ -176,6 +177,25 @@ namespace Pacman
                 return true;
             }
             return false;
+        }
+        private void Wraparound(Map map)
+        {
+            if (pixelX < 0)
+            {
+                pixelX = map.GetPixelWidth() - map.GetCellSize() + pixelX;
+            }
+            if (pixelX > map.GetPixelWidth() - map.GetCellSize())
+            {
+                pixelX = pixelX - (map.GetPixelWidth() - map.GetCellSize());
+            }
+            if (pixelY < 0)
+            { 
+                pixelY = map.GetPixelHeight() - map.GetCellSize() + pixelY;
+            }
+            if (pixelY > map.GetPixelHeight() - map.GetCellSize())
+            {
+                pixelY = pixelY - (map.GetPixelHeight() - map.GetCellSize());
+            }
         }
     }
     /* 
