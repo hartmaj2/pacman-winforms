@@ -87,23 +87,22 @@
             {
                 ContinueTween();
             }
-            else
+            if (!isTweening)
             {
-                TryStartTweening(map);
+                TryStartTweenCycle(map);
+                ContinueTween();
             }
         }
-        protected virtual void TryStartTweening(Map map)
+        protected virtual void TryStartTweenCycle(Map map)
         {
             if (CanStartNextTween(map, direction))
             {
-                isTweening = true;
-                tweenFrame = 0;
+                SetTweening();
             }
             else
             {
                 ResetDirection();
             }
-
         }
         private void ContinueTween()
         {
@@ -115,10 +114,8 @@
             }
             else
             {
-                tweenFrame = 0;
-                isTweening = false;
-            }
-                
+                SetNotTweening();
+            }      
         }
         public int GetPixelX()
         {
@@ -150,6 +147,15 @@
         {
             direction.X = 0;
             direction.Y = 0;
+        }
+        protected void SetNotTweening()
+        {
+            isTweening = false;
+        }
+        protected void SetTweening()
+        {
+            isTweening = true;
+            tweenFrame = 0;
         }
     }
     /* 
@@ -190,7 +196,7 @@
             nextDirection = newDirection;
         }
 
-        protected override void TryStartTweening(Map map)
+        protected override void TryStartTweenCycle(Map map)
         {
             if (!nextDirection.Equals(direction.OppositeDirection()))
             {

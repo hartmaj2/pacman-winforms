@@ -9,7 +9,7 @@ namespace Pacman
         public const string startButtonText = "Start Game";
 
         public const int gameLoopTimerInterval = 10;
-        public const int tweenTicksPerDiscreteTick = 10;
+        //public const int tweenTicksPerDiscreteTick = 10;
     }
     public partial class GameForm : Form
     {
@@ -51,12 +51,12 @@ namespace Pacman
         }
         private void UpdateGameLoop(object sender, EventArgs e)
         {
-            tweenTickCounter++;
-            if (tweenTickCounter > FormConstantsManager.tweenTicksPerDiscreteTick)
-            {
-                gameManager.DiscreteTick();
-                tweenTickCounter = 0;
-            }
+            //tweenTickCounter++;
+            //if (tweenTickCounter > FormConstantsManager.tweenTicksPerDiscreteTick)
+            //{
+            //    gameManager.DiscreteTick();
+            //    tweenTickCounter = 0;
+            //}
             gameManager.TweenTick();
             gameManager.Draw();
         }
