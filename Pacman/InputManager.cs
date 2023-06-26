@@ -34,7 +34,7 @@
         private static StaticObject[,] staticGrid = GetStaticGrid();
         private static DynamicObject[,] dynamicGrid = GetDynamicGrid();
         private static List<DiscreteMovableObject> discreteMovableObjects = GetDiscreteMovableObjects();
-        private static List<TweeningMovableObject> tweeningMovableObjeccts = GetTweeningMovableObjects();
+        private static List<TweeningMovableObject> tweeningMovableObjects = GetTweeningMovableObjects();
         private static Hero hero = GetHero();
 
         private static bool mapDataLoaded = false;
@@ -130,7 +130,7 @@
                 prepareMapData();
                 mapDataLoaded = true;
             }
-            return tweeningMovableObjeccts;
+            return tweeningMovableObjects;
         }
         private static void prepareMapData()
         {
@@ -143,7 +143,7 @@
             staticGrid = new StaticObject[height, width];
             dynamicGrid = new DynamicObject[height, width];
             discreteMovableObjects = new List<DiscreteMovableObject>();
-            tweeningMovableObjeccts = new List<TweeningMovableObject>();
+            tweeningMovableObjects = new List<TweeningMovableObject>();
 
             for (int y = 0; y < height; y++)
             {
@@ -164,7 +164,7 @@
                             break;
                         case heroChar:
                             hero = new Hero(x, y);
-                            tweeningMovableObjeccts.Add(hero);
+                            tweeningMovableObjects.Add(hero);
                             staticGrid[y, x] = new StaticBlank();
                             dynamicGrid[y, x] = new DynamicBlank();
                             break;
@@ -173,7 +173,7 @@
                             dynamicGrid[y, x] = new Pellet();
                             break;
                         case ghostChar:
-                            discreteMovableObjects.Add(new Ghost(x, y));
+                            tweeningMovableObjects.Add(new Ghost(x, y));
                             staticGrid[y, x] = new StaticBlank();
                             dynamicGrid[y, x] = new DynamicBlank();
                             break;

@@ -228,12 +228,12 @@
     /* 
      * Enemies that will be chasing the player
      */
-    class Ghost : DiscreteMovableObject
+    class Ghost : TweeningMovableObject
     {
         public Ghost(int x, int y) : base(x, y)
         {
-            direction.X = 0;
-            direction.Y = 1;
+            direction.X = 1;
+            direction.Y = 0;
         }
 
     }

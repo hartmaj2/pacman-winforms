@@ -158,10 +158,7 @@
             {
                 int xPos = discreteMovableGameObject.GetGridX();
                 int yPos = discreteMovableGameObject.GetGridY();
-                if (discreteMovableGameObject is Ghost)
-                {
-                    bufferGraphics.DrawImage(ghostSprite, spriteSize * xPos, spriteSize * yPos);
-                }  
+                
             }
         }
         private void PaintTweeningMovableGameObjects(Map map)
@@ -174,13 +171,16 @@
                 {
                     bufferGraphics.DrawImage(heroSprite, xPos, yPos);
                 }
+                if (tweeningMovableGameObject is Ghost)
+                {
+                    bufferGraphics.DrawImage(ghostSprite, xPos, yPos);
+                }
             }
         }
         public void Paint(Map map)
         {
             ClearBuffer();
             PaintGrids(map);
-            PaintDiscreteMovableGameObjects(map);
             PaintTweeningMovableGameObjects(map);
             WriteBuffer();
         }

@@ -14,8 +14,6 @@ namespace Pacman
     public partial class GameForm : Form
     {
 
-        private int tweenTickCounter = 0;
-
         private GameManager gameManager;
         private System.Windows.Forms.Timer gameLoopTimer = new System.Windows.Forms.Timer();
         private Button startButton = new Button();
@@ -51,12 +49,6 @@ namespace Pacman
         }
         private void UpdateGameLoop(object sender, EventArgs e)
         {
-            //tweenTickCounter++;
-            //if (tweenTickCounter > FormConstantsManager.tweenTicksPerDiscreteTick)
-            //{
-            //    gameManager.DiscreteTick();
-            //    tweenTickCounter = 0;
-            //}
             gameManager.TweenTick();
             gameManager.Draw();
         }
