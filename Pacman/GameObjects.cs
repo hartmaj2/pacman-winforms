@@ -78,7 +78,7 @@
             pixelX = gridX * InputManager.GetCellSize();
             pixelY = gridY * InputManager.GetCellSize();
             tweenFrame = 0;
-            maxTweenFrame = 20;
+            maxTweenFrame = 10;
             tweenSpeed = 5;
         }
 

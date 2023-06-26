@@ -18,7 +18,7 @@
         private const char pelletChar = 'P';
         private const char ghostChar = 'G';
 
-        private const int cellSize = 100;
+        private const int cellSize = 50;
 
         /*
          * The sprites are just PNG images converted to a Bitmap to be rendered by the Painter class later.
