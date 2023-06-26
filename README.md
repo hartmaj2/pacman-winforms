@@ -80,6 +80,9 @@ The first grid is only formed of static non-movable objects and is used to deter
 
 The first list stores `DiscreteMovableObject` instances which move only from cell to cell. On the other hand the second list stores `TweeningMovableObject` instances which can be located in between grid cells at certain points in time.
 
+#### Painter
+Provides means to paint objects that live on the game map to the screen. It uses buffering to draw the game world. When writing game objects to the screen, it doesn't do it directly. It first writes them to a private bitmap and only after all game objects are drawn it pushes this buffer to the actual screen and really draws it.
+
 # Input data
 ## Map
 The map is input as a text file. To be concrete it is a character grid where each represents a different game object. The file where this map is stored is called `map.txt`
