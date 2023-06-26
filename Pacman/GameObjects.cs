@@ -251,6 +251,17 @@ namespace Pacman
             }
         }
 
+        public bool IsTouchingAnyGhost(List<Ghost> ghosts)
+        {
+            foreach (Ghost ghost in ghosts)
+            {
+                if (IsTouchingTweeningObject(ghost))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
     /*
      * Things that player eats and gets points for that

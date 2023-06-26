@@ -27,7 +27,11 @@
             {
                 tweeningMovableObject.Move(map);
             }
-            score = hero.GetPelletsEaten();
+            if (hero.IsTouchingAnyGhost(ghosts))
+            {
+                Console.WriteLine("I've touched a ghost and I liked iiitt");
+            }
+            UpdateScore();
         }
         public void Draw()
         {
@@ -36,6 +40,11 @@
         public void SetHeroNextDirection(Direction direction)
         {
             hero.SetNextDirection(direction);
+        }
+
+        private void UpdateScore()
+        {
+            score = hero.GetPelletsEaten();
         }
     }
 }
