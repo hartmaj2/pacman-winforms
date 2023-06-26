@@ -33,14 +33,12 @@
         }
         public void RotateRight()
         {
-            X = (X + 1) % 2;
-            Y = (Y + 1) % 2;
-            if (X == 0)
+            int temp = X; X = Y; Y = temp;
+            if (Y == 0)
             {
                 Y = -Y;
                 X = -X;
             }
-
         }
 
     }
