@@ -28,16 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            gameLoopTimer = new System.Windows.Forms.Timer(components);
             startButton = new Button();
             endButton = new Button();
             SuspendLayout();
-            // 
-            // gameLoopTimer
-            // 
-            gameLoopTimer.Interval = 1000;
-            gameLoopTimer.Tick += gameLoopTimer_Tick;
             // 
             // startButton
             // 
@@ -60,7 +53,7 @@
             endButton.UseVisualStyleBackColor = true;
             endButton.Click += endButton_click;
             // 
-            // Form1
+            // GameForm
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -68,14 +61,12 @@
             Controls.Add(endButton);
             Controls.Add(startButton);
             Margin = new Padding(4, 2, 4, 2);
-            Name = "Form1";
+            Name = "GameForm";
             Text = "Form1";
             ResumeLayout(false);
         }
 
         #endregion
-
-        private System.Windows.Forms.Timer gameLoopTimer;
         private Button startButton;
         private Button endButton;
     }
