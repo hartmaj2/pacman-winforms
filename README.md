@@ -47,27 +47,27 @@ The classes used in the program are:
 The `GameManager` class is the one that puts most of all the other classes together. It takes care of the game logic such as player lives, score, etc. It also has reference to the `Map` object which stores two grids. One for the `StaticObject` instances and the second for `DynamicObject` instances. The static game objects are the ones, that don't ever change throughout the game like walls etc. The dynamic ones are things that don't move but are going to change like pellets or other power-ups.
 
 ## Specific class information
-## GameForm.cs
-### FormConstantsManager
+### GameForm.cs
+#### FormConstantsManager
 Holds the constants used by the `GameForm` class. These include form labels, button size settings, timer intervals, etc.
 
 ### GameForm
 Takes care of the `Timer` to synchronize tick signals sent to `GameManager` which it also holds. Also takes care of the buttons.
 
-## InputManager.cs
+### InputManager.cs
 #### InputManager
 Provides abstraction on the input data. Prepares all the needed data and then provides an interface through which the game classes can fetch this data.
 
-## GameManager.cs
+### GameManager.cs
 #### GameManager
 Handles all the game logic and provides means of communication with the `Form`. It contains a `Map` reference so it can access all `GameObjects` that live on the game map. It also contains a `Painter` reference which it uses to paint on the form at predefined intervals.
 
-## GameObject.cs
-### DynamicBlank and StaticBlank
+### GameObject.cs
+#### DynamicBlank and StaticBlank
 I didn't like the idea of filling the grids with null values so I had to include two different objects that indicate that the cells are blank. The idea of having to be explicit about what kind of blank space it is should be helpful for future debugging. It will tell me more than just encountering a null value if there is something wrong with it.
 
-## HelperClasses.cs
-### Map
+### HelperClasses.cs
+#### Map
 Takes care of almost everything that has to do with the topological locations of different objects. Stores two 2D grids of `GameObject` instances and also two lists of movable objects.  
 
 The first grid is only formed of static non-movable objects and is used to determine if a certain place on the grid is free to be moved to or not. The second grid is used by non-movable objects that change throughout the game like `Pellet` instances or other power-ups.  
