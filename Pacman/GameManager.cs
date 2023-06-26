@@ -20,7 +20,6 @@
             hero = InputManager.GetHero();
             ghosts = InputManager.GetGhosts();
         }
-        
         public void Tick()
         {
             MoveAllTweeningMovableObjects();
@@ -35,12 +34,10 @@
         {
             hero.SetNextDirection(direction);
         }
-
         private void UpdateScore()
         {
             score = hero.GetPelletsEaten();
         }
-
         private void CheckGhostCollisions()
         {
             if (hero.IsTouchingAnyGhost(ghosts))
@@ -48,7 +45,6 @@
                 Console.WriteLine("I've touched a ghost and I liked iiitt");
             }
         }
-
         private void MoveAllTweeningMovableObjects()
         {
             foreach (TweeningMovableObject tweeningMovableObject in map.GetTweeningMovableObjects())

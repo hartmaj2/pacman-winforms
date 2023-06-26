@@ -169,7 +169,6 @@ namespace Pacman
             tweenSpeed = speed;
             maxTweenFrame = InputManager.GetCellSize() / tweenSpeed;
         }
-
         public bool IsTouchingTweeningObject(TweeningMovableObject other)
         {
             if (Math.Abs(other.pixelX - pixelX) < InputManager.GetCellSize() && Math.Abs(other.pixelY - pixelY) < InputManager.GetCellSize())
@@ -178,7 +177,6 @@ namespace Pacman
             }
             return false;
         }
-
     }
     /* 
      * Represents a blank space in the static grid. I wanted to be explicit and not relying on null. 
@@ -205,14 +203,13 @@ namespace Pacman
      */
     class Hero : TweeningMovableObject
     {
-
         private int pelletsEaten = 0;
         private Direction nextDirection;
+
         public Hero(int x, int y, int speed) : base(x, y, speed)
         {
             direction = Direction.Right;
         }
-
         private void TryEatPellet(Map map)
         {
             if (map.ContainsPellet(GetGridX(), GetGridY())) 
@@ -221,7 +218,6 @@ namespace Pacman
                 pelletsEaten++;
             }
         }
-
         public int GetPelletsEaten()
         {
             return pelletsEaten;
@@ -230,7 +226,6 @@ namespace Pacman
         {   
             nextDirection = newDirection;
         }
-
         protected override void TryStartTweenCycle(Map map)
         {
             TryEatPellet(map);
@@ -250,7 +245,6 @@ namespace Pacman
                 ResetDirection();
             }
         }
-
         public bool IsTouchingAnyGhost(List<Ghost> ghosts)
         {
             foreach (Ghost ghost in ghosts)
@@ -279,7 +273,6 @@ namespace Pacman
         {
             direction = Direction.Right;
         }
-
         protected override void TryStartTweenCycle(Map map)
         {
             if (!CanStartNextTween(map,direction))
@@ -291,6 +284,5 @@ namespace Pacman
                 SetTweening();
             }
         }
-
     }
 }
