@@ -4,7 +4,7 @@ namespace Pacman
     {
 
         private GameManager gameManager;
-        private System.Windows.Forms.Timer tweeningTimer = new System.Windows.Forms.Timer();
+        private System.Windows.Forms.Timer gameLoopTimer = new System.Windows.Forms.Timer();
         public GameForm()
         {
             InitializeComponent();
@@ -15,8 +15,8 @@ namespace Pacman
         }
         private void initializeTimers()
         {
-            tweeningTimer.Interval = 1000;
-            tweeningTimer.Tick += tweenUpdate;
+            gameLoopTimer.Interval = 500;
+            gameLoopTimer.Tick += tweenUpdate;
         }
         private void initializeForm()
         {
@@ -41,22 +41,17 @@ namespace Pacman
             gameManager.Tick();
             gameManager.Draw();
         }
-        private void gameLoopTimer_Tick(object sender, EventArgs e)
-        {
-            //gameManager.Tick();
-            //gameManager.Draw();
-        }
         private void startButton_click(object sender, EventArgs e)
         {
             startButton.Visible = false;
             endButton.Visible = false;
             gameManager.Draw();
-            tweeningTimer.Enabled = true;
+            gameLoopTimer.Enabled = true;
 
         }
         private void endButton_click(object sender, EventArgs e)
         {
-            tweeningTimer.Enabled = false;
+            gameLoopTimer.Enabled = false;
             Application.Exit();
         }
         protected override void OnKeyDown(KeyEventArgs e)
