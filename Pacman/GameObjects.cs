@@ -81,7 +81,6 @@
             maxTweenFrame = 10;
             tweenSpeed = 5;
         }
-
         public override void Move(Map map)
         { 
             if (isTweening)
@@ -99,6 +98,10 @@
             {
                 isTweening = true;
                 tweenFrame = 0;
+            }
+            else
+            {
+                ResetDirection();
             }
 
         }
@@ -143,6 +146,11 @@
         {
             return (pixelY + (InputManager.GetCellSize() / 2)) / InputManager.GetCellSize();
         }
+        protected void ResetDirection()
+        {
+            direction.X = 0;
+            direction.Y = 0;
+        }
     }
     /* 
      * Represents a blank space in the static grid. I wanted to be explicit and not relying on null. 
@@ -179,26 +187,26 @@
 
         public void SetNextDirection(Direction newDirection)
         {   
-            if (direction.X == 0 && direction.Y == 0)
-            {
-                nextDirection = newDirection;
-            }
-            else if (newDirection.X != -direction.X && newDirection.Y != -direction.Y)
-            { 
-                nextDirection = newDirection;
-            }
+            nextDirection = newDirection;
         }
 
         protected override void TryStartTweening(Map map)
         {
-            if (CanStartNextTween(map,nextDirection))
+            if (!nextDirection.Equals(direction.OppositeDirection()))
             {
-                direction = nextDirection;
+                if (CanStartNextTween(map, nextDirection))
+                {
+                    direction = nextDirection;
+                }
             }
             if (CanStartNextTween(map,direction))
             {
                 isTweening = true;
                 tweenFrame = 0;
+            }
+            else
+            {
+                ResetDirection();
             }
         }
 
