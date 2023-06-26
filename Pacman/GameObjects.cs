@@ -24,6 +24,7 @@
 
         protected Direction direction;
 
+        public abstract void Move(Map map);
         public abstract int GetGridX();
 
         public abstract int GetGridY();
@@ -39,7 +40,7 @@
             gridX = x;
             gridY = y;
         }
-        public void DiscreteMove(Map map)
+        public override void Move(Map map)
         {
             int newX = gridX + direction.X;
             int newY = gridY + direction.Y;
@@ -80,32 +81,41 @@
             maxTweenFrame = 20;
             tweenSpeed = 5;
         }
-        public void StartTweening(Map map)
+
+        public override void Move(Map map)
+        { 
+            if (isTweening)
+            {
+                ContinueTween();
+            }
+            else
+            {
+                TryStartTweening(map);
+            }
+        }
+        protected virtual void TryStartTweening(Map map)
         {
-            if (!isTweening && CanContinueTweening(map))
+            if (CanStartNextTween(map, direction))
             {
                 isTweening = true;
                 tweenFrame = 0;
             }
 
         }
-        public void Tween()
+        private void ContinueTween()
         {
-            if (isTweening)
+            if (tweenFrame < maxTweenFrame)
             {
-                if (tweenFrame < maxTweenFrame)
-                {
-                    tweenFrame++;
-                    pixelX += direction.X * tweenSpeed;
-                    pixelY += direction.Y * tweenSpeed;
-                }
-                else
-                {
-                    tweenFrame = 0;
-                    isTweening = false;
-                }
-                
+                tweenFrame++;
+                pixelX += direction.X * tweenSpeed;
+                pixelY += direction.Y * tweenSpeed;
             }
+            else
+            {
+                tweenFrame = 0;
+                isTweening = false;
+            }
+                
         }
         public int GetPixelX()
         {
@@ -115,11 +125,10 @@
         {
             return pixelY;
         }
-
-        private bool CanContinueTweening(Map map)
+        protected bool CanStartNextTween(Map map, Direction proposedDirection)
         {
-            int nextGridX = GetGridX() + direction.X;
-            int nextGridY = GetGridY() + direction.Y;
+            int nextGridX = GetGridX() + proposedDirection.X;
+            int nextGridY = GetGridY() + proposedDirection.Y;
             if (map.IsFreeCoordinate(nextGridX, nextGridY))
             {
                 return true;
@@ -160,17 +169,36 @@
      */
     class Hero : TweeningMovableObject
     {
+
+        private Direction nextDirection;
         public Hero(int x, int y) : base(x, y)
         {
             direction.X = 1;
             direction.Y = 0;
         }
 
-        public void SetDirection(Direction direction)
-        {
-            if (!isTweening)
+        public void SetNextDirection(Direction newDirection)
+        {   
+            if (direction.X == 0 && direction.Y == 0)
             {
-                this.direction = direction;
+                nextDirection = newDirection;
+            }
+            else if (newDirection.X != -direction.X && newDirection.Y != -direction.Y)
+            { 
+                nextDirection = newDirection;
+            }
+        }
+
+        protected override void TryStartTweening(Map map)
+        {
+            if (CanStartNextTween(map,nextDirection))
+            {
+                direction = nextDirection;
+            }
+            if (CanStartNextTween(map,direction))
+            {
+                isTweening = true;
+                tweenFrame = 0;
             }
         }
 

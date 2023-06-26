@@ -22,14 +22,14 @@
         {
             foreach (DiscreteMovableObject discreteMovingObject in map.GetDiscreteMovingObjects())
             {
-                discreteMovingObject.DiscreteMove(map);
+                discreteMovingObject.Move(map);
             }
         }
         public void TweenTick()
         {
             foreach (TweeningMovableObject tweeningMovableObject in map.GetTweeningMovableObjects())
             {
-                tweeningMovableObject.Tween();
+                tweeningMovableObject.Move(map);
             }
         }
         public void Draw()
@@ -38,8 +38,7 @@
         }
         public void SetHeroDirection(Direction direction)
         {
-            hero.SetDirection(direction);
-            hero.StartTweening(map);
+            hero.SetNextDirection(direction);
         }
     }
 }
