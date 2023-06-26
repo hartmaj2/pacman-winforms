@@ -16,9 +16,9 @@ namespace Pacman
 
         public GameManager(Form form)
         {
-            this.map = new Map();
-            this.painter = new Painter(form, map);
-            this.hero = InputManager.GetHero();
+            map = new Map();
+            painter = new Painter(form, map);
+            hero = InputManager.GetHero();
         }
         public void DiscreteTick()
         {
