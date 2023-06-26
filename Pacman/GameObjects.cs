@@ -58,6 +58,9 @@
         protected int pixelX;
         protected int pixelY;
 
+        protected int maxTweenFrame;
+        protected int tweenFrame;
+
         protected bool isTweening;
 
         public TweeningMovableObject(int gridX, int gridY, Map map) : base(gridX, gridY)
@@ -66,6 +69,8 @@
             pixelX = gridX * InputManager.GetCellSize();
             pixelY = gridY * InputManager.GetCellSize();
         }
+
+
     }
     /* 
      * Represents a blank space in the static grid. I wanted to be explicit and not relying on null. 
