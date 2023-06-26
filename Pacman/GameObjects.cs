@@ -21,37 +21,51 @@
     }
     abstract class MovableGameObject : DynamicGameObject
     {
-        protected int xPos;
-        protected int yPos;
+        protected int gridX;
+        protected int gridY;
         protected Direction direction;
 
         public MovableGameObject(int x, int y)
         {
-            xPos = x;
-            yPos = y;
+            gridX = x;
+            gridY = y;
         }
 
         public int GetX()
         {
-            return xPos;
+            return gridX;
         }
         public int GetY()
         {
-            return yPos;
+            return gridY;
         }
 
         public void Move(Map map)
         {
-            int newX = xPos + direction.X;
-            int newY = yPos + direction.Y;
+            int newX = gridX + direction.X;
+            int newY = gridY + direction.Y;
 
             if (map.IsFreeCoordinate(newX, newY))
             {
-                xPos += direction.X;
-                yPos += direction.Y;
+                gridX += direction.X;
+                gridY += direction.Y;
             }
         }
 
+    }
+    abstract class TweeningMovableObject : MovableGameObject
+    {
+        protected int pixelX;
+        protected int pixelY;
+
+        protected bool isTweening;
+
+        public TweeningMovableObject(int gridX, int gridY, Map map) : base(gridX, gridY)
+        {
+            isTweening = false;
+            pixelX = gridX * InputManager.GetCellSize();
+            pixelY = gridY * InputManager.GetCellSize();
+        }
     }
     /* 
      * Represents a blank space in the static grid. I wanted to be explicit and not relying on null. 
