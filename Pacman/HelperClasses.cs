@@ -3,7 +3,7 @@
     /*
      * Represents a 2D integer vector
      */
-    class Direction
+    struct Direction
     {
         public static Direction Up { get; } = new Direction(0, -1);
         public static Direction Right { get; } = new Direction(1, 0);
@@ -33,11 +33,12 @@
         }
         public void RotateRight()
         {
-            X = (1 + X) % 2;
-            Y = (1 + Y) % 2;
+            X = (X + 1) % 2;
+            Y = (Y + 1) % 2;
             if (X == 0)
             {
                 Y = -Y;
+                X = -X;
             }
 
         }

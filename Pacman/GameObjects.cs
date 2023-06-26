@@ -216,8 +216,7 @@
             }
             if (CanStartNextTween(map,direction))
             {
-                isTweening = true;
-                tweenFrame = 0;
+                SetTweening();
             }
             else
             {
@@ -242,6 +241,18 @@
         public Ghost(int x, int y, int speed, int maxCellSize) : base(x, y, speed, maxCellSize)
         {
             direction = Direction.Right;
+        }
+
+        protected override void TryStartTweenCycle(Map map)
+        {
+            if (!CanStartNextTween(map,direction))
+            {
+                direction.RotateRight();
+            }
+            else
+            {
+                SetTweening();
+            }
         }
 
     }
