@@ -41,7 +41,7 @@ namespace Pacman
         public void SetHeroDirection(Direction direction)
         {
             hero.SetDirection(direction);
-            hero.StartTweening(direction);
+            hero.StartTweening(map);
         }
     }
 }

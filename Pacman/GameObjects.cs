@@ -80,9 +80,9 @@
             maxTweenFrame = 20;
             tweenSpeed = 5;
         }
-        public void StartTweening(Direction direction)
+        public void StartTweening(Map map)
         {
-            if (!isTweening)
+            if (!isTweening && CanContinueTweening(map))
             {
                 isTweening = true;
                 tweenFrame = 0;
@@ -114,6 +114,17 @@
         public int GetPixelY()
         {
             return pixelY;
+        }
+
+        private bool CanContinueTweening(Map map)
+        {
+            int nextGridX = GetGridX() + direction.X;
+            int nextGridY = GetGridY() + direction.Y;
+            if (map.IsFreeCoordinate(nextGridX, nextGridY))
+            {
+                return true;
+            }
+            return false;
         }
         public override int GetGridX()
         {
