@@ -229,12 +229,9 @@ namespace Pacman
         protected override void TryStartTweenCycle(Map map)
         {
             TryEatPellet(map);
-            if (!nextDirection.Equals(direction.OppositeDirection()))
+            if (CanStartNextTween(map, nextDirection))
             {
-                if (CanStartNextTween(map, nextDirection))
-                {
-                    direction = nextDirection;
-                }
+                direction = nextDirection;
             }
             if (CanStartNextTween(map,direction))
             {
