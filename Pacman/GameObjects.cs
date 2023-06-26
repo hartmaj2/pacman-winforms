@@ -74,12 +74,11 @@
 
         public TweeningMovableObject(int gridX, int gridY)
         {
-            isTweening = false;
             pixelX = gridX * InputManager.GetCellSize();
             pixelY = gridY * InputManager.GetCellSize();
-            tweenFrame = 0;
-            maxTweenFrame = 10;
             tweenSpeed = 5;
+            maxTweenFrame = InputManager.GetCellSize() / tweenSpeed;
+            SetNotTweening();
         }
         public override void Move(Map map)
         { 
