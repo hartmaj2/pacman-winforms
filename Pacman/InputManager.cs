@@ -133,7 +133,6 @@
 
             staticGrid = new StaticObject[height, width];
             dynamicGrid = new DynamicObject[height, width];
-            discreteMovableObjects = new List<DiscreteMovableObject>();
             tweeningMovableObjects = new List<TweeningMovableObject>();
 
             for (int y = 0; y < height; y++)
