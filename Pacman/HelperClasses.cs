@@ -117,21 +117,19 @@
         }
         public bool IsFreeCoordinate(int x, int y)
         {
-            x = GetWrappedXCoordinate(x);
-            y = GetWrappedYCoordinate(y);
             if (staticGrid[y,x] is StaticBlank)
             {
                 return true;
             }
             return false;
         }
-        private int GetWrappedXCoordinate(int x)
+        public int GetWrappedXCoordinate(int x)
         {
             if (x > gridWidth - 1) return 0;
             if (x < 0) return gridWidth - 1;
             return x;
         }
-        private int GetWrappedYCoordinate(int y)
+        public int GetWrappedYCoordinate(int y)
         {
             if (y > gridHeight - 1) return 0;
             if (y < 0) return gridHeight - 1;

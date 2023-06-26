@@ -128,8 +128,8 @@ namespace Pacman
         }
         protected bool CanStartNextTween(Map map, Direction proposedDirection)
         {
-            int nextGridX = GetGridX() + proposedDirection.X;
-            int nextGridY = GetGridY() + proposedDirection.Y;
+            int nextGridX = map.GetWrappedXCoordinate(GetGridX() + proposedDirection.X);
+            int nextGridY = map.GetWrappedYCoordinate(GetGridY() + proposedDirection.Y);
             if (map.IsFreeCoordinate(nextGridX, nextGridY))
             {
                 return true;
