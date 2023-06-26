@@ -33,7 +33,7 @@
 
         private static StaticObject[,] staticGrid = GetStaticGrid();
         private static DynamicObject[,] dynamicGrid = GetDynamicGrid();
-        private static List<MovableObject> discreteMovableObjects = GetDiscreteMovableObjects();
+        private static List<DiscreteMovableObject> discreteMovableObjects = GetDiscreteMovableObjects();
         private static List<TweeningMovableObject> tweeningMovableObjeccts = GetTweeningMovableObjects();
         private static Hero hero = GetHero();
 
@@ -114,7 +114,7 @@
             }
             return staticGrid;
         }
-        public static List<MovableObject> GetDiscreteMovableObjects()
+        public static List<DiscreteMovableObject> GetDiscreteMovableObjects()
         {
             if (!mapDataLoaded)
             {
@@ -142,7 +142,7 @@
 
             staticGrid = new StaticObject[height, width];
             dynamicGrid = new DynamicObject[height, width];
-            discreteMovableObjects = new List<MovableObject>();
+            discreteMovableObjects = new List<DiscreteMovableObject>();
             tweeningMovableObjeccts = new List<TweeningMovableObject>();
 
             for (int y = 0; y < height; y++)

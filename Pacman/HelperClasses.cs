@@ -22,7 +22,7 @@
     {
         private StaticObject[,] staticGrid = InputManager.GetStaticGrid();
         private DynamicObject[,] dynamicGrid = InputManager.GetDynamicGrid();
-        private List<MovableObject> movableObjects = InputManager.GetDiscreteMovableObjects();
+        private List<DiscreteMovableObject> discreteMovableObjects = InputManager.GetDiscreteMovableObjects();
         private List<TweeningMovableObject> tweeningMovableObjects = InputManager.GetTweeningMovableObjects();
 
         private int gridWidth;
@@ -70,9 +70,9 @@
             }
             return false;
         }
-        public List<MovableObject> GetDiscreteMovingObjects()
+        public List<DiscreteMovableObject> GetDiscreteMovingObjects()
         {
-            return movableObjects;
+            return discreteMovableObjects;
         }
         public List<TweeningMovableObject> GetTweeningMovableObjects() 
         {
@@ -139,13 +139,13 @@
                 }
             }
         }
-        private void PaintMovableGameObjects(Map map)
+        private void PaintDiscreteMovableGameObjects(Map map)
         {
-            foreach  (MovableObject movableGameObject in map.GetDiscreteMovingObjects())
+            foreach  (DiscreteMovableObject discreteMovableGameObject in map.GetDiscreteMovingObjects())
             {
-                int xPos = movableGameObject.GetX();
-                int yPos = movableGameObject.GetY();
-                if (movableGameObject is Ghost)
+                int xPos = discreteMovableGameObject.GetGridX();
+                int yPos = discreteMovableGameObject.GetGridY();
+                if (discreteMovableGameObject is Ghost)
                 {
                     bufferGraphics.DrawImage(ghostSprite, spriteSize * xPos, spriteSize * yPos);
                 }  
@@ -167,7 +167,7 @@
         {
             ClearBuffer();
             PaintGrids(map);
-            PaintMovableGameObjects(map);
+            PaintDiscreteMovableGameObjects(map);
             PaintTweeningMovableGameObjects(map);
             WriteBuffer();
         }

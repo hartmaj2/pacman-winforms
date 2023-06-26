@@ -22,9 +22,9 @@ namespace Pacman
         }
         public void DiscreteTick()
         {
-            foreach (MovableObject discreteMovingObject in map.GetDiscreteMovingObjects())
+            foreach (DiscreteMovableObject discreteMovingObject in map.GetDiscreteMovingObjects())
             {
-                discreteMovingObject.Move(map);
+                discreteMovingObject.DiscreteMove(map);
             }
         }
         public void TweenTick()

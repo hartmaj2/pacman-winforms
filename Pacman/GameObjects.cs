@@ -20,27 +20,26 @@
 
     }
     abstract class MovableObject : DynamicObject
+    {       
+
+        protected Direction direction;
+
+        public abstract int GetGridX();
+
+        public abstract int GetGridY();
+
+    }
+    abstract class DiscreteMovableObject : MovableObject
     {
         protected int gridX;
         protected int gridY;
-        protected Direction direction;
 
-        public MovableObject(int x, int y)
+        public DiscreteMovableObject(int x, int y)
         {
             gridX = x;
             gridY = y;
         }
-
-        public int GetX()
-        {
-            return gridX;
-        }
-        public int GetY()
-        {
-            return gridY;
-        }
-
-        public void Move(Map map)
+        public void DiscreteMove(Map map)
         {
             int newX = gridX + direction.X;
             int newY = gridY + direction.Y;
@@ -50,6 +49,14 @@
                 gridX += direction.X;
                 gridY += direction.Y;
             }
+        }
+        public override int GetGridX()
+        {
+            return gridX;
+        }
+        public override int GetGridY()
+        {
+            return gridY;
         }
 
     }
@@ -64,7 +71,7 @@
 
         protected bool isTweening;
 
-        public TweeningMovableObject(int gridX, int gridY) : base(gridX, gridY)
+        public TweeningMovableObject(int gridX, int gridY)
         {
             isTweening = false;
             pixelX = gridX * InputManager.GetCellSize();
@@ -73,7 +80,6 @@
             maxTweenFrame = 20;
             tweenSpeed = 5;
         }
-
         public void StartTweening(Direction direction)
         {
             if (!isTweening)
@@ -83,7 +89,6 @@
             }
 
         }
-
         public void Tween()
         {
             if (isTweening)
@@ -102,15 +107,21 @@
                 
             }
         }
-
         public int GetPixelX()
         {
             return pixelX;
         }
-
         public int GetPixelY()
         {
             return pixelY;
+        }
+        public override int GetGridX()
+        {
+            return (pixelX + (InputManager.GetCellSize() / 2)) / InputManager.GetCellSize();
+        }
+        public override int GetGridY()
+        {
+            return (pixelY + (InputManager.GetCellSize() / 2)) / InputManager.GetCellSize();
         }
     }
     /* 
@@ -164,7 +175,7 @@
     /* 
      * Enemies that will be chasing the player
      */
-    class Ghost : MovableObject
+    class Ghost : DiscreteMovableObject
     {
         public Ghost(int x, int y) : base(x, y)
         {
