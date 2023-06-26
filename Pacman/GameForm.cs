@@ -9,7 +9,6 @@ namespace Pacman
         public const string startButtonText = "Start Game";
 
         public const int gameLoopTimerInterval = 10;
-        //public const int tweenTicksPerDiscreteTick = 10;
     }
     public partial class GameForm : Form
     {
@@ -68,16 +67,16 @@ namespace Pacman
             switch (e.KeyCode)
             {
                 case Keys.Up:
-                    newDirection = new Direction(0, -1);
+                    newDirection = Direction.Up;
                     break;
                 case Keys.Right:
-                    newDirection = new Direction(1, 0);
+                    newDirection = Direction.Right;
                     break;
                 case Keys.Down:
-                    newDirection = new Direction(0, 1);
+                    newDirection = Direction.Down;
                     break;
                 case Keys.Left:
-                    newDirection = new Direction(-1, 0);
+                    newDirection = Direction.Left;
                     break;
             }
 

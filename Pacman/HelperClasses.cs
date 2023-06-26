@@ -26,6 +26,14 @@
             }
             return false;
         }
+
+        public static Direction Up { get; } = new Direction(0, -1);
+        public static Direction Right { get; } = new Direction(1, 0);
+        public static Direction Down { get; } = new Direction(0, 1);
+        public static Direction Left { get; } = new Direction(-1, 0);
+
+
+
     }
     /*
      * Represents the topological space in which everything in the game lives. Has both a grid like map
