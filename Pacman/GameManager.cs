@@ -1,4 +1,6 @@
-﻿namespace Pacman
+﻿using System.Security.Cryptography;
+
+namespace Pacman
 {
      /*
      * Takes care of all the game logic. Holds the Map, has access to the Painter and all the variables that 
@@ -18,11 +20,18 @@
             this.painter = new Painter(form, map);
             this.hero = InputManager.GetHero();
         }
-        public void Tick()
+        public void DiscreteTick()
         {
-            foreach (MovableGameObject movableGameObject in map.GetMovableGameObjects())
+            foreach (MovableObject discreteMovingObject in map.GetDiscreteMovingObjects())
             {
-                movableGameObject.Move(map);
+                discreteMovingObject.Move(map);
+            }
+        }
+        public void TweenTick()
+        {
+            foreach (TweeningMovableObject tweeningMovableObject in map.GetTweeningMovableObjects())
+            {
+                tweeningMovableObject.Tween();
             }
         }
         public void Draw()
@@ -32,6 +41,7 @@
         public void SetHeroDirection(Direction direction)
         {
             hero.SetDirection(direction);
+            hero.StartTweening(direction);
         }
     }
 }

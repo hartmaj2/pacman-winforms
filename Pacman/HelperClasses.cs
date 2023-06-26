@@ -20,10 +20,10 @@
      */
     class Map
     {
-        private StaticGameObject[,] staticGrid = InputManager.GetStaticGrid();
-        private DynamicGameObject[,] dynamicGrid = InputManager.GetDynamicGrid();
-        private List<MovableGameObject> movableObjects = InputManager.GetMovableGameObjects();
-        private List<TweeningMovableGameObject> tweeningMovableObjects = InputManager.GetTweeningMovableGameObjects();
+        private StaticObject[,] staticGrid = InputManager.GetStaticGrid();
+        private DynamicObject[,] dynamicGrid = InputManager.GetDynamicGrid();
+        private List<MovableObject> movableObjects = InputManager.GetDiscreteMovableObjects();
+        private List<TweeningMovableObject> tweeningMovableObjects = InputManager.GetTweeningMovableObjects();
 
         private int gridWidth;
         private int gridHeight;
@@ -54,11 +54,11 @@
         {
             return gridHeight;
         }
-        public StaticGameObject GetStaticObjectAtCoordinates(int x, int y)
+        public StaticObject GetStaticObjectAtCoordinates(int x, int y)
         {
             return staticGrid[y,x];
         }
-        public DynamicGameObject GetDynamicObjectAtCoordinates(int x,int y)
+        public DynamicObject GetDynamicObjectAtCoordinates(int x,int y)
         {
             return dynamicGrid[y,x];
         }
@@ -70,11 +70,11 @@
             }
             return false;
         }
-        public List<MovableGameObject> GetMovableGameObjects()
+        public List<MovableObject> GetDiscreteMovingObjects()
         {
             return movableObjects;
         }
-        public List<TweeningMovableGameObject> GetTweeningMovableObjects() 
+        public List<TweeningMovableObject> GetTweeningMovableObjects() 
         {
             return tweeningMovableObjects;
         }
@@ -111,7 +111,7 @@
         }
         private void PaintStaticObjectAtCoordinate(Map map, int dx, int dy)
         {
-            StaticGameObject staticGameObject = map.GetStaticObjectAtCoordinates(dx, dy);
+            StaticObject staticGameObject = map.GetStaticObjectAtCoordinates(dx, dy);
             if (staticGameObject is Wall)
             {
                 bufferGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
@@ -119,7 +119,7 @@
         }
         private void PaintDynamicObjectAtCoordinate(Map map, int dx, int dy)
         {
-            DynamicGameObject dynamicGameObject = map.GetDynamicObjectAtCoordinates(dx, dy);
+            DynamicObject dynamicGameObject = map.GetDynamicObjectAtCoordinates(dx, dy);
             if (dynamicGameObject is Pellet)
             {
                 bufferGraphics.DrawImage(pelletSprite, spriteSize * dx, spriteSize * dy);
@@ -141,7 +141,7 @@
         }
         private void PaintMovableGameObjects(Map map)
         {
-            foreach  (MovableGameObject movableGameObject in map.GetMovableGameObjects())
+            foreach  (MovableObject movableGameObject in map.GetDiscreteMovingObjects())
             {
                 int xPos = movableGameObject.GetX();
                 int yPos = movableGameObject.GetY();
@@ -153,7 +153,7 @@
         }
         private void PaintTweeningMovableGameObjects(Map map)
         {
-            foreach (TweeningMovableGameObject tweeningMovableGameObject in map.GetTweeningMovableObjects())
+            foreach (TweeningMovableObject tweeningMovableGameObject in map.GetTweeningMovableObjects())
             {
                 int xPos = tweeningMovableGameObject.GetPixelX();
                 int yPos = tweeningMovableGameObject.GetPixelY();

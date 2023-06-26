@@ -8,10 +8,13 @@ namespace Pacman
         public const int startButtonWidthValue = 5;
         public const string startButtonText = "Start Game";
 
-        public const int gameLoopTimerInterval = 500;
+        public const int gameLoopTimerInterval = 10;
+        public const int tweenTicksPerDiscreteTick = 10;
     }
     public partial class GameForm : Form
     {
+
+        private int tweenTickCounter = 0;
 
         private GameManager gameManager;
         private System.Windows.Forms.Timer gameLoopTimer = new System.Windows.Forms.Timer();
@@ -48,7 +51,13 @@ namespace Pacman
         }
         private void UpdateGameLoop(object sender, EventArgs e)
         {
-            gameManager.Tick();
+            tweenTickCounter++;
+            if (tweenTickCounter > FormConstantsManager.tweenTicksPerDiscreteTick)
+            {
+                gameManager.DiscreteTick();
+                tweenTickCounter = 0;
+            }
+            gameManager.TweenTick();
             gameManager.Draw();
         }
         private void StartButton_Click(object sender, EventArgs e)

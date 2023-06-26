@@ -11,21 +11,21 @@
     /* 
      * Special type of GameObject that can also move around
      */
-    abstract class StaticGameObject
+    abstract class StaticObject
     {
 
     }
-    abstract class DynamicGameObject
+    abstract class DynamicObject
     {
 
     }
-    abstract class MovableGameObject : DynamicGameObject
+    abstract class MovableObject : DynamicObject
     {
         protected int gridX;
         protected int gridY;
         protected Direction direction;
 
-        public MovableGameObject(int x, int y)
+        public MovableObject(int x, int y)
         {
             gridX = x;
             gridY = y;
@@ -53,7 +53,7 @@
         }
 
     }
-    abstract class TweeningMovableGameObject : MovableGameObject
+    abstract class TweeningMovableObject : MovableObject
     {
         protected int pixelX;
         protected int pixelY;
@@ -64,7 +64,7 @@
 
         protected bool isTweening;
 
-        public TweeningMovableGameObject(int gridX, int gridY) : base(gridX, gridY)
+        public TweeningMovableObject(int gridX, int gridY) : base(gridX, gridY)
         {
             isTweening = false;
             pixelX = gridX * InputManager.GetCellSize();
@@ -117,18 +117,18 @@
      * Represents a blank space in the static grid. I wanted to be explicit and not relying on null. 
      * This can be useful for debugging purposes in the future.
      */
-    class StaticBlank : StaticGameObject
+    class StaticBlank : StaticObject
     {
 
     }
-    class DynamicBlank : DynamicGameObject
+    class DynamicBlank : DynamicObject
     {
 
     }
     /* 
      * A wall that the player will collide with.
      */
-    class Wall : StaticGameObject
+    class Wall : StaticObject
     {
 
     }
@@ -136,7 +136,7 @@
      * Main playable character of the game. So far I will make it non playable but will
      * add controls later.
      */
-    class Hero : TweeningMovableGameObject
+    class Hero : TweeningMovableObject
     {
         public Hero(int x, int y) : base(x, y)
         {
@@ -146,21 +146,25 @@
 
         public void SetDirection(Direction direction)
         {
-            this.direction = direction;
+            if (!isTweening)
+            {
+                this.direction = direction;
+            }
         }
+
 
     }
     /*
      * Things that player eats and gets points for that
      */
-    class Pellet : DynamicGameObject
+    class Pellet : DynamicObject
     {
 
     }
     /* 
      * Enemies that will be chasing the player
      */
-    class Ghost : MovableGameObject
+    class Ghost : MovableObject
     {
         public Ghost(int x, int y) : base(x, y)
         {

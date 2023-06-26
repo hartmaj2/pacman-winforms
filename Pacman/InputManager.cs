@@ -31,10 +31,10 @@
 
         private static readonly string map = Properties.Resources.map;
 
-        private static StaticGameObject[,] staticGrid = GetStaticGrid();
-        private static DynamicGameObject[,] dynamicGrid = GetDynamicGrid();
-        private static List<MovableGameObject> movableGameObjects = GetMovableGameObjects();
-        private static List<TweeningMovableGameObject> tweeningMovableGameObjects = GetTweeningMovableGameObjects();
+        private static StaticObject[,] staticGrid = GetStaticGrid();
+        private static DynamicObject[,] dynamicGrid = GetDynamicGrid();
+        private static List<MovableObject> discreteMovableObjects = GetDiscreteMovableObjects();
+        private static List<TweeningMovableObject> tweeningMovableObjeccts = GetTweeningMovableObjects();
         private static Hero hero = GetHero();
 
         private static bool mapDataLoaded = false;
@@ -96,7 +96,7 @@
             }
             return hero;
         }
-        public static DynamicGameObject[,] GetDynamicGrid()
+        public static DynamicObject[,] GetDynamicGrid()
         {
             if (!mapDataLoaded)
             {
@@ -105,7 +105,7 @@
             }
             return dynamicGrid;
         }
-        public static StaticGameObject[,] GetStaticGrid()
+        public static StaticObject[,] GetStaticGrid()
         {
             if (!mapDataLoaded)
             {
@@ -114,23 +114,23 @@
             }
             return staticGrid;
         }
-        public static List<MovableGameObject> GetMovableGameObjects()
+        public static List<MovableObject> GetDiscreteMovableObjects()
         {
             if (!mapDataLoaded)
             {
                 prepareMapData();
                 mapDataLoaded = true;
             }
-            return movableGameObjects;
+            return discreteMovableObjects;
         }
-        public static List<TweeningMovableGameObject> GetTweeningMovableGameObjects()
+        public static List<TweeningMovableObject> GetTweeningMovableObjects()
         {
             if (!mapDataLoaded)
             {
                 prepareMapData();
                 mapDataLoaded = true;
             }
-            return tweeningMovableGameObjects;
+            return tweeningMovableObjeccts;
         }
         private static void prepareMapData()
         {
@@ -140,10 +140,10 @@
             int height = separated.Length;
             int width = separated[0].Length;
 
-            staticGrid = new StaticGameObject[height, width];
-            dynamicGrid = new DynamicGameObject[height, width];
-            movableGameObjects = new List<MovableGameObject>();
-            tweeningMovableGameObjects = new List<TweeningMovableGameObject>();
+            staticGrid = new StaticObject[height, width];
+            dynamicGrid = new DynamicObject[height, width];
+            discreteMovableObjects = new List<MovableObject>();
+            tweeningMovableObjeccts = new List<TweeningMovableObject>();
 
             for (int y = 0; y < height; y++)
             {
@@ -164,7 +164,7 @@
                             break;
                         case heroChar:
                             hero = new Hero(x, y);
-                            tweeningMovableGameObjects.Add(hero);
+                            tweeningMovableObjeccts.Add(hero);
                             staticGrid[y, x] = new StaticBlank();
                             dynamicGrid[y, x] = new DynamicBlank();
                             break;
@@ -173,7 +173,7 @@
                             dynamicGrid[y, x] = new Pellet();
                             break;
                         case ghostChar:
-                            movableGameObjects.Add(new Ghost(x, y));
+                            discreteMovableObjects.Add(new Ghost(x, y));
                             staticGrid[y, x] = new StaticBlank();
                             dynamicGrid[y, x] = new DynamicBlank();
                             break;
