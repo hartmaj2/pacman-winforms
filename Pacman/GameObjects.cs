@@ -60,6 +60,7 @@
 
         protected int maxTweenFrame;
         protected int tweenFrame;
+        protected int tweenSpeed;
 
         protected bool isTweening;
 
@@ -68,6 +69,38 @@
             isTweening = false;
             pixelX = gridX * InputManager.GetCellSize();
             pixelY = gridY * InputManager.GetCellSize();
+            tweenFrame = 0;
+            maxTweenFrame = 20;
+            tweenSpeed = 5;
+        }
+
+        public void StartTweening(Direction direction)
+        {
+            if (!isTweening)
+            {
+                isTweening = true;
+                tweenFrame = 0;
+            }
+
+        }
+
+        public void Tween()
+        {
+            if (isTweening)
+            {
+                if (tweenFrame < maxTweenFrame)
+                {
+                    tweenFrame++;
+                    pixelX += direction.X * tweenSpeed;
+                    pixelY += direction.Y * tweenSpeed;
+                }
+                else
+                {
+                    tweenFrame = 0;
+                    isTweening = false;
+                }
+                
+            }
         }
 
 
