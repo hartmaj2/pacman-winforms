@@ -31,8 +31,7 @@
         public static Direction Right { get; } = new Direction(1, 0);
         public static Direction Down { get; } = new Direction(0, 1);
         public static Direction Left { get; } = new Direction(-1, 0);
-
-
+        public static Direction None { get; } = new Direction(0, 0);
 
     }
     /*
