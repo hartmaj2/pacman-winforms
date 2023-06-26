@@ -23,14 +23,8 @@
         
         public void Tick()
         {
-            foreach (TweeningMovableObject tweeningMovableObject in map.GetTweeningMovableObjects())
-            {
-                tweeningMovableObject.Move(map);
-            }
-            if (hero.IsTouchingAnyGhost(ghosts))
-            {
-                Console.WriteLine("I've touched a ghost and I liked iiitt");
-            }
+            MoveAllTweeningMovableObjects();
+            CheckGhostCollisions();
             UpdateScore();
         }
         public void Draw()
@@ -45,6 +39,22 @@
         private void UpdateScore()
         {
             score = hero.GetPelletsEaten();
+        }
+
+        private void CheckGhostCollisions()
+        {
+            if (hero.IsTouchingAnyGhost(ghosts))
+            {
+                Console.WriteLine("I've touched a ghost and I liked iiitt");
+            }
+        }
+
+        private void MoveAllTweeningMovableObjects()
+        {
+            foreach (TweeningMovableObject tweeningMovableObject in map.GetTweeningMovableObjects())
+            {
+                tweeningMovableObject.Move(map);
+            }
         }
     }
 }
