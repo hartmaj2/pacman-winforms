@@ -3,6 +3,12 @@ Jan Hartman, 1st year, group 38
 Summer Semester 2022/23  
 Programming NPRG031
 
+# Things to improve
+- Implement state machine design pattern so I can better handle different game states (IMPLEMENT USING INTERFACES)
+- Animations should be handled by objects themselves in some way (ADD ANIMATION CLASS AND SPRITE CLASS)
+- Load images using their name from a file
+- Automatic intersection identification
+
 # Introduction
 This program is supposed to be a simplified Pacman game for my university project. I am hoping to be able to implement all the well knows features such as Pacman preemptive direction setting and some simple ghost AI. The game is made in ***C# using Windows Forms***.
 
