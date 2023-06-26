@@ -132,7 +132,6 @@
         }
         private static void prepareMapData()
         {
-            Console.WriteLine("Map data loaded");
             mapDataLoaded = true;
 
             string mapString = GetMap();
