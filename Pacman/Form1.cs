@@ -3,8 +3,6 @@ namespace Pacman
     public partial class Form1 : Form
     {
 
-        public static int count = 0;
-
         private GameManager gameManager;
         public Form1()
         {
@@ -33,11 +31,8 @@ namespace Pacman
         } 
         private void gameLoopTimer_Tick(object sender, EventArgs e)
         {
-            this.Text = "Pacman Game " + count;
-            count++;
             gameManager.Tick();
             gameManager.Draw();
-
         }
         private void startButton_click(object sender, EventArgs e)
         {
