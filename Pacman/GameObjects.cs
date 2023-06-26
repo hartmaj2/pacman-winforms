@@ -143,8 +143,7 @@
         }
         protected void ResetDirection()
         {
-            direction.X = 0;
-            direction.Y = 0;
+            direction = Direction.None;
         }
         protected void SetNotTweening()
         {
@@ -198,8 +197,7 @@
         private Direction nextDirection;
         public Hero(int x, int y, int speed, int mapCellSize) : base(x, y, speed, mapCellSize)
         {
-            direction.X = 1;
-            direction.Y = 0;
+            direction = Direction.Right;
         }
 
         public void SetNextDirection(Direction newDirection)
@@ -243,8 +241,7 @@
     {
         public Ghost(int x, int y, int speed, int maxCellSize) : base(x, y, speed, maxCellSize)
         {
-            direction.X = 1;
-            direction.Y = 0;
+            direction = Direction.Right;
         }
 
     }

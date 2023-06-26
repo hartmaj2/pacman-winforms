@@ -62,7 +62,7 @@ namespace Pacman
         {
             base.OnKeyDown(e);
 
-            Direction newDirection = new Direction(0, 0);
+            Direction newDirection = Direction.None;
 
             switch (e.KeyCode)
             {
