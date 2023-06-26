@@ -18,24 +18,30 @@ The project is composed of four main code files. These are:
 The files are meant to separate logically different parts of the program. The main reason I did this was to not have to scroll all the way through the code to get to some parts of the program. This is also the reason why the classes should be separated logically. That will result in clearer orientation which in turn will make my code editing more efficient.
 
 ## Class list
-The classes used in the program are:  
-- InputManager
-- GameManager
-- GameObject
-- StaticGameObject
-- DynamicGameObject
-- MovableGameObject
-- StaticBlank
-- DynamicBlank
-- Wall
-- Hero
-- Pellet
-- Ghost
-- Map
-- Painter
+The classes used in the program are: 
+- InputManager.cs
+  - InputManager
+- GameManager.cs
+  - GameManager
+- GameObjects.cs
+  - GameObject
+  - MovableObject
+  - StaticObject
+  - DynamicObject
+  - DiscreteMovableObject
+  - TweeningMovableObject
+  - StaticBlank
+  - DynamicBlank
+  - Wall
+  - Hero
+  - Pellet
+  - Ghost
+- GelperClasses.cs
+  - Map
+  - Painter
 
 ## Class intercommunication
-The `GameManager` class is the one that puts most of all the other classes together. It takes care of the game logic such as player lives, score, etc. It also has reference to the `Map` object which stores two grids. One for the `StaticGameObject` instances and the second for `DynamicGameObject` instances. The static game objects are the ones, that don't ever change throughout the game like walls etc. The dynamic ones are things that don't move but are going to change like pellets or other power-ups.
+The `GameManager` class is the one that puts most of all the other classes together. It takes care of the game logic such as player lives, score, etc. It also has reference to the `Map` object which stores two grids. One for the `StaticObject` instances and the second for `DynamicObject` instances. The static game objects are the ones, that don't ever change throughout the game like walls etc. The dynamic ones are things that don't move but are going to change like pellets or other power-ups.
 
 ## Specific class information
 ### InputManager
@@ -48,9 +54,11 @@ Handles all the game logic and provides means of communication with the `Form`.
 I didn't like the idea of filling the grids with null values so I had to include two different objects that indicate that the cells are blank. The idea of having to be explicit about what kind of blank space it is should be helpful for future debugging. It will tell me more than just encountering a null value if there is something wrong with it.
 
 ### Map
-Takes care of almost everything that has to do with the topological locations of different objects. Stores two 2D grids of `GameObject` instances and also a 'List' of 'MovableGameObjects'. The first grid is only formed of static non-movable objects and is used to determine if a certain place on the grid is free to be moved to or not. The second grid is used by non-movable objects that change throughout the game like `Pellet` instances or other power-ups.  
+Takes care of almost everything that has to do with the topological locations of different objects. Stores two 2D grids of `GameObject` instances and also two lists of movable objects.  
 
-On the other hand, the list of movable characters is meant to be changing their locations constantly. This is one thing that the `Map` class doesn't take care of - the locations of these movable objects. They store their position themselves.
+The first grid is only formed of static non-movable objects and is used to determine if a certain place on the grid is free to be moved to or not. The second grid is used by non-movable objects that change throughout the game like `Pellet` instances or other power-ups.  
+
+The first list stores `DiscreteMovableObject` instances which move only from cell to cell. On the other hand the second list stores `TweeningMovableObject` instances which can be located in between grid cells at certain points in time.
 
 # Input data
 ## Map
