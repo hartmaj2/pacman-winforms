@@ -12,10 +12,10 @@
         /*
          * Sets how different game objects are represented in the map.txt file
          */
-        private const char blankChar = 'B';
-        private const char wallChar = 'W';
-        private const char heroChar = 'H';
-        private const char pelletChar = 'P';
+        private const char blankChar = '-';
+        private const char wallChar = '#';
+        private const char heroChar = 'P';
+        private const char pelletChar = '.';
         private const char ghostChar = 'G';
 
         private const int cellSize = 48;
