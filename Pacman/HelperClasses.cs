@@ -41,6 +41,16 @@
             }
         }
 
+        public void RotateLeft()
+        {
+            int temp = X; X = Y; Y = temp;
+            if (X == 0)
+            {
+                Y = -Y;
+                X = -X;
+            }
+        }
+
     }
     /*
      * Represents the topological space in which everything in the game lives. Has both a grid like map

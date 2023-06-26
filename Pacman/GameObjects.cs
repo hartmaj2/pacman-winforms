@@ -247,7 +247,7 @@
         {
             if (!CanStartNextTween(map,direction))
             {
-                direction.RotateRight();
+                direction.RotateLeft();
             }
             else
             {
