@@ -13,6 +13,19 @@
             X = x;
             Y = y;
         }
+        public Direction OppositeDirection()
+        {
+            return new Direction(-X, -Y);
+        }
+
+        public bool Equals(Direction other)
+        {
+            if (other.X == X && other.Y == Y)
+            {
+                return true;
+            }
+            return false;
+        }
     }
     /*
      * Represents the topological space in which everything in the game lives. Has both a grid like map
