@@ -18,8 +18,8 @@
         private const char pelletChar = 'P';
         private const char ghostChar = 'G';
 
-        private const int cellSize = 45;
-        private const int heroSpeed = 7; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
+        private const int cellSize = 48;
+        private const int heroSpeed = 12; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
         private const int ghostSpeed = 10;
 
         /*
@@ -33,11 +33,11 @@
 
         private static readonly string map = Properties.Resources.map;
 
-        private static StaticObject[,] staticGrid = GetStaticGrid();
-        private static DynamicObject[,] dynamicGrid = GetDynamicGrid();
-        private static List<DiscreteMovableObject> discreteMovableObjects = GetDiscreteMovableObjects();
-        private static List<TweeningMovableObject> tweeningMovableObjects = GetTweeningMovableObjects();
-        private static Hero hero = GetHero();
+        private static StaticObject[,] staticGrid;
+        private static DynamicObject[,] dynamicGrid;
+        private static List<DiscreteMovableObject> discreteMovableObjects;
+        private static List<TweeningMovableObject> tweeningMovableObjects;
+        private static Hero hero;
 
         private static bool mapDataLoaded = false;
         private static bool spriteSizeAdjusted = false;
@@ -92,7 +92,7 @@
         }
         public static Hero GetHero()
         {
-            if (hero == null)
+            if (!mapDataLoaded)
             {
                 prepareMapData();
             }
@@ -103,7 +103,6 @@
             if (!mapDataLoaded)
             {
                 prepareMapData();
-                mapDataLoaded = true;
             }
             return dynamicGrid;
         }
@@ -112,7 +111,6 @@
             if (!mapDataLoaded)
             {
                 prepareMapData();
-                mapDataLoaded = true;
             }
             return staticGrid;
         }
@@ -121,7 +119,6 @@
             if (!mapDataLoaded)
             {
                 prepareMapData();
-                mapDataLoaded = true;
             }
             return discreteMovableObjects;
         }
@@ -130,12 +127,14 @@
             if (!mapDataLoaded)
             {
                 prepareMapData();
-                mapDataLoaded = true;
             }
             return tweeningMovableObjects;
         }
         private static void prepareMapData()
         {
+            Console.WriteLine("Map data loaded");
+            mapDataLoaded = true;
+
             string mapString = GetMap();
             string[] separated = mapString.Split(new[] { "\r\n" }, StringSplitOptions.None);
 
