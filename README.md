@@ -63,6 +63,12 @@ Provides abstraction on the input data. Prepares all the needed data and then pr
 Handles all the game logic and provides means of communication with the `Form`. It contains a `Map` reference so it can access all `GameObjects` that live on the game map. It also contains a `Painter` reference which it uses to paint on the form at predefined intervals.
 
 ### GameObject.cs
+#### DiscreteMovableObject
+Represents an object which can only move by one grid cell at a time and nothing in between.
+
+### TweeningMovableObject
+These objects can move in between cells by a ratio of the cell size. It is important that the objects always finish one tween movement exactly inside some cell and not in between. Possible collisions with walls are calculated between a tween move interval starts.
+
 #### DynamicBlank and StaticBlank
 I didn't like the idea of filling the grids with null values so I had to include two different objects that indicate that the cells are blank. The idea of having to be explicit about what kind of blank space it is should be helpful for future debugging. It will tell me more than just encountering a null value if there is something wrong with it.
 
