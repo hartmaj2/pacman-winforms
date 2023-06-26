@@ -34,6 +34,7 @@
         private static StaticGameObject[,] staticGrid = GetStaticGrid();
         private static DynamicGameObject[,] dynamicGrid = GetDynamicGrid();
         private static List<MovableGameObject> movableGameObjects = GetMovableGameObjects();
+        private static List<TweeningMovableGameObject> tweeningMovableGameObjects = GetTweeningMovableGameObjects();
         private static Hero hero = GetHero();
 
         private static bool mapDataLoaded = false;
@@ -122,6 +123,15 @@
             }
             return movableGameObjects;
         }
+        public static List<TweeningMovableGameObject> GetTweeningMovableGameObjects()
+        {
+            if (!mapDataLoaded)
+            {
+                prepareMapData();
+                mapDataLoaded = true;
+            }
+            return tweeningMovableGameObjects;
+        }
         private static void prepareMapData()
         {
             string mapString = GetMap();
@@ -133,6 +143,7 @@
             staticGrid = new StaticGameObject[height, width];
             dynamicGrid = new DynamicGameObject[height, width];
             movableGameObjects = new List<MovableGameObject>();
+            tweeningMovableGameObjects = new List<TweeningMovableGameObject>();
 
             for (int y = 0; y < height; y++)
             {
@@ -153,7 +164,7 @@
                             break;
                         case heroChar:
                             hero = new Hero(x, y);
-                            movableGameObjects.Add(hero);
+                            tweeningMovableGameObjects.Add(hero);
                             staticGrid[y, x] = new StaticBlank();
                             dynamicGrid[y, x] = new DynamicBlank();
                             break;

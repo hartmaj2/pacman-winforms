@@ -27,8 +27,7 @@
         }
         public void Draw()
         {
-            painter.PaintGrids(map);
-            painter.PaintMovableGameObjects(map);
+            painter.Paint(map);
         }
         public void SetHeroDirection(Direction direction)
         {

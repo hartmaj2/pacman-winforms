@@ -53,7 +53,7 @@
         }
 
     }
-    abstract class TweeningMovableObject : MovableGameObject
+    abstract class TweeningMovableGameObject : MovableGameObject
     {
         protected int pixelX;
         protected int pixelY;
@@ -64,7 +64,7 @@
 
         protected bool isTweening;
 
-        public TweeningMovableObject(int gridX, int gridY, Map map) : base(gridX, gridY)
+        public TweeningMovableGameObject(int gridX, int gridY) : base(gridX, gridY)
         {
             isTweening = false;
             pixelX = gridX * InputManager.GetCellSize();
@@ -103,7 +103,15 @@
             }
         }
 
+        public int GetPixelX()
+        {
+            return pixelX;
+        }
 
+        public int GetPixelY()
+        {
+            return pixelY;
+        }
     }
     /* 
      * Represents a blank space in the static grid. I wanted to be explicit and not relying on null. 
@@ -128,7 +136,7 @@
      * Main playable character of the game. So far I will make it non playable but will
      * add controls later.
      */
-    class Hero : MovableGameObject
+    class Hero : TweeningMovableGameObject
     {
         public Hero(int x, int y) : base(x, y)
         {

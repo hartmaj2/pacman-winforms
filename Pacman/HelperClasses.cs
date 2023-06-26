@@ -20,10 +20,10 @@
      */
     class Map
     {
-        private StaticGameObject[,] staticGrid;
-        private DynamicGameObject[,] dynamicGrid;
-        private List<MovableGameObject> movableObjects;
-        private List<TweeningMovableObject> tweeningMovableObjects;
+        private StaticGameObject[,] staticGrid = InputManager.GetStaticGrid();
+        private DynamicGameObject[,] dynamicGrid = InputManager.GetDynamicGrid();
+        private List<MovableGameObject> movableObjects = InputManager.GetMovableGameObjects();
+        private List<TweeningMovableGameObject> tweeningMovableObjects = InputManager.GetTweeningMovableGameObjects();
 
         private int gridWidth;
         private int gridHeight;
@@ -32,9 +32,6 @@
 
         public Map()
         {
-            staticGrid = InputManager.GetStaticGrid();
-            dynamicGrid = InputManager.GetDynamicGrid();
-            movableObjects = InputManager.GetMovableGameObjects();
 
             gridWidth = staticGrid.GetLength(1);
             gridHeight = staticGrid.GetLength(0);
@@ -77,7 +74,7 @@
         {
             return movableObjects;
         }
-        public List<TweeningMovableObject> GetTweeningMovableObjects() 
+        public List<TweeningMovableGameObject> GetTweeningMovableObjects() 
         {
             return tweeningMovableObjects;
         }
@@ -104,6 +101,14 @@
             bufferBitmap = new Bitmap(map.GetPixelWidth(), map.GetPixelHeight());
             bufferGraphics = Graphics.FromImage(bufferBitmap);
         }
+        private void ClearBuffer()
+        {
+            bufferGraphics.Clear(Color.Black);
+        }
+        private void WriteBuffer()
+        {
+            formGraphics.DrawImageUnscaled(bufferBitmap, 0, 0);
+        }
         private void PaintStaticObjectAtCoordinate(Map map, int dx, int dy)
         {
             StaticGameObject staticGameObject = map.GetStaticObjectAtCoordinates(dx, dy);
@@ -120,9 +125,8 @@
                 bufferGraphics.DrawImage(pelletSprite, spriteSize * dx, spriteSize * dy);
             }
         }
-        public void PaintGrids(Map map)
+        private void PaintGrids(Map map)
         {
-            bufferGraphics.Clear(Color.Black);
             for (int dy = 0; dy < map.GetCoordinateHeight();dy++)
             {
                 for (int dx = 0; dx < map.GetCoordinateWidth(); dx++)
@@ -135,23 +139,37 @@
                 }
             }
         }
-        public void PaintMovableGameObjects(Map map)
+        private void PaintMovableGameObjects(Map map)
         {
             foreach  (MovableGameObject movableGameObject in map.GetMovableGameObjects())
             {
                 int xPos = movableGameObject.GetX();
                 int yPos = movableGameObject.GetY();
-                if (movableGameObject is Hero)
-                {
-                    bufferGraphics.DrawImage(heroSprite, spriteSize *  xPos, spriteSize * yPos);
-                }
                 if (movableGameObject is Ghost)
                 {
                     bufferGraphics.DrawImage(ghostSprite, spriteSize * xPos, spriteSize * yPos);
                 }  
             }
-            formGraphics.DrawImageUnscaled(bufferBitmap, 0, 0);
         }
-
+        private void PaintTweeningMovableGameObjects(Map map)
+        {
+            foreach (TweeningMovableGameObject tweeningMovableGameObject in map.GetTweeningMovableObjects())
+            {
+                int xPos = tweeningMovableGameObject.GetPixelX();
+                int yPos = tweeningMovableGameObject.GetPixelY();
+                if (tweeningMovableGameObject is Hero)
+                {
+                    bufferGraphics.DrawImage(heroSprite, xPos, yPos);
+                }
+            }
+        }
+        public void Paint(Map map)
+        {
+            ClearBuffer();
+            PaintGrids(map);
+            PaintMovableGameObjects(map);
+            PaintTweeningMovableGameObjects(map);
+            WriteBuffer();
+        }
     }
 }
