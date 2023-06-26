@@ -60,7 +60,6 @@
     {
         private StaticObject[,] staticGrid = InputManager.GetStaticGrid();
         private DynamicObject[,] dynamicGrid = InputManager.GetDynamicGrid();
-        private List<DiscreteMovableObject> discreteMovableObjects = InputManager.GetDiscreteMovableObjects();
         private List<TweeningMovableObject> tweeningMovableObjects = InputManager.GetTweeningMovableObjects();
 
         private int gridWidth;
@@ -119,10 +118,6 @@
                 return true;
             }
             return false;
-        }
-        public List<DiscreteMovableObject> GetDiscreteMovingObjects()
-        {
-            return discreteMovableObjects;
         }
         public List<TweeningMovableObject> GetTweeningMovableObjects() 
         {
@@ -219,7 +214,7 @@
 
         private void DisplayScore(int score)
         {
-            bufferGraphics.DrawString("Score: " + score, FormConstantsManager.textFont, FormConstantsManager.textBrush, 0, 0);
+            bufferGraphics.DrawString(FormConstantsManager.scoreText + " " + score, FormConstantsManager.textFont, FormConstantsManager.textBrush, 0, 0);
         }
     }
 }

@@ -35,7 +35,6 @@
 
         private static StaticObject[,] staticGrid;
         private static DynamicObject[,] dynamicGrid;
-        private static List<DiscreteMovableObject> discreteMovableObjects;
         private static List<TweeningMovableObject> tweeningMovableObjects;
         private static Hero hero;
 
@@ -113,14 +112,6 @@
                 prepareMapData();
             }
             return staticGrid;
-        }
-        public static List<DiscreteMovableObject> GetDiscreteMovableObjects()
-        {
-            if (!mapDataLoaded)
-            {
-                prepareMapData();
-            }
-            return discreteMovableObjects;
         }
         public static List<TweeningMovableObject> GetTweeningMovableObjects()
         {

@@ -12,6 +12,7 @@ namespace Pacman
 
         public static SolidBrush textBrush = new SolidBrush(Color.White);
         public static Font textFont = new Font("Arial", 16);
+        public const string scoreText = "Score:";
     }
     public partial class GameForm : Form
     {
