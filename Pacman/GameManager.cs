@@ -36,7 +36,7 @@
         {
             painter.Paint(map);
         }
-        public void SetHeroDirection(Direction direction)
+        public void SetHeroNextDirection(Direction direction)
         {
             hero.SetNextDirection(direction);
         }

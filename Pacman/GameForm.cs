@@ -80,7 +80,7 @@ namespace Pacman
                     break;
             }
 
-            gameManager.SetHeroDirection(newDirection);
+            gameManager.SetHeroNextDirection(newDirection);
 
         }
     }
