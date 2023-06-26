@@ -9,6 +9,9 @@ namespace Pacman
         public const string startButtonText = "Start Game";
 
         public const int gameLoopTimerInterval = 10;
+
+        public static SolidBrush textBrush = new SolidBrush(Color.White);
+        public static Font textFont = new Font("Arial", 16);
     }
     public partial class GameForm : Form
     {
@@ -48,7 +51,7 @@ namespace Pacman
         }
         private void UpdateGameLoop(object sender, EventArgs e)
         {
-            gameManager.TweenTick();
+            gameManager.Tick();
             gameManager.Draw();
         }
         private void StartButton_Click(object sender, EventArgs e)

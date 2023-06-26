@@ -76,6 +76,18 @@
 
         }
 
+        public void RemoveFromDynamicGrid(int gridX,  int gridY)
+        {
+            dynamicGrid[gridY, gridX] = new DynamicBlank();
+        }
+        public bool ContainsPellet(int gridX, int gridY)
+        {
+            if (dynamicGrid[gridY, gridX] is Pellet)
+            {
+                return true;
+            }
+            return false;
+        }
         public int GetPixelWidth()
         {
             return gridWidth * cellSize;
@@ -125,6 +137,7 @@
         private Graphics formGraphics;
         private Graphics bufferGraphics;
         private Bitmap bufferBitmap;
+        private Form gameForm;
 
         private Bitmap wallSprite = InputManager.GetWallSprite();
         private Bitmap heroSprite = InputManager.GetHeroSprite();
@@ -132,12 +145,14 @@
         private Bitmap ghostSprite = InputManager.GetGhostSprite();
 
         private int spriteSize = InputManager.GetCellSize();
+
         public Painter(Form form, Map map)
         {
             form.ClientSize = new Size(map.GetPixelWidth(), map.GetPixelHeight());
             formGraphics = form.CreateGraphics();
             bufferBitmap = new Bitmap(map.GetPixelWidth(), map.GetPixelHeight());
             bufferGraphics = Graphics.FromImage(bufferBitmap);
+            gameForm = form;
         }
         private void ClearBuffer()
         {
@@ -177,15 +192,6 @@
                 }
             }
         }
-        private void PaintDiscreteMovableGameObjects(Map map)
-        {
-            foreach  (DiscreteMovableObject discreteMovableGameObject in map.GetDiscreteMovingObjects())
-            {
-                int xPos = discreteMovableGameObject.GetGridX();
-                int yPos = discreteMovableGameObject.GetGridY();
-                
-            }
-        }
         private void PaintTweeningMovableGameObjects(Map map)
         {
             foreach (TweeningMovableObject tweeningMovableGameObject in map.GetTweeningMovableObjects())
@@ -202,12 +208,18 @@
                 }
             }
         }
-        public void Paint(Map map)
+        public void Paint(Map map, int score)
         {
             ClearBuffer();
             PaintGrids(map);
             PaintTweeningMovableGameObjects(map);
+            DisplayScore(score);
             WriteBuffer();
+        }
+
+        private void DisplayScore(int score)
+        {
+            bufferGraphics.DrawString("Score: " + score, FormConstantsManager.textFont, FormConstantsManager.textBrush, 0, 0);
         }
     }
 }

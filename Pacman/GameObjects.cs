@@ -1,4 +1,6 @@
-﻿namespace Pacman
+﻿using System.ComponentModel;
+
+namespace Pacman
 {
     /*
     * Everything that lives inside the game should inherit this. It has to be something that can 
@@ -194,12 +196,26 @@
     class Hero : TweeningMovableObject
     {
 
+        private int pelletsEaten = 0;
         private Direction nextDirection;
         public Hero(int x, int y, int speed, int mapCellSize) : base(x, y, speed, mapCellSize)
         {
             direction = Direction.Right;
         }
 
+        private void TryEatPellet(Map map)
+        {
+            if (map.ContainsPellet(GetGridX(), GetGridY())) 
+            {
+                map.RemoveFromDynamicGrid(GetGridX(), GetGridY());
+                pelletsEaten++;
+            }
+        }
+
+        public int GetPelletsEaten()
+        {
+            return pelletsEaten;
+        }
         public void SetNextDirection(Direction newDirection)
         {   
             nextDirection = newDirection;
@@ -207,6 +223,7 @@
 
         protected override void TryStartTweenCycle(Map map)
         {
+            TryEatPellet(map);
             if (!nextDirection.Equals(direction.OppositeDirection()))
             {
                 if (CanStartNextTween(map, nextDirection))
@@ -223,7 +240,6 @@
                 ResetDirection();
             }
         }
-
 
     }
     /*

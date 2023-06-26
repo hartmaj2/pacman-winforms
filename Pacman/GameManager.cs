@@ -10,7 +10,7 @@
         private Painter painter;
         private Hero hero;
 
-        private int pelletsEaten;
+        private int score;
 
         public GameManager(Form form)
         {
@@ -18,23 +18,18 @@
             painter = new Painter(form, map);
             hero = InputManager.GetHero();
         }
-        public void DiscreteTick()
-        {
-            foreach (DiscreteMovableObject discreteMovingObject in map.GetDiscreteMovingObjects())
-            {
-                discreteMovingObject.Move(map);
-            }
-        }
-        public void TweenTick()
+        
+        public void Tick()
         {
             foreach (TweeningMovableObject tweeningMovableObject in map.GetTweeningMovableObjects())
             {
                 tweeningMovableObject.Move(map);
             }
+            score = hero.GetPelletsEaten();
         }
         public void Draw()
         {
-            painter.Paint(map);
+            painter.Paint(map,score);
         }
         public void SetHeroNextDirection(Direction direction)
         {
