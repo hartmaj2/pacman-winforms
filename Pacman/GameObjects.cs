@@ -74,11 +74,11 @@ namespace Pacman
 
         protected bool isTweening;
 
-        public TweeningMovableObject(int gridX, int gridY, int speed, int mapCellSize)
+        public TweeningMovableObject(int gridX, int gridY, int speed)
         {
-            pixelX = gridX * mapCellSize;
-            pixelY = gridY * mapCellSize;
-            SetTweenSpeed(speed, mapCellSize); // automatically adjust movements speed to be a multiple of cell size
+            pixelX = gridX * InputManager.GetCellSize();
+            pixelY = gridY * InputManager.GetCellSize();
+            SetTweenSpeed(speed); // automatically adjust movements speed to be a multiple of cell size
             SetNotTweening();
         }
         public override void Move(Map map)
@@ -160,15 +160,25 @@ namespace Pacman
          * Because each movable object needs to end a tweening cycle at a precise grid location, we need the 
          * cell size to be a multiple of the speed. This funciton takes care of readjusting the speed corectly.
          */
-        protected void SetTweenSpeed(int speed,int cellSize)
+        protected void SetTweenSpeed(int speed)
         {
-            while (cellSize % speed != 0)
+            while (InputManager.GetCellSize() % speed != 0)
             {
                 speed--;
             }
             tweenSpeed = speed;
-            maxTweenFrame = cellSize / tweenSpeed;
+            maxTweenFrame = InputManager.GetCellSize() / tweenSpeed;
         }
+
+        public bool IsTouchingTweeningObject(TweeningMovableObject other)
+        {
+            if (Math.Abs(other.pixelX - pixelX) < InputManager.GetCellSize() && Math.Abs(other.pixelY - pixelY) < InputManager.GetCellSize())
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
     /* 
      * Represents a blank space in the static grid. I wanted to be explicit and not relying on null. 
@@ -198,7 +208,7 @@ namespace Pacman
 
         private int pelletsEaten = 0;
         private Direction nextDirection;
-        public Hero(int x, int y, int speed, int mapCellSize) : base(x, y, speed, mapCellSize)
+        public Hero(int x, int y, int speed) : base(x, y, speed)
         {
             direction = Direction.Right;
         }
@@ -254,7 +264,7 @@ namespace Pacman
      */
     class Ghost : TweeningMovableObject
     {
-        public Ghost(int x, int y, int speed, int maxCellSize) : base(x, y, speed, maxCellSize)
+        public Ghost(int x, int y, int speed) : base(x, y, speed)
         {
             direction = Direction.Right;
         }

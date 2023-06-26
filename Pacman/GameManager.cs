@@ -8,6 +8,7 @@
     {
         private Map map;
         private Painter painter;
+        private List<Ghost> ghosts;
         private Hero hero;
 
         private int score;
@@ -17,6 +18,7 @@
             map = new Map();
             painter = new Painter(form, map);
             hero = InputManager.GetHero();
+            ghosts = InputManager.GetGhosts();
         }
         
         public void Tick()
