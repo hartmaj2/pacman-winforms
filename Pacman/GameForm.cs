@@ -37,7 +37,7 @@ namespace Pacman
         private void initializeTimer()
         {
             gameLoopTimer.Interval = FormConstantsManager.gameLoopTimerInterval;
-            gameLoopTimer.Tick += UpdateGameLoop;
+            gameLoopTimer.Tick += GameLoopTick;
         }
         private void initializeStartButton()
         {
@@ -50,15 +50,15 @@ namespace Pacman
             startButton.Visible = true;
             this.Controls.Add(startButton);
         }
-        private void UpdateGameLoop(object sender, EventArgs e)
+        private void GameLoopTick(object sender, EventArgs e)
         {
-            gameManager.Tick();
-            gameManager.Draw();
+            gameManager.Update();
+            gameManager.Render();
         }
         private void StartButton_Click(object sender, EventArgs e)
         {
             startButton.Visible = false;
-            gameManager.Draw();
+            gameManager.Render();
             gameLoopTimer.Enabled = true;
 
         }

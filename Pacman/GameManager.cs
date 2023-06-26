@@ -20,13 +20,13 @@
             hero = InputManager.GetHero();
             ghosts = InputManager.GetGhosts();
         }
-        public void Tick()
+        public void Update()
         {
             MoveAllTweeningMovableObjects();
             CheckGhostCollisions();
             UpdateScore();
         }
-        public void Draw()
+        public void Render()
         {
             painter.Paint(map,score);
         }
