@@ -1,5 +1,12 @@
 namespace Pacman
 {
+    public static class FormConstantsManager
+    {
+        public const int buttonHeightValue = 10;
+        public const int buttonWidthValue = 5;
+
+        public const int gameLoopTimerInterval = 500;
+    }
     public partial class GameForm : Form
     {
 
@@ -16,7 +23,7 @@ namespace Pacman
         }
         private void initializeTimers()
         {
-            gameLoopTimer.Interval = 500;
+            gameLoopTimer.Interval = FormConstantsManager.gameLoopTimerInterval;
             gameLoopTimer.Tick += UpdateGameLoop;
         }
         private void initializeForm()
@@ -27,8 +34,8 @@ namespace Pacman
         private void initializeStartButton()
         {
             startButton.Text = "Start Game";
-            startButton.Height = (ClientSize.Height / 10);
-            startButton.Width = (ClientSize.Width / 5);
+            startButton.Height = (ClientSize.Height / FormConstantsManager.buttonHeightValue);
+            startButton.Width = (ClientSize.Width / FormConstantsManager.buttonWidthValue);
             startButton.Left = (ClientSize.Width - startButton.Width) / 2;
             startButton.Top = (ClientSize.Height - startButton.Height) / 2;
             startButton.Click += StartButton_Click;
