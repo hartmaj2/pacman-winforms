@@ -8,23 +8,46 @@ namespace Pacman
     */
     abstract class GameObject
     {
-
+        public abstract int GetGridX();
+        public abstract int GetGridY();
+        public double GetDistanceToCell(int x, int y)
+        {
+            return Math.Sqrt(Math.Pow(Math.Abs(x - GetGridX()), 2) + Math.Pow(Math.Abs(y - GetGridY()), 2));
+        }
     } 
+    abstract class GridObject
+    {
+        private int gridX;
+        private int gridY;
+        public GridObject(int x, int y)
+        {
+            this.gridX = x;
+            this.gridY = y;
+        }
+        public int GetGridX()
+        { 
+            return gridX; 
+        }
+        public int GetGridY() 
+        {  
+            return gridY; 
+        }
+    }
     /*
      * This is a game object that occupies a certain place on the grid but the player cannot interact with like walls
      * fences etc.
      */
-    abstract class StaticGridObject
+    abstract class StaticGridObject : GridObject
     {
-
+        public StaticGridObject(int x, int y) : base(x, y) { }
     }
     /*
      * These objects are not moving but can be eaten or otherwise interacted with by some kind of a player. 
      * They live on a different layer on the map
      */
-    abstract class InteractiveGridObject
+    abstract class InteractiveGridObject : GridObject
     {
-
+        public InteractiveGridObject(int x, int y) : base(x, y) { }
     }
     /* 
      * This is anything in the game that can move its position. It may be both something that can move 
@@ -34,11 +57,11 @@ namespace Pacman
     {       
 
         protected Direction direction;
-
+        public void TurnAround()
+        {
+            direction = direction.OppositeDirection();
+        }
         public abstract void Move(Map map);
-        public abstract int GetGridX();
-
-        public abstract int GetGridY();
 
         protected abstract bool IsReachableCell(int x, int y, Map map);
 
@@ -222,14 +245,16 @@ namespace Pacman
      */
     class StaticLayerBlankSpace : StaticGridObject
     {
-
+        public StaticLayerBlankSpace(int x, int y) : base(x, y) { }
     }
     class InteractiveLayerBlankSpace : InteractiveGridObject
     {
-
+        public InteractiveLayerBlankSpace(int x, int y) : base(x, y) { }
     }
     class Fence : StaticGridObject
     {
+        public Fence(int x, int y) : base(x, y) { }
+
         private bool open = false;
         public void Open()
         {
@@ -246,14 +271,14 @@ namespace Pacman
     }
     class GhostHome : StaticGridObject
     {
-
+        public GhostHome(int x, int y) : base(x, y) { }
     }
     /* 
      * A wall that the player will collide with.
      */
     class Wall : StaticGridObject
     {
-
+        public Wall(int x, int y) : base(x, y) { }
     }
     /*
      * Main playable character of the game. So far I will make it non playable but will
@@ -326,22 +351,28 @@ namespace Pacman
      */
     class Pellet : InteractiveGridObject
     {
-
+        public Pellet(int x, int y) : base(x, y) { }
     }
     /* 
      * Enemies that will be chasing the player
      */
     class Ghost : TweeningObjects
     {
+        private Point target;
+
         public Ghost(int x, int y, int speed) : base(x, y, speed)
         {
-            direction = Direction.Right;
+            direction = Direction.Up;
+            target = new Point(3, 3);
         }
         protected override void TryStartTweenCycle(Map map)
         {
             if (!CanStartNextTween(map,direction))
             {
-                direction.RotateLeft();
+                if (map.IsGhostHome(GetGridX(),GetGridY()))
+                {
+                    TurnAround();
+                }
             }
             else
             {

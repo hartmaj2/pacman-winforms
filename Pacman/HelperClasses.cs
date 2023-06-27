@@ -81,7 +81,7 @@
         }
         public void RemoveFromInteractiveGrid(int gridX,  int gridY)
         {
-            interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace();
+            interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace(gridX,gridY);
         }
         public bool ContainsPellet(int gridX, int gridY)
         {
@@ -125,7 +125,7 @@
         }
         public bool IsGhostHome(int x, int y)
         {
-            if (staticGrid[x, y]  is GhostHome)
+            if (staticGrid[x, y] is GhostHome)
             {
                 return true;
             }
