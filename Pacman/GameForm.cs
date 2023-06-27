@@ -11,7 +11,6 @@ namespace Pacman
         public const int startButtonWidthValue = 5;
         public const string startButtonText = "Start Game";
 
-        //public const int gameLoopTimerInterval = 10;
         public static readonly TimeSpan TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / 60);
 
         public static SolidBrush textBrush = new SolidBrush(Color.White);
@@ -28,15 +27,12 @@ namespace Pacman
         //HACK INIT END
 
         private GameManager gameManager;
-        private System.Windows.Forms.Timer gameLoopTimer = new System.Windows.Forms.Timer();
-        private Button startButton = new Button();
         public GameForm()
         {
             
             InitializeComponent();
             gameManager = new GameManager(this);
             this.KeyPreview = true; // makes sure that the form receives key events before their are passed to other components with focus
-            initializeForm();
             Application.Idle += HandleApplicationIdle;
 
         }
@@ -47,7 +43,7 @@ namespace Pacman
             NativeMessage result;
             return PeekMessage(out result, IntPtr.Zero, (uint)0, (uint)0, (uint)0) == 0;
         }
-        void HandleApplicationIdle (object sender, EventArgs e)
+        void HandleApplicationIdle(object sender, EventArgs e)
         {
             while(IsApplicatoinIdle())
             {
@@ -92,18 +88,6 @@ namespace Pacman
         public static extern int PeekMessage(out NativeMessage message, IntPtr window, uint filterMin, uint filterMax, uint remove);
 
         //HACK CODE END
-        private void initializeForm()
-        {
-            this.Text = FormConstantsManager.gameFormText;
-        }
-
-        private void StartButton_Click(object sender, EventArgs e)
-        {
-            startButton.Visible = false;
-            gameManager.Render();
-            gameLoopTimer.Enabled = true;
-
-        }
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
