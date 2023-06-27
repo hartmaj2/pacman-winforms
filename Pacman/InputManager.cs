@@ -141,8 +141,8 @@
             int height = separated.Length;
             int width = separated[0].Length;
 
-            staticGrid = new StaticGridObject[height, width];
-            dynamicGrid = new InteractiveGridObject[height, width];
+            staticGrid = new StaticGridObject[width, height];
+            dynamicGrid = new InteractiveGridObject[width, height];
             tweeningObjects = new List<TweeningObjects>();
             ghosts = new List<Ghost>();
 
@@ -156,33 +156,33 @@
                     switch (gameObjectChar)
                     {
                         case blankChar:
-                            staticGrid[y, x] = new StaticLayerBlankSpace();
-                            dynamicGrid[y, x] = new InteractiveLayerBlankSpace();
+                            staticGrid[x, y] = new StaticLayerBlankSpace();
+                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace();
                             break;
                         case wallChar:
-                            staticGrid[y, x] = new Wall();
-                            dynamicGrid[y, x] = new InteractiveLayerBlankSpace();
+                            staticGrid[x, y] = new Wall();
+                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace();
                             break;
                         case heroChar:
                             hero = new Hero(x, y, heroSpeed);
                             tweeningObjects.Add(hero);
-                            staticGrid[y, x] = new StaticLayerBlankSpace();
-                            dynamicGrid[y, x] = new InteractiveLayerBlankSpace();
+                            staticGrid[x, y] = new StaticLayerBlankSpace();
+                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace();
                             break;
                         case pelletChar:
-                            staticGrid[y, x] = new StaticLayerBlankSpace();
-                            dynamicGrid[y, x] = new Pellet();
+                            staticGrid[x, y] = new StaticLayerBlankSpace();
+                            dynamicGrid[x, y] = new Pellet();
                             break;
                         case ghostChar:
                             Ghost ghost = new Ghost(x, y, ghostSpeed);
                             tweeningObjects.Add(ghost);
                             ghosts.Add(ghost);
-                            staticGrid[y, x] = new GhostHome();
-                            dynamicGrid[y, x] = new InteractiveLayerBlankSpace();
+                            staticGrid[x, y] = new GhostHome();
+                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace();
                             break;
                         case ghostHomeChar:
-                            staticGrid[y, x] = new GhostHome();
-                            dynamicGrid[y, x] = new InteractiveLayerBlankSpace();
+                            staticGrid[x, y] = new GhostHome();
+                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace();
                             break;
 
                     }

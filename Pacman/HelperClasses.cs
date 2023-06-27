@@ -70,8 +70,8 @@
         public Map()
         {
 
-            gridWidth = staticGrid.GetLength(1);
-            gridHeight = staticGrid.GetLength(0);
+            gridWidth = staticGrid.GetLength(0);
+            gridHeight = staticGrid.GetLength(1);
 
         }
 
@@ -81,11 +81,11 @@
         }
         public void RemoveFromInteractiveGrid(int gridX,  int gridY)
         {
-            interactiveGrid[gridY, gridX] = new InteractiveLayerBlankSpace();
+            interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace();
         }
         public bool ContainsPellet(int gridX, int gridY)
         {
-            if (interactiveGrid[gridY, gridX] is Pellet)
+            if (interactiveGrid[gridX, gridY] is Pellet)
             {
                 return true;
             }
@@ -109,15 +109,15 @@
         }
         public StaticGridObject GetStaticGridObject(int x, int y)
         {
-            return staticGrid[y,x];
+            return staticGrid[x,y];
         }
         public InteractiveGridObject GetInteractiveGridObject(int x,int y)
         {
-            return interactiveGrid[y,x];
+            return interactiveGrid[x,y];
         }
         public bool IsFreeGridCell(int x, int y)
         {
-            if (staticGrid[y,x] is StaticLayerBlankSpace)
+            if (staticGrid[x,y] is StaticLayerBlankSpace)
             {
                 return true;
             }
@@ -138,6 +138,21 @@
         public List<TweeningObjects> GetTweeningObjects() 
         {
             return tweeningObjects;
+        }
+        private void LocateIntersections()
+        {
+            for (int i = 0; i < gridHeight; i++)
+            {
+                for (int j = 0 ; j < gridWidth; j++)
+                {
+
+                }
+            }
+        }
+
+        private bool IsAnIntersection(int x, int y)
+        {
+            return false;
         }
     }
     /*
