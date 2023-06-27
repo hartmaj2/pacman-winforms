@@ -73,6 +73,16 @@ namespace Pacman.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap fence {
+            get {
+                object obj = ResourceManager.GetObject("fence", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ghost {
             get {
                 object obj = ResourceManager.GetObject("ghost", resourceCulture);
@@ -101,12 +111,24 @@ namespace Pacman.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to WWWWWWWWWW
-        ///WBBBBHBBBW
-        ///WBBBBBBBBW
-        ///WBBBBBBBBW
-        ///WBBBBBBBBW
-        ///WWWWWWWWWW.
+        ///   Looks up a localized string similar to ----------------------------
+        ///----------------------------
+        ///############################
+        ///#............##............#
+        ///#.####.#####.##.#####.####.#
+        ///#-####.#####.##.#####.####-#
+        ///#.####.#####.##.#####.####.#
+        ///#..........................#
+        ///#.####.##.########.##.####.#
+        ///#.####.##.########.##.####.#
+        ///#......##....##....##......#
+        ///######.#####-##-#####.######
+        ///-----#.#####-##-#####.#-----
+        ///-----#.##----------##.#-----
+        ///-----#.##-##HHHH##-##.#-----
+        ///######.##-#HHHHHH#-##.######
+        ///------.---#HGHHHH#---.------
+        ///## [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string map {
             get {

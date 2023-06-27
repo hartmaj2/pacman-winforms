@@ -18,6 +18,7 @@
         private const char pelletChar = '.';
         private const char ghostChar = 'G';
         private const char ghostHomeChar = 'H';
+        private const char fenceChar = 'F';
 
         private const int cellSize = 48;
         private const int heroSpeed = 12; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
@@ -31,6 +32,7 @@
         private static Bitmap heroSprite = Properties.Resources.hero;
         private static Bitmap pelletSprite = Properties.Resources.pellet;
         private static Bitmap ghostSprite = Properties.Resources.ghost;
+        private static Bitmap fenceSprite = Properties.Resources.fence;
 
         private static readonly string map = Properties.Resources.map;
 
@@ -50,6 +52,14 @@
         public static string GetMap()
         {
             return map;
+        }
+        public static Bitmap GetFenceSprite()
+        {
+            if (!spriteSizeAdjusted)
+            {
+                adjustSpriteSize();
+            }
+            return fenceSprite;
         }
         public static Bitmap GetBlankSprite()
         {
@@ -184,7 +194,10 @@
                             staticGrid[x, y] = new GhostHome();
                             dynamicGrid[x, y] = new InteractiveLayerBlankSpace();
                             break;
-
+                        case fenceChar:
+                            staticGrid[x, y] = new Fence();
+                            dynamicGrid[x,y ] = new InteractiveLayerBlankSpace();
+                            break;
                     }
                 }
             }
@@ -198,6 +211,7 @@
             heroSprite = new Bitmap(heroSprite, new Size(cellSize, cellSize));
             pelletSprite = new Bitmap(pelletSprite, new Size(cellSize, cellSize));
             ghostSprite = new Bitmap(ghostSprite, new Size(cellSize, cellSize));
+            fenceSprite = new Bitmap(fenceSprite, new Size(cellSize, cellSize));
         }
 
     }

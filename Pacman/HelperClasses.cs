@@ -180,6 +180,7 @@
         private Bitmap heroSprite = InputManager.GetHeroSprite();
         private Bitmap pelletSprite = InputManager.GetPelletSprite();
         private Bitmap ghostSprite = InputManager.GetGhostSprite();
+        private Bitmap fenceSprite = InputManager.GetFenceSprite();
 
         private int spriteSize = InputManager.GetCellSize();
 
@@ -204,6 +205,13 @@
             if (staticGameObject is Wall)
             {
                 bufferGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
+            }
+            if (staticGameObject is Fence)
+            {
+                if (((Fence)staticGameObject).IsClosed())
+                {
+                    bufferGraphics.DrawImage(fenceSprite, spriteSize * dx, spriteSize * dy);
+                }
             }
         }
         private void PaintInteractiveGridObjectAtCoordinate(Map map, int dx, int dy)

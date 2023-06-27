@@ -228,13 +228,29 @@ namespace Pacman
     {
 
     }
-    /* 
-     * A wall that the player will collide with.
-     */
+    class Fence : StaticGridObject
+    {
+        private bool open = false;
+        public void Open()
+        {
+            open = true;
+        }
+        public void Close()
+        {
+            open = false;
+        }
+        public bool IsClosed()
+        {
+            return !open;
+        }
+    }
     class GhostHome : StaticGridObject
     {
 
     }
+    /* 
+     * A wall that the player will collide with.
+     */
     class Wall : StaticGridObject
     {
 
