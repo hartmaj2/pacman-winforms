@@ -23,7 +23,7 @@
         public void Update(Keys keyPressed)
         {
             CheckKeyPressed(keyPressed);
-            MoveAllTweeningMovableObjects();
+            MoveAllTweeningObjects();
             CheckGhostCollisions();
             UpdateScore();
         }
@@ -61,11 +61,11 @@
                 Console.WriteLine("I've touched a ghost and I liked iiitt");
             }
         }
-        private void MoveAllTweeningMovableObjects()
+        private void MoveAllTweeningObjects()
         {
-            foreach (TweeningMovableObject tweeningMovableObject in map.GetTweeningMovableObjects())
+            foreach (TweeningObjects tweeningObject in map.GetTweeningObjects())
             {
-                tweeningMovableObject.Move(map);
+                tweeningObject.Move(map);
             }
         }
     }

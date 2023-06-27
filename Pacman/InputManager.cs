@@ -33,9 +33,9 @@
 
         private static readonly string map = Properties.Resources.map;
 
-        private static StaticObject[,] staticGrid;
-        private static DynamicObject[,] dynamicGrid;
-        private static List<TweeningMovableObject> tweeningMovableObjects;
+        private static StaticGridObject[,] staticGrid;
+        private static InteractiveGridObject[,] dynamicGrid;
+        private static List<TweeningObjects> tweeningObjects;
         private static Hero hero;
         private static List<Ghost> ghosts;
 
@@ -106,7 +106,7 @@
             }
             return ghosts;
         }
-        public static DynamicObject[,] GetDynamicGrid()
+        public static InteractiveGridObject[,] GetDynamicGrid()
         {
             if (!mapDataLoaded)
             {
@@ -114,7 +114,7 @@
             }
             return dynamicGrid;
         }
-        public static StaticObject[,] GetStaticGrid()
+        public static StaticGridObject[,] GetStaticGrid()
         {
             if (!mapDataLoaded)
             {
@@ -122,13 +122,13 @@
             }
             return staticGrid;
         }
-        public static List<TweeningMovableObject> GetTweeningMovableObjects()
+        public static List<TweeningObjects> GetTweeningObjects()
         {
             if (!mapDataLoaded)
             {
                 prepareMapData();
             }
-            return tweeningMovableObjects;
+            return tweeningObjects;
         }
         private static void prepareMapData()
         {
@@ -140,9 +140,9 @@
             int height = separated.Length;
             int width = separated[0].Length;
 
-            staticGrid = new StaticObject[height, width];
-            dynamicGrid = new DynamicObject[height, width];
-            tweeningMovableObjects = new List<TweeningMovableObject>();
+            staticGrid = new StaticGridObject[height, width];
+            dynamicGrid = new InteractiveGridObject[height, width];
+            tweeningObjects = new List<TweeningObjects>();
             ghosts = new List<Ghost>();
 
             for (int y = 0; y < height; y++)
@@ -155,29 +155,29 @@
                     switch (gameObjectChar)
                     {
                         case blankChar:
-                            staticGrid[y, x] = new StaticBlank();
-                            dynamicGrid[y, x] = new DynamicBlank();
+                            staticGrid[y, x] = new StaticLayerBlankSpace();
+                            dynamicGrid[y, x] = new InteractiveLayerBlankSpace();
                             break;
                         case wallChar:
                             staticGrid[y, x] = new Wall();
-                            dynamicGrid[y, x] = new DynamicBlank();
+                            dynamicGrid[y, x] = new InteractiveLayerBlankSpace();
                             break;
                         case heroChar:
                             hero = new Hero(x, y, heroSpeed);
-                            tweeningMovableObjects.Add(hero);
-                            staticGrid[y, x] = new StaticBlank();
-                            dynamicGrid[y, x] = new DynamicBlank();
+                            tweeningObjects.Add(hero);
+                            staticGrid[y, x] = new StaticLayerBlankSpace();
+                            dynamicGrid[y, x] = new InteractiveLayerBlankSpace();
                             break;
                         case pelletChar:
-                            staticGrid[y, x] = new StaticBlank();
+                            staticGrid[y, x] = new StaticLayerBlankSpace();
                             dynamicGrid[y, x] = new Pellet();
                             break;
                         case ghostChar:
                             Ghost ghost = new Ghost(x, y, ghostSpeed);
-                            tweeningMovableObjects.Add(ghost);
+                            tweeningObjects.Add(ghost);
                             ghosts.Add(ghost);
-                            staticGrid[y, x] = new StaticBlank();
-                            dynamicGrid[y, x] = new DynamicBlank();
+                            staticGrid[y, x] = new StaticLayerBlankSpace();
+                            dynamicGrid[y, x] = new InteractiveLayerBlankSpace();
                             break;
 
                     }

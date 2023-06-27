@@ -58,9 +58,9 @@
      */
     class Map
     {
-        private StaticObject[,] staticGrid = InputManager.GetStaticGrid();
-        private DynamicObject[,] dynamicGrid = InputManager.GetDynamicGrid();
-        private List<TweeningMovableObject> tweeningMovableObjects = InputManager.GetTweeningMovableObjects();
+        private StaticGridObject[,] staticGrid = InputManager.GetStaticGrid();
+        private InteractiveGridObject[,] interactiveGrid = InputManager.GetDynamicGrid();
+        private List<TweeningObjects> tweeningObjects = InputManager.GetTweeningObjects();
 
         private int gridWidth;
         private int gridHeight;
@@ -79,13 +79,13 @@
         { 
             return cellSize; 
         }
-        public void RemoveFromDynamicGrid(int gridX,  int gridY)
+        public void RemoveFromInteractiveGrid(int gridX,  int gridY)
         {
-            dynamicGrid[gridY, gridX] = new DynamicBlank();
+            interactiveGrid[gridY, gridX] = new InteractiveLayerBlankSpace();
         }
         public bool ContainsPellet(int gridX, int gridY)
         {
-            if (dynamicGrid[gridY, gridX] is Pellet)
+            if (interactiveGrid[gridY, gridX] is Pellet)
             {
                 return true;
             }
@@ -99,25 +99,25 @@
         {
             return gridHeight * cellSize;
         }
-        public int GetCoordinateWidth()
+        public int GetGridWidth()
         {
             return gridWidth;
         }
-        public int GetCoordinateHeight()
+        public int GetGridHeight()
         {
             return gridHeight;
         }
-        public StaticObject GetStaticObjectAtCoordinates(int x, int y)
+        public StaticGridObject GetStaticGridObject(int x, int y)
         {
             return staticGrid[y,x];
         }
-        public DynamicObject GetDynamicObjectAtCoordinates(int x,int y)
+        public InteractiveGridObject GetInteractiveGridObject(int x,int y)
         {
-            return dynamicGrid[y,x];
+            return interactiveGrid[y,x];
         }
-        public bool IsFreeCoordinate(int x, int y)
+        public bool IsFreeGridCell(int x, int y)
         {
-            if (staticGrid[y,x] is StaticBlank)
+            if (staticGrid[y,x] is StaticLayerBlankSpace)
             {
                 return true;
             }
@@ -135,9 +135,9 @@
             if (y < 0) return gridHeight - 1;
             return y;
         }
-        public List<TweeningMovableObject> GetTweeningMovableObjects() 
+        public List<TweeningObjects> GetTweeningObjects() 
         {
-            return tweeningMovableObjects;
+            return tweeningObjects;
         }
     }
     /*
@@ -171,17 +171,17 @@
         {
             formGraphics.DrawImageUnscaled(bufferBitmap, 0, 0);
         }
-        private void PaintStaticObjectAtCoordinate(Map map, int dx, int dy)
+        private void PaintStaticGridObjectAtCoordinate(Map map, int dx, int dy)
         {
-            StaticObject staticGameObject = map.GetStaticObjectAtCoordinates(dx, dy);
+            StaticGridObject staticGameObject = map.GetStaticGridObject(dx, dy);
             if (staticGameObject is Wall)
             {
                 bufferGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
             }
         }
-        private void PaintDynamicObjectAtCoordinate(Map map, int dx, int dy)
+        private void PaintInteractiveGridObjectAtCoordinate(Map map, int dx, int dy)
         {
-            DynamicObject dynamicGameObject = map.GetDynamicObjectAtCoordinates(dx, dy);
+            InteractiveGridObject dynamicGameObject = map.GetInteractiveGridObject(dx, dy);
             if (dynamicGameObject is Pellet)
             {
                 bufferGraphics.DrawImage(pelletSprite, spriteSize * dx, spriteSize * dy);
@@ -189,21 +189,21 @@
         }
         private void PaintGrids(Map map)
         {
-            for (int dy = 0; dy < map.GetCoordinateHeight();dy++)
+            for (int dy = 0; dy < map.GetGridHeight();dy++)
             {
-                for (int dx = 0; dx < map.GetCoordinateWidth(); dx++)
+                for (int dx = 0; dx < map.GetGridWidth(); dx++)
                 {
                     
-                    PaintStaticObjectAtCoordinate(map, dx, dy);
+                    PaintStaticGridObjectAtCoordinate(map, dx, dy);
                     
-                    PaintDynamicObjectAtCoordinate(map, dx, dy);
+                    PaintInteractiveGridObjectAtCoordinate(map, dx, dy);
                     
                 }
             }
         }
-        private void PaintTweeningMovableGameObjects(Map map)
+        private void PaintTweeningObjects(Map map)
         {
-            foreach (TweeningMovableObject tweeningMovableGameObject in map.GetTweeningMovableObjects())
+            foreach (TweeningObjects tweeningMovableGameObject in map.GetTweeningObjects())
             {
                 int xPos = tweeningMovableGameObject.GetPixelX();
                 int yPos = tweeningMovableGameObject.GetPixelY();
@@ -221,11 +221,10 @@
         {
             ClearBuffer();
             PaintGrids(map);
-            PaintTweeningMovableGameObjects(map);
+            PaintTweeningObjects(map);
             DisplayScore(score);
             WriteBuffer();
         }
-
         private void DisplayScore(int score)
         {
             bufferGraphics.DrawString(FormConstantsManager.scoreText + " " + score, FormConstantsManager.textFont, FormConstantsManager.textBrush, 0, 0);

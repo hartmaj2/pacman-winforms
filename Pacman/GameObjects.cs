@@ -4,24 +4,33 @@ namespace Pacman
 {
     /*
     * Everything that lives inside the game should inherit this. It has to be something that can 
-    * occupy a grid and that can be drawn
+    * be located somewhere in the game world. It doesn't have to be moving. It can be walls, pellets, anything.
     */
     abstract class GameObject
     {
 
+    } 
+    /*
+     * This is a game object that occupies a certain place on the grid but the player cannot interact with like walls
+     * fences etc.
+     */
+    abstract class StaticGridObject
+    {
+
+    }
+    /*
+     * These objects are not moving but can be eaten or otherwise interacted with by some kind of a player. 
+     * They live on a different layer on the map
+     */
+    abstract class InteractiveGridObject
+    {
+
     }
     /* 
-     * Special type of GameObject that can also move around
+     * This is anything in the game that can move its position. It may be both something that can move 
+     * on the grid or something that moves independently of the grid.
      */
-    abstract class StaticObject
-    {
-
-    }
-    abstract class DynamicObject
-    {
-
-    }
-    abstract class MovableObject : DynamicObject
+    abstract class MovingObject : GameObject
     {       
 
         protected Direction direction;
@@ -32,12 +41,15 @@ namespace Pacman
         public abstract int GetGridY();
 
     }
-    abstract class DiscreteMovableObject : MovableObject
+    /*
+     * This is an object that can move but only in discrete steps ending somewhere on the game grid
+     */
+    abstract class DiscreteMovingObject : MovingObject
     {
         protected int gridX;
         protected int gridY;
 
-        public DiscreteMovableObject(int x, int y)
+        public DiscreteMovingObject(int x, int y)
         {
             gridX = x;
             gridY = y;
@@ -47,7 +59,7 @@ namespace Pacman
             int newX = gridX + direction.X;
             int newY = gridY + direction.Y;
 
-            if (map.IsFreeCoordinate(newX, newY))
+            if (map.IsFreeGridCell(newX, newY))
             {
                 gridX += direction.X;
                 gridY += direction.Y;
@@ -63,7 +75,11 @@ namespace Pacman
         }
 
     }
-    abstract class TweeningMovableObject : MovableObject
+    /* 
+     * These objects can move independently of the game grid but are able to tell you what would be their 
+     * corresponding location on the game grid
+     */
+    abstract class TweeningObjects : MovingObject
     {
         protected int pixelX;
         protected int pixelY;
@@ -74,7 +90,7 @@ namespace Pacman
 
         protected bool isTweening;
 
-        public TweeningMovableObject(int gridX, int gridY, int speed)
+        public TweeningObjects(int gridX, int gridY, int speed)
         {
             pixelX = gridX * InputManager.GetCellSize();
             pixelY = gridY * InputManager.GetCellSize();
@@ -130,7 +146,7 @@ namespace Pacman
         {
             int nextGridX = map.GetWrappedXCoordinate(GetGridX() + proposedDirection.X);
             int nextGridY = map.GetWrappedYCoordinate(GetGridY() + proposedDirection.Y);
-            if (map.IsFreeCoordinate(nextGridX, nextGridY))
+            if (map.IsFreeGridCell(nextGridX, nextGridY))
             {
                 return true;
             }
@@ -170,7 +186,7 @@ namespace Pacman
             tweenSpeed = speed;
             maxTweenFrame = InputManager.GetCellSize() / tweenSpeed;
         }
-        public bool IsTouchingTweeningObject(TweeningMovableObject other)
+        public bool IsTouchingTweeningObject(TweeningObjects other)
         {
             if (Math.Abs(other.pixelX - pixelX) < InputManager.GetCellSize() && Math.Abs(other.pixelY - pixelY) < InputManager.GetCellSize())
             {
@@ -202,18 +218,18 @@ namespace Pacman
      * Represents a blank space in the static grid. I wanted to be explicit and not relying on null. 
      * This can be useful for debugging purposes in the future.
      */
-    class StaticBlank : StaticObject
+    class StaticLayerBlankSpace : StaticGridObject
     {
 
     }
-    class DynamicBlank : DynamicObject
+    class InteractiveLayerBlankSpace : InteractiveGridObject
     {
 
     }
     /* 
      * A wall that the player will collide with.
      */
-    class Wall : StaticObject
+    class Wall : StaticGridObject
     {
 
     }
@@ -221,7 +237,7 @@ namespace Pacman
      * Main playable character of the game. So far I will make it non playable but will
      * add controls later.
      */
-    class Hero : TweeningMovableObject
+    class Hero : TweeningObjects
     {
         private int pelletsEaten = 0;
         private Direction nextDirection;
@@ -234,7 +250,7 @@ namespace Pacman
         {
             if (map.ContainsPellet(GetGridX(), GetGridY())) 
             {
-                map.RemoveFromDynamicGrid(GetGridX(), GetGridY());
+                map.RemoveFromInteractiveGrid(GetGridX(), GetGridY());
                 pelletsEaten++;
             }
         }
@@ -277,14 +293,14 @@ namespace Pacman
     /*
      * Things that player eats and gets points for that
      */
-    class Pellet : DynamicObject
+    class Pellet : InteractiveGridObject
     {
 
     }
     /* 
      * Enemies that will be chasing the player
      */
-    class Ghost : TweeningMovableObject
+    class Ghost : TweeningObjects
     {
         public Ghost(int x, int y, int speed) : base(x, y, speed)
         {
