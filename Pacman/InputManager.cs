@@ -17,6 +17,7 @@
         private const char heroChar = 'P';
         private const char pelletChar = '.';
         private const char ghostChar = 'G';
+        private const char ghostHomeChar = 'H';
 
         private const int cellSize = 48;
         private const int heroSpeed = 12; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
@@ -176,7 +177,11 @@
                             Ghost ghost = new Ghost(x, y, ghostSpeed);
                             tweeningObjects.Add(ghost);
                             ghosts.Add(ghost);
-                            staticGrid[y, x] = new StaticLayerBlankSpace();
+                            staticGrid[y, x] = new GhostHome();
+                            dynamicGrid[y, x] = new InteractiveLayerBlankSpace();
+                            break;
+                        case ghostHomeChar:
+                            staticGrid[y, x] = new GhostHome();
                             dynamicGrid[y, x] = new InteractiveLayerBlankSpace();
                             break;
 

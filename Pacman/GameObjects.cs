@@ -229,6 +229,14 @@ namespace Pacman
     /* 
      * A wall that the player will collide with.
      */
+    class GhostHome : StaticGridObject
+    {
+
+    }
+    class Intersection : StaticGridObject
+    {
+
+    }
     class Wall : StaticGridObject
     {
 
