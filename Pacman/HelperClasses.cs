@@ -123,6 +123,14 @@
             }
             return false;
         }
+        public bool IsGhostHome(int x, int y)
+        {
+            if (staticGrid[x, y]  is GhostHome)
+            {
+                return true;
+            }
+            return false;
+        }
         public int GetWrappedXCoordinate(int x)
         {
             if (x > gridWidth - 1) return 0;
@@ -139,19 +147,23 @@
         {
             return tweeningObjects;
         }
-        private void LocateIntersections()
-        {
-            for (int i = 0; i < gridHeight; i++)
-            {
-                for (int j = 0 ; j < gridWidth; j++)
-                {
-
-                }
-            }
-        }
-
         private bool IsAnIntersection(int x, int y)
         {
+            Direction direction = Direction.Up;
+            int blankSpacesCount = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                StaticGridObject neighboringCell = GetStaticGridObject(x + direction.X, y + direction.Y);
+                if (neighboringCell is StaticLayerBlankSpace)
+                {
+                    blankSpacesCount++;
+                }
+                direction.RotateRight();
+            }
+            if (blankSpacesCount > 3)
+            {
+                return true;
+            }
             return false;
         }
     }

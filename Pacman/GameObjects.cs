@@ -40,6 +40,8 @@ namespace Pacman
 
         public abstract int GetGridY();
 
+        protected abstract bool IsReachableCell(int x, int y, Map map);
+
     }
     /*
      * This is an object that can move but only in discrete steps ending somewhere on the game grid
@@ -146,7 +148,7 @@ namespace Pacman
         {
             int nextGridX = map.GetWrappedXCoordinate(GetGridX() + proposedDirection.X);
             int nextGridY = map.GetWrappedYCoordinate(GetGridY() + proposedDirection.Y);
-            if (map.IsFreeGridCell(nextGridX, nextGridY))
+            if (IsReachableCell(nextGridX, nextGridY,map))
             {
                 return true;
             }
@@ -233,10 +235,6 @@ namespace Pacman
     {
 
     }
-    class Intersection : StaticGridObject
-    {
-
-    }
     class Wall : StaticGridObject
     {
 
@@ -297,6 +295,15 @@ namespace Pacman
             }
             return false;
         }
+
+        protected override bool IsReachableCell(int x, int y, Map map)
+        {
+            if (map.IsFreeGridCell(x,y))
+            {
+                return true;
+            }
+            return false;
+        }
     }
     /*
      * Things that player eats and gets points for that
@@ -324,6 +331,15 @@ namespace Pacman
             {
                 SetTweening();
             }
+        }
+
+        protected override bool IsReachableCell(int x, int y, Map map)
+        {
+            if (map.IsFreeGridCell(x,y) || map.IsGhostHome(x,y))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
