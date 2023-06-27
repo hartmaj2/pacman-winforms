@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
 namespace Pacman
 {
     public static class FormConstantsManager
@@ -8,7 +11,8 @@ namespace Pacman
         public const int startButtonWidthValue = 5;
         public const string startButtonText = "Start Game";
 
-        public const int gameLoopTimerInterval = 10;
+        //public const int gameLoopTimerInterval = 10;
+        public static readonly TimeSpan TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / 60);
 
         public static SolidBrush textBrush = new SolidBrush(Color.White);
         public static Font textFont = new Font("Arial", 16);
@@ -17,28 +21,88 @@ namespace Pacman
     public partial class GameForm : Form
     {
 
+        // HACK INIT
+        Stopwatch stopWatch = Stopwatch.StartNew();
+        TimeSpan accumulatedTime;
+        TimeSpan lastTime;
+        //HACK INIT END
+
         private GameManager gameManager;
         private System.Windows.Forms.Timer gameLoopTimer = new System.Windows.Forms.Timer();
         private Button startButton = new Button();
         public GameForm()
         {
+            
             InitializeComponent();
             gameManager = new GameManager(this);
             this.KeyPreview = true; // makes sure that the form receives key events before their are passed to other components with focus
             initializeForm();
+            Application.Idle += HandleApplicationIdle;
 
         }
+        
+        //HACK CODE
+        bool IsApplicatoinIdle()
+        {
+            NativeMessage result;
+            return PeekMessage(out result, IntPtr.Zero, (uint)0, (uint)0, (uint)0) == 0;
+        }
+        void HandleApplicationIdle (object sender, EventArgs e)
+        {
+            while(IsApplicatoinIdle())
+            {
+
+                TimeSpan currentTime = stopWatch.Elapsed;
+                TimeSpan elapsedTime = currentTime - lastTime;
+                lastTime = currentTime;
+
+                accumulatedTime += elapsedTime;
+
+                bool updated = false;
+
+                while (accumulatedTime >= FormConstantsManager.TargetElapsedTime)
+                {
+                    gameManager.Update();
+                    accumulatedTime -=  FormConstantsManager.TargetElapsedTime;
+                    updated = true;
+                }
+
+                if (updated)
+                {
+                    gameManager.Render();
+                }
+
+                
+            }
+        }
+
+        
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NativeMessage
+        {
+            public IntPtr Handle;
+            public uint Message;
+            public IntPtr WParameter;
+            public IntPtr LParameter;
+            public uint Time;
+            public Point Location;
+        }
+
+        [DllImport("user32.dll")]
+        public static extern int PeekMessage(out NativeMessage message, IntPtr window, uint filterMin, uint filterMax, uint remove);
+
+        //HACK CODE END
         private void initializeForm()
         {
             this.Text = FormConstantsManager.gameFormText;
-            initializeTimer();
+            //initializeTimer();
             initializeStartButton();
         }
-        private void initializeTimer()
-        {
-            gameLoopTimer.Interval = FormConstantsManager.gameLoopTimerInterval;
-            gameLoopTimer.Tick += GameLoopTick;
-        }
+        //private void initializeTimer()
+        //{
+        //    gameLoopTimer.Interval = FormConstantsManager.gameLoopTimerInterval;
+        //    gameLoopTimer.Tick += GameLoopTick;
+        //}
         private void initializeStartButton()
         {
             startButton.Text = FormConstantsManager.startButtonText;
@@ -50,11 +114,11 @@ namespace Pacman
             startButton.Visible = true;
             this.Controls.Add(startButton);
         }
-        private void GameLoopTick(object sender, EventArgs e)
-        {
-            gameManager.Update();
-            gameManager.Render();
-        }
+        //private void GameLoopTick(object sender, EventArgs e)
+        //{
+        //    gameManager.Update();
+        //    gameManager.Render();
+        //}
         private void StartButton_Click(object sender, EventArgs e)
         {
             startButton.Visible = false;
