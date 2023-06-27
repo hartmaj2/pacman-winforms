@@ -95,30 +95,8 @@ namespace Pacman
         private void initializeForm()
         {
             this.Text = FormConstantsManager.gameFormText;
-            //initializeTimer();
-            initializeStartButton();
         }
-        //private void initializeTimer()
-        //{
-        //    gameLoopTimer.Interval = FormConstantsManager.gameLoopTimerInterval;
-        //    gameLoopTimer.Tick += GameLoopTick;
-        //}
-        private void initializeStartButton()
-        {
-            startButton.Text = FormConstantsManager.startButtonText;
-            startButton.Height = (ClientSize.Height / FormConstantsManager.startButtonHeightValue);
-            startButton.Width = (ClientSize.Width / FormConstantsManager.startButtonWidthValue);
-            startButton.Left = (ClientSize.Width - startButton.Width) / 2;
-            startButton.Top = (ClientSize.Height - startButton.Height) / 2;
-            startButton.Click += StartButton_Click;
-            startButton.Visible = true;
-            this.Controls.Add(startButton);
-        }
-        //private void GameLoopTick(object sender, EventArgs e)
-        //{
-        //    gameManager.Update();
-        //    gameManager.Render();
-        //}
+
         private void StartButton_Click(object sender, EventArgs e)
         {
             startButton.Visible = false;
