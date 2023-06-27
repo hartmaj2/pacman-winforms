@@ -20,8 +20,9 @@
             hero = InputManager.GetHero();
             ghosts = InputManager.GetGhosts();
         }
-        public void Update()
+        public void Update(Keys keyPressed)
         {
+            CheckKeyPressed(keyPressed);
             MoveAllTweeningMovableObjects();
             CheckGhostCollisions();
             UpdateScore();
@@ -30,9 +31,24 @@
         {
             painter.Paint(map,score);
         }
-        public void SetHeroNextDirection(Direction direction)
+        private void CheckKeyPressed(Keys keyPressed)
         {
-            hero.SetNextDirection(direction);
+
+            switch (keyPressed)
+            {
+                case Keys.Up:
+                    hero.SetNextDirection(Direction.Up);
+                    break;
+                case Keys.Right:
+                    hero.SetNextDirection(Direction.Right);
+                    break;
+                case Keys.Down:
+                    hero.SetNextDirection(Direction.Down);
+                    break;
+                case Keys.Left:
+                    hero.SetNextDirection(Direction.Left);
+                    break;
+            }
         }
         private void UpdateScore()
         {

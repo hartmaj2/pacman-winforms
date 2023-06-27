@@ -37,7 +37,7 @@
             ClientSize = new Size(800, 450);
             Margin = new Padding(4, 2, 4, 2);
             Name = "GameForm";
-            Text = "Form1";
+            Text = "Pacman";
             ResumeLayout(false);
         }
 

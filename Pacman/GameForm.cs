@@ -20,59 +20,71 @@ namespace Pacman
     public partial class GameForm : Form
     {
 
-        // HACK INIT
+        Keys keyPressed = Keys.None;
         Stopwatch stopWatch = Stopwatch.StartNew();
         TimeSpan accumulatedTime;
         TimeSpan lastTime;
-        //HACK INIT END
+        
 
         private GameManager gameManager;
         public GameForm()
         {
             
             InitializeComponent();
+            StartPosition = FormStartPosition.Manual;
+            Location = new Point(0, 0);
             gameManager = new GameManager(this);
-            this.KeyPreview = true; // makes sure that the form receives key events before their are passed to other components with focus
+            KeyPreview = true; // makes sure that the form receives key events before their are passed to other components with focus
             Application.Idle += HandleApplicationIdle;
 
         }
         
-        //HACK CODE
-        bool IsApplicatoinIdle()
+        private bool IsApplicatoinIdle()
         {
             NativeMessage result;
             return PeekMessage(out result, IntPtr.Zero, (uint)0, (uint)0, (uint)0) == 0;
         }
-        void HandleApplicationIdle(object sender, EventArgs e)
+        private void HandleApplicationIdle(object sender, EventArgs e)
         {
             while(IsApplicatoinIdle())
             {
-
-                TimeSpan currentTime = stopWatch.Elapsed;
-                TimeSpan elapsedTime = currentTime - lastTime;
-                lastTime = currentTime;
-
-                accumulatedTime += elapsedTime;
-
-                bool updated = false;
-
-                while (accumulatedTime >= FormConstantsManager.TargetElapsedTime)
-                {
-                    gameManager.Update();
-                    accumulatedTime -=  FormConstantsManager.TargetElapsedTime;
-                    updated = true;
-                }
-
-                if (updated)
-                {
-                    gameManager.Render();
-                }
-
-                
+                Loop();
             }
         }
 
-        
+        private void Loop()
+        {
+            TimeSpan currentTime = stopWatch.Elapsed;
+            TimeSpan elapsedTime = currentTime - lastTime;
+            lastTime = currentTime;
+
+            accumulatedTime += elapsedTime;
+
+            bool updated = false;
+
+            while (accumulatedTime >= FormConstantsManager.TargetElapsedTime)
+            {
+                Tick();
+                accumulatedTime -= FormConstantsManager.TargetElapsedTime;
+                updated = true;
+            }
+
+            if (updated)
+            {
+                Render();
+            }
+        }
+
+        private void Tick()
+        {
+            gameManager.Update(keyPressed);
+            keyPressed = Keys.None;
+        }
+
+        private void Render()
+        {
+            gameManager.Render();
+        }
         [StructLayout(LayoutKind.Sequential)]
         public struct NativeMessage
         {
@@ -87,31 +99,22 @@ namespace Pacman
         [DllImport("user32.dll")]
         public static extern int PeekMessage(out NativeMessage message, IntPtr window, uint filterMin, uint filterMax, uint remove);
 
-        //HACK CODE END
-        protected override void OnKeyDown(KeyEventArgs e)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            base.OnKeyDown(e);
-
-            Direction newDirection = Direction.None;
-
-            switch (e.KeyCode)
-            {
-                case Keys.Up:
-                    newDirection = Direction.Up;
-                    break;
-                case Keys.Right:
-                    newDirection = Direction.Right;
-                    break;
-                case Keys.Down:
-                    newDirection = Direction.Down;
-                    break;
-                case Keys.Left:
-                    newDirection = Direction.Left;
-                    break;
-            }
-
-            gameManager.SetHeroNextDirection(newDirection);
-
+            keyPressed = keyData;
+            return true;
         }
+
+        //protected override void OnKeyDown(KeyEventArgs e)
+        //{
+        //    base.OnKeyDown(e);
+
+        //    Direction newDirection = Direction.None;
+
+
+
+        //    gameManager.CheckKeyPressed(newDirection);
+
+        //}
     }
 }
