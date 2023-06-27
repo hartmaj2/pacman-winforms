@@ -24,7 +24,6 @@ namespace Pacman
         Stopwatch stopWatch = Stopwatch.StartNew();
         TimeSpan accumulatedTime;
         TimeSpan lastTime;
-        
 
         private GameManager gameManager;
         public GameForm()
@@ -37,20 +36,6 @@ namespace Pacman
             Application.Idle += HandleApplicationIdle;
 
         }
-        
-        private bool IsApplicatoinIdle()
-        {
-            NativeMessage result;
-            return PeekMessage(out result, IntPtr.Zero, (uint)0, (uint)0, (uint)0) == 0;
-        }
-        private void HandleApplicationIdle(object sender, EventArgs e)
-        {
-            while(IsApplicatoinIdle())
-            {
-                Loop();
-            }
-        }
-
         private void Loop()
         {
             TimeSpan currentTime = stopWatch.Elapsed;
@@ -74,23 +59,39 @@ namespace Pacman
                 Render();
             }
         }
-
         private void Tick()
         {
             gameManager.Update(keyPressed);
             keyPressed = Keys.None;
         }
-
         private void Render()
         {
             gameManager.Render();
         }
-
+        /* 
+         *  Because I am using the built in enum Keys, I don't have to create my own enum
+         */
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            keyPressed = keyData;
+            return true;
+        }
+        private bool IsApplicatoinIdle()
+        {
+            NativeMessage result;
+            return PeekMessage(out result, IntPtr.Zero, (uint)0, (uint)0, (uint)0) == 0;
+        }
+        private void HandleApplicationIdle(object sender, EventArgs e)
+        {
+            while(IsApplicatoinIdle())
+            {
+                Loop();
+            }
+        }
         /*
          * This is some kind of a hack that allows me to use the PeekMessage() function that returns 
          * true if the windows message pump is empty. If it is I can just go on continuing my game loop
          */
-
         [StructLayout(LayoutKind.Sequential)]
         public struct NativeMessage
         {
@@ -101,19 +102,8 @@ namespace Pacman
             public uint Time;
             public Point Location;
         }
-
         [DllImport("user32.dll")]
         public static extern int PeekMessage(out NativeMessage message, IntPtr window, uint filterMin, uint filterMax, uint remove);
-
-        /**
-         * Because I am using the built in enum Keys, I don't have to create my own enum
-         */
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            Console.WriteLine($"Key press {keyData}");
-            keyPressed = keyData;
-            return true;
-        }
-
     }
+        
 }
