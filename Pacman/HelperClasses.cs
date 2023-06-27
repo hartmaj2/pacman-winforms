@@ -141,14 +141,13 @@
         }
     }
     /*
-     * Takes care of drawing to the form. Implements buffering to get rid of the flickering.
+     * Takes care of drawing to the form. Implements double buffering to get rid of the flickering.
      */
     class Painter
     {
         private Graphics formGraphics;
         private Graphics bufferGraphics;
         private Bitmap bufferBitmap;
-        private Form gameForm;
 
         private Bitmap wallSprite = InputManager.GetWallSprite();
         private Bitmap heroSprite = InputManager.GetHeroSprite();
@@ -163,7 +162,6 @@
             formGraphics = form.CreateGraphics();
             bufferBitmap = new Bitmap(map.GetPixelWidth(), map.GetPixelHeight());
             bufferGraphics = Graphics.FromImage(bufferBitmap);
-            gameForm = form;
         }
         private void ClearBuffer()
         {

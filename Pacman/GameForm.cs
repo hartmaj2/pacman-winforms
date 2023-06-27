@@ -34,7 +34,6 @@ namespace Pacman
             StartPosition = FormStartPosition.Manual;
             Location = new Point(0, 0);
             gameManager = new GameManager(this);
-            KeyPreview = true; // makes sure that the form receives key events before their are passed to other components with focus
             Application.Idle += HandleApplicationIdle;
 
         }
@@ -62,6 +61,7 @@ namespace Pacman
 
             bool updated = false;
 
+            // If there was lots of accumulated time, the game ticks many times without rendering
             while (accumulatedTime >= FormConstantsManager.TargetElapsedTime)
             {
                 Tick();
@@ -85,6 +85,12 @@ namespace Pacman
         {
             gameManager.Render();
         }
+
+        /*
+         * This is some kind of a hack that allows me to use the PeekMessage() function that returns 
+         * true if the windows message pump is empty. If it is I can just go on continuing my game loop
+         */
+
         [StructLayout(LayoutKind.Sequential)]
         public struct NativeMessage
         {
@@ -99,22 +105,15 @@ namespace Pacman
         [DllImport("user32.dll")]
         public static extern int PeekMessage(out NativeMessage message, IntPtr window, uint filterMin, uint filterMax, uint remove);
 
+        /**
+         * Because I am using the built in enum Keys, I don't have to create my own enum
+         */
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            Console.WriteLine($"Key press {keyData}");
             keyPressed = keyData;
             return true;
         }
 
-        //protected override void OnKeyDown(KeyEventArgs e)
-        //{
-        //    base.OnKeyDown(e);
-
-        //    Direction newDirection = Direction.None;
-
-
-
-        //    gameManager.CheckKeyPressed(newDirection);
-
-        //}
     }
 }
