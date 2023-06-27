@@ -336,7 +336,6 @@ namespace Pacman
             }
             return false;
         }
-
         protected override bool IsReachableCell(int x, int y, Map map)
         {
             if (map.IsFreeGridCell(x,y))

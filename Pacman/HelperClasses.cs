@@ -147,7 +147,7 @@
         {
             return tweeningObjects;
         }
-        private bool IsAnIntersection(int x, int y)
+        public bool IsAnIntersection(int x, int y)
         {
             Direction direction = Direction.Up;
             int blankSpacesCount = 0;
@@ -160,11 +160,26 @@
                 }
                 direction.RotateRight();
             }
-            if (blankSpacesCount > 3)
+            if (blankSpacesCount > 2)
             {
                 return true;
             }
             return false;
+        }
+        private List<StaticGridObject> GetNeighbouringFreeCells(int x, int y)
+        {
+            List<StaticGridObject> neighbours = new List<StaticGridObject>();
+            Direction direction = Direction.Up;
+            for (int i = 0; i < 4; i++)
+            {
+                StaticGridObject neighboringCell = GetStaticGridObject(x + direction.X, y + direction.Y);
+                if (neighboringCell is StaticLayerBlankSpace)
+                {
+                    neighbours.Add(neighboringCell);
+                }
+                direction.RotateRight();
+            }
+            return neighbours;
         }
     }
     /*
