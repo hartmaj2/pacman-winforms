@@ -151,7 +151,7 @@ namespace Pacman
         }
         protected virtual void TryStartTweenCycle(Map map)
         {
-            if (CanStartNextTween(map, direction))
+            if (CanGoInDirection(map, direction))
             {
                 SetTweening();
             }
@@ -181,7 +181,7 @@ namespace Pacman
         {
             return pixelY;
         }
-        protected bool CanStartNextTween(Map map, Direction proposedDirection)
+        protected bool CanGoInDirection(Map map, Direction proposedDirection)
         {
             int nextGridX = map.GetWrappedXCoordinate(GetGridX() + proposedDirection.X);
             int nextGridY = map.GetWrappedYCoordinate(GetGridY() + proposedDirection.Y);
@@ -326,11 +326,11 @@ namespace Pacman
         protected override void TryStartTweenCycle(Map map)
         {
             TryEatPellet(map);
-            if (CanStartNextTween(map, nextDirection))
+            if (CanGoInDirection(map, nextDirection))
             {
                 direction = nextDirection;
             }
-            if (CanStartNextTween(map,direction))
+            if (CanGoInDirection(map,direction))
             {
                 SetTweening();
             }
@@ -381,9 +381,9 @@ namespace Pacman
         }
         protected override void TryStartTweenCycle(Map map)
         {
-            if (!CanStartNextTween(map,direction))
+            if (!CanGoInDirection(map,direction))
             {
-                if (map.IsGhostHome(GetGridX(),GetGridY()))
+                if (IAmHome(map))
                 {
                     TurnAround();
                 }
@@ -433,6 +433,14 @@ namespace Pacman
         {
             lastOccupiedCell.X = GetGridX();
             lastOccupiedCell.Y = GetGridY();
+        }
+        private bool IAmHome(Map map)
+        {
+            if(map.IsGhostHome(GetGridX(), GetGridY()))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
