@@ -48,6 +48,9 @@
                 case Keys.Left:
                     hero.SetNextDirection(Direction.Left);
                     break;
+                case Keys.Enter:
+                    map.OpenAllFences();
+                    break;
             }
         }
         private void UpdateScore()

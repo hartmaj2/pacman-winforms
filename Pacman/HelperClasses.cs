@@ -61,6 +61,7 @@
         private StaticGridObject[,] staticGrid = InputManager.GetStaticGrid();
         private InteractiveGridObject[,] interactiveGrid = InputManager.GetDynamicGrid();
         private List<TweeningObjects> tweeningObjects = InputManager.GetTweeningObjects();
+        private List<Fence> fences = InputManager.GetFences();
 
         private int gridWidth;
         private int gridHeight;
@@ -131,6 +132,17 @@
             }
             return false;
         }
+        public bool IsOpenFence(int x, int y)
+        {
+            if (staticGrid[x, y] is Fence)
+            {
+                if (!((Fence)staticGrid[x, y]).IsClosed())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public int GetWrappedXCoordinate(int x)
         {
             if (x > gridWidth - 1) return 0;
@@ -170,20 +182,27 @@
             }
             return blankSpacesCount;
         }
-        private List<StaticGridObject> GetNeighboringCells(int x, int y)
+        public List<StaticLayerBlankSpace> GetNeighboringBlankCells(int x, int y)
         {
-            List<StaticGridObject> neighbours = new List<StaticGridObject>();
+            List<StaticLayerBlankSpace> neighbours = new List<StaticLayerBlankSpace>();
             Direction direction = Direction.Up;
             for (int i = 0; i < 4; i++)
             {
                 StaticGridObject neighboringCell = GetStaticGridObject(x + direction.X, y + direction.Y);
                 if (neighboringCell is StaticLayerBlankSpace)
                 {
-                    neighbours.Add(neighboringCell);
+                    neighbours.Add((StaticLayerBlankSpace)neighboringCell);
                 }
                 direction.RotateRight();
             }
             return neighbours;
+        }
+        public void OpenAllFences()
+        {
+            foreach (Fence fence in fences)
+            {
+                fence.Open();
+            }
         }
     }
     /*

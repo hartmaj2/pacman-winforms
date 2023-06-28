@@ -41,6 +41,7 @@
         private static List<TweeningObjects> tweeningObjects;
         private static Hero hero;
         private static List<Ghost> ghosts;
+        private static List<Fence> fences;
 
         private static bool mapDataLoaded = false;
         private static bool spriteSizeAdjusted = false;
@@ -109,6 +110,14 @@
             }
             return hero;
         }
+        public static List<Fence> GetFences()
+        {
+            if (!mapDataLoaded) 
+            { 
+                prepareMapData();
+            }
+            return fences;
+        }
         public static List<Ghost> GetGhosts()
         {
             if (!mapDataLoaded)
@@ -155,6 +164,7 @@
             dynamicGrid = new InteractiveGridObject[width, height];
             tweeningObjects = new List<TweeningObjects>();
             ghosts = new List<Ghost>();
+            fences = new List<Fence>();
 
             for (int y = 0; y < height; y++)
             {
@@ -195,7 +205,9 @@
                             dynamicGrid[x, y] = new InteractiveLayerBlankSpace(x,y);
                             break;
                         case fenceChar:
-                            staticGrid[x, y] = new Fence(x,y);
+                            Fence fence = new Fence(x,y);
+                            fences.Add(fence);
+                            staticGrid[x, y] = fence;
                             dynamicGrid[x,y ] = new InteractiveLayerBlankSpace(x,y);
                             break;
                     }

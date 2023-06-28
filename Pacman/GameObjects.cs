@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Security.Policy;
 
 namespace Pacman
 {
@@ -68,12 +69,12 @@ namespace Pacman
         /*
          * Sets the direction towards a neighboring cell. DOESN'T WORK ON DIAGONAL PIECES
          */
-        protected void SetDirectionTowardsNeighbor(int x, int y)
+        protected void SetDirectionTowardsNeighbor(StaticGridObject neighbor)
         {
             Direction newDirection = Direction.None;
-            newDirection.X = x - GetGridX();
-            newDirection.Y = y - GetGridY();
-            Console.WriteLine($"The direction from {GetGridX()} {GetGridY()} towards {x} {y} is {newDirection.X} {newDirection.Y}");
+            newDirection.X = neighbor.GetGridX() - GetGridX();
+            newDirection.Y = neighbor.GetGridY() - GetGridY();
+            Console.WriteLine($"The direction from {GetGridX()} {GetGridY()} towards {neighbor.GetGridX()} {neighbor.GetGridY()} is {newDirection.X} {newDirection.Y}");
             direction = newDirection;
 
         }
@@ -371,11 +372,12 @@ namespace Pacman
     class Ghost : TweeningObjects
     {
         private Point target;
-
+        private Point lastOccupiedCell;
         public Ghost(int x, int y, int speed) : base(x, y, speed)
         {
             direction = Direction.Up;
             target = new Point(3, 3);
+            lastOccupiedCell = new Point(GetGridX(),GetGridY());
         }
         protected override void TryStartTweenCycle(Map map)
         {
@@ -385,19 +387,44 @@ namespace Pacman
                 {
                     TurnAround();
                 }
+                else if (map.GetNeighboringCellsCount(GetGridX(),GetGridY()) == 2)
+                {
+                    foreach (StaticLayerBlankSpace neighbour in map.GetNeighboringBlankCells(GetGridX(),GetGridY()))
+                    {
+                        if (!WasLastOccupied(neighbour))
+                        {
+                            SetDirectionTowardsNeighbor(neighbour);
+                        }
+                    }
+                }
             }
             else
             {
+                SetCurrentLocationLastOccupied();
                 SetTweening();
             }
         }
         protected override bool IsReachableCell(int x, int y, Map map)
         {
-            if (map.IsFreeGridCell(x,y) || map.IsGhostHome(x,y))
+            if (map.IsFreeGridCell(x,y) || map.IsGhostHome(x,y) || map.IsOpenFence(x,y))
             {
                 return true;
             }
             return false;
+        }
+        private bool WasLastOccupied(StaticLayerBlankSpace neighbour)
+        {
+            if (neighbour.GetGridX() == lastOccupiedCell.X && neighbour.GetGridY() == lastOccupiedCell.Y)
+            {
+                return true;
+            }
+            return false;
+
+        }
+        private void SetCurrentLocationLastOccupied()
+        {
+            lastOccupiedCell.X = GetGridX();
+            lastOccupiedCell.Y = GetGridY();
         }
     }
 }
