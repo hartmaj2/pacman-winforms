@@ -278,10 +278,13 @@
         {
             foreach (TweeningObjects movingObjectToPaint in map.GetMovingObjects())
             {
-                int xPos = movingObjectToPaint.GetPixelX();
-                int yPos = movingObjectToPaint.GetPixelY();
-                bufferGraphics.DrawImage(movingObjectToPaint.GetBitmap(), xPos, yPos);
- 
+                
+                if (movingObjectToPaint.IsDrawable())
+                {
+                    int xPos = movingObjectToPaint.GetPixelX();
+                    int yPos = movingObjectToPaint.GetPixelY();
+                    bufferGraphics.DrawImage(movingObjectToPaint.GetBitmap(), xPos, yPos);
+                }
             }
         }
         public void Paint(Map map, int score)
