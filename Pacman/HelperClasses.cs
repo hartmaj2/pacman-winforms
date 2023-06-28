@@ -249,7 +249,7 @@
             StaticGridObject staticObjectToPaint = map.GetStaticGridObject(dx, dy);
             if (staticObjectToPaint.IsDrawable())
             {
-                bufferGraphics.DrawImage(staticObjectToPaint.GetBitmap(), spriteSize * dx, spriteSize * dy);
+                bufferGraphics.DrawImage(staticObjectToPaint.GetImageToDraw(), spriteSize * dx, spriteSize * dy);
             }
 
         }
@@ -258,7 +258,7 @@
             InteractiveGridObject interactiveObjectToPaint = map.GetInteractiveGridObject(dx, dy);
             if (interactiveObjectToPaint.IsDrawable())
             {
-                bufferGraphics.DrawImage(interactiveObjectToPaint.GetBitmap(), spriteSize * dx, spriteSize * dy);
+                bufferGraphics.DrawImage(interactiveObjectToPaint.GetImageToDraw(), spriteSize * dx, spriteSize * dy);
             }
             
         }
@@ -283,7 +283,7 @@
                 {
                     int xPos = movingObjectToPaint.GetPixelX();
                     int yPos = movingObjectToPaint.GetPixelY();
-                    bufferGraphics.DrawImage(movingObjectToPaint.GetBitmap(), xPos, yPos);
+                    bufferGraphics.DrawImage(movingObjectToPaint.GetImageToDraw(), xPos, yPos);
                 }
             }
         }

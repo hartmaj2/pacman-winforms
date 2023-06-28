@@ -17,7 +17,7 @@ namespace Pacman
         {
             return Math.Sqrt(Math.Pow(Math.Abs(x - GetGridX()), 2) + Math.Pow(Math.Abs(y - GetGridY()), 2));
         }
-        public virtual Bitmap GetBitmap()
+        public virtual Bitmap GetImageToDraw()
         {
             return sprite;
         }
