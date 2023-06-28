@@ -65,6 +65,19 @@ namespace Pacman
 
         protected abstract bool IsReachableCell(int x, int y, Map map);
 
+        /*
+         * Sets the direction towards a neighboring cell. DOESN'T WORK ON DIAGONAL PIECES
+         */
+        protected void SetDirectionTowardsNeighbor(int x, int y)
+        {
+            Direction newDirection = Direction.None;
+            newDirection.X = x - GetGridX();
+            newDirection.Y = y - GetGridY();
+            Console.WriteLine($"The direction from {GetGridX()} {GetGridY()} towards {x} {y} is {newDirection.X} {newDirection.Y}");
+            direction = newDirection;
+
+        }
+
     }
     /*
      * This is an object that can move but only in discrete steps ending somewhere on the game grid
@@ -312,6 +325,7 @@ namespace Pacman
         protected override void TryStartTweenCycle(Map map)
         {
             TryEatPellet(map);
+            SetDirectionTowardsNeighbor(map.GetGridWidth() -1, map.GetGridHeight() -1);
             if (CanStartNextTween(map, nextDirection))
             {
                 direction = nextDirection;
@@ -378,7 +392,7 @@ namespace Pacman
                 SetTweening();
             }
         }
-
+     
         protected override bool IsReachableCell(int x, int y, Map map)
         {
             if (map.IsFreeGridCell(x,y) || map.IsGhostHome(x,y))
