@@ -74,7 +74,6 @@ namespace Pacman
             Direction newDirection = Direction.None;
             newDirection.X = neighbor.GetGridX() - GetGridX();
             newDirection.Y = neighbor.GetGridY() - GetGridY();
-            Console.WriteLine($"The direction from {GetGridX()} {GetGridY()} towards {neighbor.GetGridX()} {neighbor.GetGridY()} is {newDirection.X} {newDirection.Y}");
             direction = newDirection;
 
         }
@@ -123,54 +122,54 @@ namespace Pacman
         protected int pixelX;
         protected int pixelY;
 
-        protected int maxTweenFrame;
-        protected int tweenFrame;
-        protected int tweenSpeed;
+        protected int maxMovementFrame;
+        protected int movementFrame;
+        protected int movementSpeed;
 
-        protected bool isTweening;
+        protected bool isMoving;
 
         public TweeningObjects(int gridX, int gridY, int speed)
         {
             pixelX = gridX * InputManager.GetCellSize();
             pixelY = gridY * InputManager.GetCellSize();
             SetTweenSpeed(speed); // automatically adjust movements speed to be a multiple of cell size
-            SetNotTweening();
+            SetNotMoving();
         }
         public override void Move(Map map)
         { 
-            if (isTweening)
+            if (isMoving)
             {
-                ContinueTween();
+                ContinueMovement();
             }
-            if (!isTweening)
+            if (!isMoving)
             {
-                TryStartTweenCycle(map);
-                ContinueTween();
+                TryStartNextMovement(map);
+                ContinueMovement();
             }
             Wraparound(map);
         }
-        protected virtual void TryStartTweenCycle(Map map)
+        protected virtual void TryStartNextMovement(Map map)
         {
             if (CanGoInDirection(map, direction))
             {
-                SetTweening();
+                SetMoving();
             }
             else
             {
                 ResetDirection();
             }
         }
-        private void ContinueTween()
+        private void ContinueMovement()
         {
-            if (tweenFrame < maxTweenFrame)
+            if (movementFrame < maxMovementFrame)
             {
-                tweenFrame++;
-                pixelX += direction.X * tweenSpeed;
-                pixelY += direction.Y * tweenSpeed;
+                movementFrame++;
+                pixelX += direction.X * movementSpeed;
+                pixelY += direction.Y * movementSpeed;
             }
             else
             {
-                SetNotTweening();
+                SetNotMoving();
             }      
         }
         public int GetPixelX()
@@ -203,14 +202,14 @@ namespace Pacman
         {
             direction = Direction.None;
         }
-        protected void SetNotTweening()
+        protected void SetNotMoving()
         {
-            isTweening = false;
+            isMoving = false;
         }
-        protected void SetTweening()
+        protected void SetMoving()
         {
-            isTweening = true;
-            tweenFrame = 0;
+            isMoving = true;
+            movementFrame = 0;
         }
         /*
          * Because each movable object needs to end a tweening cycle at a precise grid location, we need the 
@@ -222,8 +221,8 @@ namespace Pacman
             {
                 speed--;
             }
-            tweenSpeed = speed;
-            maxTweenFrame = InputManager.GetCellSize() / tweenSpeed;
+            movementSpeed = speed;
+            maxMovementFrame = InputManager.GetCellSize() / movementSpeed;
         }
         public bool IsTouchingTweeningObject(TweeningObjects other)
         {
@@ -323,7 +322,7 @@ namespace Pacman
         {   
             nextDirection = newDirection;
         }
-        protected override void TryStartTweenCycle(Map map)
+        protected override void TryStartNextMovement(Map map)
         {
             TryEatPellet(map);
             if (CanGoInDirection(map, nextDirection))
@@ -332,7 +331,7 @@ namespace Pacman
             }
             if (CanGoInDirection(map,direction))
             {
-                SetTweening();
+                SetMoving();
             }
             else
             {
@@ -379,7 +378,7 @@ namespace Pacman
             target = new Point(3, 3);
             lastOccupiedCell = new Point(GetGridX(),GetGridY());
         }
-        protected override void TryStartTweenCycle(Map map)
+        protected override void TryStartNextMovement(Map map)
         {
             if (!CanGoInDirection(map,direction))
             {
@@ -396,7 +395,7 @@ namespace Pacman
             else
             {
                 SetCurrentLocationLastOccupied();
-                SetTweening();
+                SetMoving();
             }
         }
         protected override bool IsReachableCell(int x, int y, Map map)
