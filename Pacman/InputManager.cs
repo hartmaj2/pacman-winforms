@@ -39,12 +39,12 @@ namespace Pacman
         private const string pelletImage = "pellet.png";
         private const string wallImage = "wall.png";
 
-        private static Bitmap blankSprite;
-        private static Bitmap fenceSprite;
-        private static Bitmap ghostSprite;
-        private static Bitmap heroSprite;
-        private static Bitmap pelletSprite;
-        private static Bitmap wallSprite;
+        private static Bitmap blankSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, blankImage)), cellSize, cellSize);
+        private static Bitmap fenceSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, fenceImage)), cellSize, cellSize);
+        private static Bitmap ghostSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostRedImage)), cellSize, cellSize);
+        private static Bitmap heroSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, heroImage)), cellSize, cellSize);
+        private static Bitmap pelletSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, pelletImage)), cellSize, cellSize);
+        private static Bitmap wallSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, wallImage)), cellSize, cellSize);
 
         private static StaticGridObject[,] staticGrid;
         private static InteractiveGridObject[,] dynamicGrid;
@@ -62,50 +62,26 @@ namespace Pacman
         }
         public static Bitmap GetFenceSprite()
         {
-            if (!spriteSizeAdjusted)
-            {
-                LoadSprites();
-            }
             return fenceSprite;
         }
         public static Bitmap GetBlankSprite()
         {
-            if (!spriteSizeAdjusted)
-            {
-                LoadSprites();
-            }
             return blankSprite;
         }
         public static Bitmap GetWallSprite()
         {
-            if (!spriteSizeAdjusted)
-            {
-                LoadSprites();
-            }
             return wallSprite;
         }
         public static Bitmap GetHeroSprite()
         {
-            if (!spriteSizeAdjusted)
-            {
-                LoadSprites();
-            }
             return heroSprite;
         }
         public static Bitmap GetPelletSprite()
         {
-            if (!spriteSizeAdjusted)
-            {
-                LoadSprites();
-            }
             return pelletSprite;
         }
         public static Bitmap GetGhostSprite()
         {
-            if (!spriteSizeAdjusted)
-            {
-                LoadSprites();
-            }
             return ghostSprite;
         }
         public static Hero GetHero()
@@ -222,15 +198,7 @@ namespace Pacman
 
 
         }
-        private static void LoadSprites()
-        {
-            blankSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, blankImage)), cellSize, cellSize);
-            fenceSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, fenceImage)), cellSize, cellSize);
-            wallSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, wallImage)), cellSize, cellSize);
-            heroSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, heroImage)), cellSize, cellSize);
-            pelletSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, pelletImage)), cellSize, cellSize);
-            ghostSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostRedImage)), cellSize, cellSize);
-        }
+
 
     }
 }
