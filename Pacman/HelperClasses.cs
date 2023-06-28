@@ -1,7 +1,7 @@
 ﻿namespace Pacman
 {
     /*
-     * Represents a 2D integer vector
+     * Represents a 2D integer vector with unit size or a zero vector
      */
     struct Direction
     {
