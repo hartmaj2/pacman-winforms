@@ -60,7 +60,7 @@
     {
         private StaticGridObject[,] staticGrid = InputManager.GetStaticGrid();
         private InteractiveGridObject[,] interactiveGrid = InputManager.GetDynamicGrid();
-        private List<TweeningObjects> tweeningObjects = InputManager.GetTweeningObjects();
+        private List<TweeningObjects> movingObjects = InputManager.GetTweeningObjects();
         private List<Fence> fences = InputManager.GetFences();
         private Hero hero = InputManager.GetHero();
 
@@ -80,6 +80,9 @@
         { 
             return cellSize; 
         }
+        /*
+         * Writes the corresponding BlankSpace object to the interactive grid thus effectively removing the object
+         */
         public void RemoveFromInteractiveGrid(int gridX,  int gridY)
         {
             interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace(gridX,gridY);
@@ -155,9 +158,9 @@
             if (y < 0) return gridHeight - 1;
             return y;
         }
-        public List<TweeningObjects> GetTweeningObjects() 
+        public List<TweeningObjects> GetMovingObjects() 
         {
-            return tweeningObjects;
+            return movingObjects;
         }
         public bool IsAnIntersection(int x, int y)
         {
@@ -167,14 +170,14 @@
             }
             return false;
         }
-        public int GetNeighboringCellsCount(int x, int y)
+        public int GetNeighboringCellsCount(int currentX, int currentY)
         {
             Direction direction = Direction.Up;
             int blankSpacesCount = 0;
             for (int i = 0; i < 4; i++)
             {
-                int neighbourX = GetWrappedXCoordinate(x + direction.X);
-                int neighbourY = GetWrappedYCoordinate(y + direction.Y);
+                int neighbourX = GetWrappedXCoordinate(currentX + direction.X);
+                int neighbourY = GetWrappedYCoordinate(currentY + direction.Y);
                 StaticGridObject neighboringCell = GetStaticGridObject(neighbourX, neighbourY);
                 if (neighboringCell is StaticLayerBlankSpace)
                 {
@@ -213,11 +216,15 @@
     }
     /*
      * Takes care of drawing to the form. Implements double buffering to get rid of the flickering.
+     * The objects are painted in three different layers. 
+     * First, the statc objects on the grid are painted.
+     * Second, the interactive objects on the grid.
+     * Lastly, the moving objects anywhere on the map.
      */
     class Painter
     {
-        private Graphics formGraphics;
-        private Graphics bufferGraphics;
+        private Graphics formGraphics; // the actual graphics elements that gets painted on the form
+        private Graphics bufferGraphics; // the buffer that we paint on before propagating change to formGraphics
         private Bitmap bufferBitmap;
 
         private Bitmap wallSprite = InputManager.GetWallSprite();
@@ -245,14 +252,14 @@
         }
         private void PaintStaticGridObjectAtCoordinate(Map map, int dx, int dy)
         {
-            StaticGridObject staticGameObject = map.GetStaticGridObject(dx, dy);
-            if (staticGameObject is Wall)
+            StaticGridObject staticObjectToPaint = map.GetStaticGridObject(dx, dy);
+            if (staticObjectToPaint is Wall)
             {
                 bufferGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
             }
-            if (staticGameObject is Fence)
+            if (staticObjectToPaint is Fence)
             {
-                if (((Fence)staticGameObject).IsClosed())
+                if (((Fence)staticObjectToPaint).IsClosed())
                 {
                     bufferGraphics.DrawImage(fenceSprite, spriteSize * dx, spriteSize * dy);
                 }
@@ -260,8 +267,8 @@
         }
         private void PaintInteractiveGridObjectAtCoordinate(Map map, int dx, int dy)
         {
-            InteractiveGridObject dynamicGameObject = map.GetInteractiveGridObject(dx, dy);
-            if (dynamicGameObject is Pellet)
+            InteractiveGridObject interactiveObjectToPaint = map.GetInteractiveGridObject(dx, dy);
+            if (interactiveObjectToPaint is Pellet)
             {
                 bufferGraphics.DrawImage(pelletSprite, spriteSize * dx, spriteSize * dy);
             }
@@ -280,17 +287,17 @@
                 }
             }
         }
-        private void PaintTweeningObjects(Map map)
+        private void PaintMovingObjects(Map map)
         {
-            foreach (TweeningObjects tweeningMovableGameObject in map.GetTweeningObjects())
+            foreach (TweeningObjects movingObjectToPaint in map.GetMovingObjects())
             {
-                int xPos = tweeningMovableGameObject.GetPixelX();
-                int yPos = tweeningMovableGameObject.GetPixelY();
-                if (tweeningMovableGameObject is Hero)
+                int xPos = movingObjectToPaint.GetPixelX();
+                int yPos = movingObjectToPaint.GetPixelY();
+                if (movingObjectToPaint is Hero)
                 {
                     bufferGraphics.DrawImage(heroSprite, xPos, yPos);
                 }
-                if (tweeningMovableGameObject is Ghost)
+                if (movingObjectToPaint is Ghost)
                 {
                     bufferGraphics.DrawImage(ghostSprite, xPos, yPos);
                 }
@@ -300,7 +307,7 @@
         {
             ClearBuffer();
             PaintGrids(map);
-            PaintTweeningObjects(map);
+            PaintMovingObjects(map);
             DisplayScore(score);
             WriteBuffer();
         }

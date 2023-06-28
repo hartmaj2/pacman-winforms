@@ -146,7 +146,7 @@ namespace Pacman
                 TryStartNextMovement(map);
                 ContinueMovement();
             }
-            Wraparound(map);
+            WraparoundIfOutOfBounds(map);
         }
         protected virtual void TryStartNextMovement(Map map)
         {
@@ -156,7 +156,7 @@ namespace Pacman
             }
             else
             {
-                ResetDirection();
+                ClearDirection();
             }
         }
         private void ContinueMovement()
@@ -198,7 +198,7 @@ namespace Pacman
         {
             return (pixelY + (InputManager.GetCellSize() / 2)) / InputManager.GetCellSize();
         }
-        protected void ResetDirection()
+        protected void ClearDirection()
         {
             direction = Direction.None;
         }
@@ -215,13 +215,13 @@ namespace Pacman
          * Because each movable object needs to end a tweening cycle at a precise grid location, we need the 
          * cell size to be a multiple of the speed. This funciton takes care of readjusting the speed corectly.
          */
-        protected void SetTweenSpeed(int speed)
+        protected void SetTweenSpeed(int newSpeed)
         {
-            while (InputManager.GetCellSize() % speed != 0)
+            while (InputManager.GetCellSize() % newSpeed != 0)
             {
-                speed--;
+                newSpeed--;
             }
-            movementSpeed = speed;
+            movementSpeed = newSpeed;
             maxMovementFrame = InputManager.GetCellSize() / movementSpeed;
         }
         public bool IsTouchingTweeningObject(TweeningObjects other)
@@ -232,7 +232,7 @@ namespace Pacman
             }
             return false;
         }
-        private void Wraparound(Map map)
+        private void WraparoundIfOutOfBounds(Map map)
         {
             if (pixelX < 0)
             {
@@ -335,7 +335,7 @@ namespace Pacman
             }
             else
             {
-                ResetDirection();
+                ClearDirection();
             }
         }
         public bool IsTouchingAnyGhost(List<Ghost> ghosts)
