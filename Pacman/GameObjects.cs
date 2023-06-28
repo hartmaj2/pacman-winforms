@@ -380,6 +380,7 @@ namespace Pacman
         }
         protected override void TryStartNextMovement(Map map)
         {
+            SetTargetOnHero(map);
             if (IAmAtIntersection(map))
             {
                 StaticLayerBlankSpace targetNeighbour = FindNeighbourClosestToTarget(map);
@@ -435,7 +436,6 @@ namespace Pacman
             lastOccupiedCell.X = GetGridX();
             lastOccupiedCell.Y = GetGridY();
         }
-
         private StaticLayerBlankSpace FindNeighbourClosestToTarget(Map map)
         {
             double closestDistance = Double.MaxValue;
@@ -469,6 +469,10 @@ namespace Pacman
                 return true;
             }
             return false;
+        }
+        private void SetTargetOnHero(Map map)
+        {
+            target = map.GetHeroLocaion();
         }
     }
 }
