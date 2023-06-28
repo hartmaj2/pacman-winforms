@@ -149,6 +149,14 @@
         }
         public bool IsAnIntersection(int x, int y)
         {
+            if (GetNeighboringCellsCount(x,y) > 2)
+            {
+                return true;
+            }
+            return false;
+        }
+        public int GetNeighboringCellsCount(int x, int y)
+        {
             Direction direction = Direction.Up;
             int blankSpacesCount = 0;
             for (int i = 0; i < 4; i++)
@@ -160,13 +168,9 @@
                 }
                 direction.RotateRight();
             }
-            if (blankSpacesCount > 2)
-            {
-                return true;
-            }
-            return false;
+            return blankSpacesCount;
         }
-        private List<StaticGridObject> GetNeighbouringFreeCells(int x, int y)
+        private List<StaticGridObject> GetNeighboringCells(int x, int y)
         {
             List<StaticGridObject> neighbours = new List<StaticGridObject>();
             Direction direction = Direction.Up;

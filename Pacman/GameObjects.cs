@@ -325,7 +325,6 @@ namespace Pacman
         protected override void TryStartTweenCycle(Map map)
         {
             TryEatPellet(map);
-            SetDirectionTowardsNeighbor(map.GetGridWidth() -1, map.GetGridHeight() -1);
             if (CanStartNextTween(map, nextDirection))
             {
                 direction = nextDirection;
@@ -392,7 +391,6 @@ namespace Pacman
                 SetTweening();
             }
         }
-     
         protected override bool IsReachableCell(int x, int y, Map map)
         {
             if (map.IsFreeGridCell(x,y) || map.IsGhostHome(x,y))
