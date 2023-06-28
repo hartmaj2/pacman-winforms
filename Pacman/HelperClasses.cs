@@ -62,6 +62,7 @@
         private InteractiveGridObject[,] interactiveGrid = InputManager.GetDynamicGrid();
         private List<TweeningObjects> tweeningObjects = InputManager.GetTweeningObjects();
         private List<Fence> fences = InputManager.GetFences();
+        private Hero hero = InputManager.GetHero();
 
         private int gridWidth;
         private int gridHeight;
@@ -75,7 +76,6 @@
             gridHeight = staticGrid.GetLength(1);
 
         }
-
         public int GetCellSize()
         { 
             return cellSize; 
@@ -173,7 +173,9 @@
             int blankSpacesCount = 0;
             for (int i = 0; i < 4; i++)
             {
-                StaticGridObject neighboringCell = GetStaticGridObject(x + direction.X, y + direction.Y);
+                int neighbourX = GetWrappedXCoordinate(x + direction.X);
+                int neighbourY = GetWrappedYCoordinate(y + direction.Y);
+                StaticGridObject neighboringCell = GetStaticGridObject(neighbourX, neighbourY);
                 if (neighboringCell is StaticLayerBlankSpace)
                 {
                     blankSpacesCount++;
@@ -203,6 +205,10 @@
             {
                 fence.Open();
             }
+        }
+        public Point GetHeroLocaion()
+        {
+            return new Point(hero.GetGridX(), hero.GetGridY());
         }
     }
     /*
