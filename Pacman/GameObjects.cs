@@ -387,16 +387,11 @@ namespace Pacman
                 {
                     TurnAround();
                 }
-                else if (map.GetNeighboringCellsCount(GetGridX(),GetGridY()) == 2)
+                else
                 {
-                    foreach (StaticLayerBlankSpace neighbour in map.GetNeighboringBlankCells(GetGridX(),GetGridY()))
-                    {
-                        if (!WasLastOccupied(neighbour))
-                        {
-                            SetDirectionTowardsNeighbor(neighbour);
-                        }
-                    }
+                    TryTurnOnCurve(map);
                 }
+                
             }
             else
             {
@@ -420,6 +415,19 @@ namespace Pacman
             }
             return false;
 
+        }
+        private void TryTurnOnCurve(Map map)
+        {
+            if (map.GetNeighboringCellsCount(GetGridX(), GetGridY()) == 2)
+            {
+                foreach (StaticLayerBlankSpace neighbour in map.GetNeighboringBlankCells(GetGridX(), GetGridY()))
+                {
+                    if (!WasLastOccupied(neighbour))
+                    {
+                        SetDirectionTowardsNeighbor(neighbour);
+                    }
+                }
+            }
         }
         private void SetCurrentLocationLastOccupied()
         {
