@@ -139,13 +139,16 @@ namespace Pacman
         protected int movementFrame;
         protected int movementSpeed;
 
+        protected int mapCellSize;
+
         protected bool isMoving;
 
-        public TweeningObjects(Bitmap image, int gridX, int gridY, int speed)
+        public TweeningObjects(Bitmap image, int gridX, int gridY, int speed, int cellSize)
         {
-            this.sprite = image;
-            pixelX = gridX * InputManager.GetCellSize();
-            pixelY = gridY * InputManager.GetCellSize();
+            sprite = image;
+            mapCellSize = cellSize;
+            pixelX = gridX * mapCellSize;
+            pixelY = gridY * mapCellSize;
             SetTweenSpeed(speed); // automatically adjust movements speed to be a multiple of cell size
             SetNotMoving();
         }
@@ -206,11 +209,11 @@ namespace Pacman
         }
         public override int GetGridX()
         {
-            return (pixelX + (InputManager.GetCellSize() / 2)) / InputManager.GetCellSize();
+            return (pixelX + (mapCellSize / 2)) / mapCellSize;
         }
         public override int GetGridY()
         {
-            return (pixelY + (InputManager.GetCellSize() / 2)) / InputManager.GetCellSize();
+            return (pixelY + (mapCellSize / 2)) / mapCellSize;
         }
         protected void ClearDirection()
         {
@@ -231,16 +234,16 @@ namespace Pacman
          */
         protected void SetTweenSpeed(int newSpeed)
         {
-            while (InputManager.GetCellSize() % newSpeed != 0)
+            while (mapCellSize % newSpeed != 0)
             {
                 newSpeed--;
             }
             movementSpeed = newSpeed;
-            maxMovementFrame = InputManager.GetCellSize() / movementSpeed;
+            maxMovementFrame = mapCellSize / movementSpeed;
         }
         public bool IsTouchingTweeningObject(TweeningObjects other)
         {
-            if (Math.Abs(other.pixelX - pixelX) < InputManager.GetCellSize() && Math.Abs(other.pixelY - pixelY) < InputManager.GetCellSize())
+            if (Math.Abs(other.pixelX - pixelX) < mapCellSize && Math.Abs(other.pixelY - pixelY) < mapCellSize)
             {
                 return true;
             }
@@ -323,7 +326,7 @@ namespace Pacman
         private int pelletsEaten = 0;
         private Direction nextDirection;
 
-        public Hero(Bitmap image, int x, int y, int speed) : base(image, x, y, speed)
+        public Hero(Bitmap image, int x, int y, int speed, int mapCellSize) : base(image, x, y, speed, mapCellSize)
         {
             direction = Direction.Right;
         }
@@ -393,7 +396,7 @@ namespace Pacman
     {
         private Point target;
         private Point lastOccupiedCell;
-        public Ghost(Bitmap image, int x, int y, int speed) : base(image, x, y, speed)
+        public Ghost(Bitmap image, int x, int y, int speed, int mapCellSize) : base(image, x, y, speed, mapCellSize)
         {
             direction = Direction.Up;
             target = new Point(3, 3);

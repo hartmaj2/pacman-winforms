@@ -166,7 +166,7 @@ namespace Pacman
                             dynamicGrid[x, y] = new InteractiveLayerBlankSpace(null,x,y);
                             break;
                         case heroChar:
-                            hero = new Hero(heroSprite,x, y, heroSpeed);
+                            hero = new Hero(heroSprite,x, y, heroSpeed, cellSize);
                             tweeningObjects.Add(hero);
                             staticGrid[x, y] = new StaticLayerBlankSpace(null,x,y);
                             dynamicGrid[x, y] = new InteractiveLayerBlankSpace(null,x,y);
@@ -176,7 +176,7 @@ namespace Pacman
                             dynamicGrid[x, y] = new Pellet(pelletSprite,x,y);
                             break;
                         case ghostChar:
-                            Ghost ghost = new Ghost(ghostRedSprite,x, y, ghostSpeed);
+                            Ghost ghost = new Ghost(ghostRedSprite,x, y, ghostSpeed, cellSize);
                             tweeningObjects.Add(ghost);
                             ghosts.Add(ghost);
                             staticGrid[x, y] = new GhostHome(null, x,y);
