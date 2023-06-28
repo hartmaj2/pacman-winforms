@@ -39,8 +39,6 @@ namespace Pacman
         private const string pelletImage = "pellet.png";
         private const string wallImage = "wall.png";
 
-        private static string imagePath = Path.Combine(Application.StartupPath, imageFolder);
-
         private static Bitmap blankSprite;
         private static Bitmap fenceSprite;
         private static Bitmap ghostSprite;
@@ -226,12 +224,12 @@ namespace Pacman
         }
         private static void LoadSprites()
         {
-            blankSprite = new Bitmap(new Bitmap(Path.Combine(imagePath,blankImage)),cellSize,cellSize);
-            fenceSprite = new Bitmap(new Bitmap(Path.Combine(imagePath, fenceImage)), cellSize, cellSize);
-            wallSprite = new Bitmap(new Bitmap(Path.Combine(imagePath, wallImage)), cellSize, cellSize);
-            heroSprite = new Bitmap(new Bitmap(Path.Combine(imagePath, heroImage)), cellSize, cellSize);
-            pelletSprite = new Bitmap(new Bitmap(Path.Combine(imagePath, pelletImage)), cellSize, cellSize);
-            ghostSprite = new Bitmap(new Bitmap(Path.Combine(imagePath, ghostRedImage)), cellSize, cellSize);
+            blankSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, blankImage)), cellSize, cellSize);
+            fenceSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, fenceImage)), cellSize, cellSize);
+            wallSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, wallImage)), cellSize, cellSize);
+            heroSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, heroImage)), cellSize, cellSize);
+            pelletSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, pelletImage)), cellSize, cellSize);
+            ghostSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostRedImage)), cellSize, cellSize);
         }
 
     }
