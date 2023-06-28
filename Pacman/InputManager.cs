@@ -27,12 +27,22 @@
         /*
          * The sprites are just PNG images converted to a Bitmap to be rendered by the Painter class later.
          */
-        private static Bitmap blankSprite = Properties.Resources.blank;
-        private static Bitmap wallSprite = Properties.Resources.wall;
-        private static Bitmap heroSprite = Properties.Resources.hero;
-        private static Bitmap pelletSprite = Properties.Resources.pellet;
-        private static Bitmap ghostSprite = Properties.Resources.ghost;
-        private static Bitmap fenceSprite = Properties.Resources.fence;
+        private const string imageFolder = "Images";
+        private const string blankImage = "blank.png";
+        private const string fenceImage = "fence.png";
+        private const string ghostRedImage = "ghost_red.png";
+        private const string heroImage = "hero.png";
+        private const string pelletImage = "pellet.png";
+        private const string wallImage = "wall.png";
+
+        private static string imagePath = Path.Combine(Application.StartupPath, imageFolder);
+
+        private static Bitmap blankSprite;
+        private static Bitmap fenceSprite;
+        private static Bitmap ghostSprite;
+        private static Bitmap heroSprite;
+        private static Bitmap pelletSprite;
+        private static Bitmap wallSprite;
 
         private static readonly string map = Properties.Resources.map;
 
@@ -58,7 +68,7 @@
         {
             if (!spriteSizeAdjusted)
             {
-                adjustSpriteSize();
+                LoadSprites();
             }
             return fenceSprite;
         }
@@ -66,7 +76,7 @@
         {
             if (!spriteSizeAdjusted)
             {
-                adjustSpriteSize();
+                LoadSprites();
             }
             return blankSprite;
         }
@@ -74,7 +84,7 @@
         {
             if (!spriteSizeAdjusted)
             {
-                adjustSpriteSize();
+                LoadSprites();
             }
             return wallSprite;
         }
@@ -82,7 +92,7 @@
         {
             if (!spriteSizeAdjusted)
             {
-                adjustSpriteSize();
+                LoadSprites();
             }
             return heroSprite;
         }
@@ -90,7 +100,7 @@
         {
             if (!spriteSizeAdjusted)
             {
-                adjustSpriteSize();
+                LoadSprites();
             }
             return pelletSprite;
         }
@@ -98,7 +108,7 @@
         {
             if (!spriteSizeAdjusted)
             {
-                adjustSpriteSize();
+                LoadSprites();
             }
             return ghostSprite;
         }
@@ -106,7 +116,7 @@
         {
             if (!mapDataLoaded)
             {
-                prepareMapData();
+                PrepareMapData();
             }
             return hero;
         }
@@ -114,7 +124,7 @@
         {
             if (!mapDataLoaded) 
             { 
-                prepareMapData();
+                PrepareMapData();
             }
             return fences;
         }
@@ -122,7 +132,7 @@
         {
             if (!mapDataLoaded)
             {
-                prepareMapData();
+                PrepareMapData();
             }
             return ghosts;
         }
@@ -130,7 +140,7 @@
         {
             if (!mapDataLoaded)
             {
-                prepareMapData();
+                PrepareMapData();
             }
             return dynamicGrid;
         }
@@ -138,7 +148,7 @@
         {
             if (!mapDataLoaded)
             {
-                prepareMapData();
+                PrepareMapData();
             }
             return staticGrid;
         }
@@ -146,11 +156,11 @@
         {
             if (!mapDataLoaded)
             {
-                prepareMapData();
+                PrepareMapData();
             }
             return tweeningObjects;
         }
-        private static void prepareMapData()
+        private static void PrepareMapData()
         {
             mapDataLoaded = true;
 
@@ -216,14 +226,14 @@
 
 
         }
-        private static void adjustSpriteSize()
+        private static void LoadSprites()
         {
-            blankSprite = new Bitmap(blankSprite, new Size(cellSize, cellSize));
-            wallSprite = new Bitmap(wallSprite, new Size(cellSize, cellSize));
-            heroSprite = new Bitmap(heroSprite, new Size(cellSize, cellSize));
-            pelletSprite = new Bitmap(pelletSprite, new Size(cellSize, cellSize));
-            ghostSprite = new Bitmap(ghostSprite, new Size(cellSize, cellSize));
-            fenceSprite = new Bitmap(fenceSprite, new Size(cellSize, cellSize));
+            blankSprite = new Bitmap(new Bitmap(Path.Combine(imagePath,blankImage)),cellSize,cellSize);
+            fenceSprite = new Bitmap(new Bitmap(Path.Combine(imagePath, fenceImage)), cellSize, cellSize);
+            wallSprite = new Bitmap(new Bitmap(Path.Combine(imagePath, wallImage)), cellSize, cellSize);
+            heroSprite = new Bitmap(new Bitmap(Path.Combine(imagePath, heroImage)), cellSize, cellSize);
+            pelletSprite = new Bitmap(new Bitmap(Path.Combine(imagePath, pelletImage)), cellSize, cellSize);
+            ghostSprite = new Bitmap(new Bitmap(Path.Combine(imagePath, ghostRedImage)), cellSize, cellSize);
         }
 
     }
