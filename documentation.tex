@@ -28,9 +28,9 @@
 \subsection{Anotace}
 Program Czech-Man je napodobeninou klasické hry Pac-Man z roku 1980. Neklade si za cíl být naprosto přesnou kopií hry, hlavní funkčnosti by měly být zachovány. Hra je vyvíjena v programovacím jazyce C\#.
 \subsection{Formát tohoto dokumentu}
-Pokud se v tomto dokumentu budu vyjadřovat k nějaké třídě nebo objektu jejím jménem, jako je v programu tak budu využívat \textit{kurzívu}. Jako třeba pokud zmiňuji třídu \textit{GameManager}.
+Pokud se v tomto dokumentu budu vyjadřovat k nějaké třídě nebo objektu jejím jménem, jako je v programu tak budu psát \textbf{tučně}. Jako třeba pokud zmiňuji třídu \textbf{GameManager}.
 \\\\
-Naopak pokud zmiňuji nějaké klíčové slovo jazyka C\#, tak budu používat formát \verb|verbatim|. Například \verb|char| nebo \verb|class|.
+Naopak pokud zmiňuji nějaké klíčové slovo jazyka C\# nebo nějakou built-in třídu, tak budu používat formát \verb|verbatim|. Například \verb|char| nebo \verb|Bitmap|.
 \subsection{Zvolené vývojové prostředí}
 Prvotním úmyslem bylo hru vyvíjet ve vývojovém prostředí Unity, které je přímo určeno k vytváření počítačových her. S Unity jsem však neměl žádné předchozí zkušenosti a po krátké snaze naučit se základy fungování tohoto prostředí jsem jeho užití zavrhl, jelikož naučit se v tomto prostředí pracovat vyžaduje mnoho specifických znalostí. Zároveň mi prostředí Unity nevyhovovalo v jeho zaměření na přesné fyzikální simulace a také fakt, že se nedá toto zaměření plně „odstínit“. Chtěl jsem pracovat v takovém prostředí, kde budu mít nad svým herním světem co největší kontrolu, a tak jsem se nakonec rozhodl pro složitější postup, který mi však umožnil mít více kontroly nad programem.
 \\\\
@@ -38,23 +38,40 @@ Touto volbou bylo pracovat v prostředí Windows Forms (dále už jen Winforms).
 \newpage
 \section{Programátorská část}
 \subsection{Hlavní principy sledované při tvorbě programu}
+\subsubsection{Obecnost a přenositelnost kódu do budoucna}
 Při psaní kódu jsem se snažil hlavně dbát na to, aby byl program psán co nejvíce obecně a tudíž abych měl co největší prostor program do budoucna rozvíjet jakýmikoliv směry. Chtěl jsem také si nechat otevřenou možnost v budoucnu přejít na jiné vývojové prostředí než Winforms a dbal jsem tedy na to, ať je na Winforms všechna logika hry kromě samotného vykreslování co nejvíce nezávislá. Toto mě vedlo například k úplnému odstranění vizuálního designeru formy, jelikož jsem chtěl co nejvíce funkčnosti obsažené v samotném kódu, ze kterého by se v budoucnu dalo vyčíst, jak program převést do jiného prostředí lépe než z interních nastavení Winforms.
-\\\\
+\subsubsection{Objektová orientace}
 Snažil jsem se také programovat co možná nejvíce objektově. Dával jsem tedy důraz na to, aby všechno ve hře byl nějaký objekt. Zde jsem možná zaběhl do přílišných extrémů a můj kód je proto delší než by mohl být. Upřednostňuji však vždy delší kód, pokud tím získám lepší přehlednost a znovupoužitelnost kódu. Tím, že téměř každou věc reprezentuji objektem si nezavírám dveře před tím, abych mohl k jakémukoliv takovému objektu později přidat i nějaké chování a to mi přijde jako velmi pozitivní vlastnost.
-\\\\
+\subsubsection{Čitelný kód}
 Dalším principem, kterého jsem se snažil držet byl důraz na tzv. „samokomentující“ kód. To znamená, že jsem dbal velmi na to, aby jména proměnných byla co nejvíce výstižná a opravdu popisovala, co dané objekty, proměnné nebo funkce znamenají či dělají. Nebál jsem se proto klidně i delších jmen pokud mi přišlo, že by to pomohlo budoucímu čtenáři se v kódu lépe zorientovat. Zde jsem se však přistihl, že možná také zabíhám do přílišných extrémů. Během tvorby programu jsem si také uvědomil, že nemá smysl ve jménu proměnné slepě opakovat typ proměnné, ale snažit se trefným pojmenováním objektu v aktuálním kontextu přidat informační hodnotu navíc.
-\\\\
+\subsubsection{Zapouzdření privátních dat}
 V neposlední řadě jsem pak usiloval o to, aby každý objekt zpřístupňoval navenek jen ty informace, které jsou potřeba a více ne. To se vyplácí z toho důvodu, že je jasnější, jaký je záměr jaké funkce. Zdali má daná funkce být pouze malou pomocnou funkcí nebo něčím klíčovým, čím objekt komunikuje navenek. Dále to také usnadňuje práci z našeptávačem, který mi zbytečně nenabízí ty funkce, které stejně nebudu chtít na daném objektu nikdy volat.
 \subsection{Chronologický postup tvorby}
 Zde se pokusím popsat, jak se program postupně vyvíjel a jak na sobě jednotlivé důležité části programu časově navazují. Mám pocit, že je to užitečná informace, která slouží k pochopení, proč jsou různé věci řešeny tak jak jsou řešeny a dá lepší přehled o tom, jaké části programu jsou závislé na jakých jiných.
 \subsubsection{Načítání vstupních dat}
 Nejprve bylo nutné vůbec se rozhodnout, jak budu reprezentovat vstupní data. Rozhodl jsem se, že nejjednodušší bude zadávat herní mapu jako textový soubor, ve kterém jednotlivé symboly budou znamenat různé herní objekty. Rozhodl jsem se také zadávat soubory pomocí funkce Resources, kterou umožňuje Visual Studio, ale to jsem později změnil, jelikož mi přišlo příliš krkolomné přidávat takto nové obrázky. Je jednodušší mít jednu složku, ze které akorát přečtu soubor s daným jménem. Zároveň aby se projevily změny, tak je při využití Resources nutné také klikat na volbu Clean Build, což také přidává zbytečný krok navíc. 
 \\\\
-Jinak jsem se snažil vstupní data co nejvíce oddělit od zbytku programu a založil jsem tedy samostatnou statickou třídu \textit{InputManager}, která se stará o vše co se týká načítání a předzpracování vstupních dat.
+Jinak jsem se snažil vstupní data co nejvíce oddělit od zbytku programu a založil jsem tedy samostatnou statickou třídu \textbf{InputManager}, která se stará o vše co se týká načítání a předzpracování vstupních dat.
 \\\\
 Na načítání vstupních dat bych však také chtěl ještě opravit způsob, kterým jsou vstupní data předávány samotným objektům. Přijde mi lepší, aby objekty dostávaly tyto data jako svoje parametry konstruktoru jelikož tím pádem budou objekty méně závislé na konkrétní implementaci reprezentace vstupních dat.
 \subsubsection{Vykreslování herního pole}
-Dále bylo nutné se postarat o to, abych dokázal vykreslit herní pole se všemi objekty které v něm žijí. Bez toho by vůbec nemělo smysl implementovat nějaké chování objektů. Zde jsem se inspiroval kódem, který jsme využívali na cvičeních z Programování 2 při upravování hry s balvany. Rozhodl jsem se však pro větší obecnost a tudíž místo aby si informace o tom, jaké obrázky je potřeba vykreslit držela třída \textit{Painter}, tak má každý herní objekt metodu \textit{GetBitmap}, která vrátí jeho aktuální bitmapu k vykreslení. To mi umožní, aby objekt sám mohl podle svého stavu vykreslit bitmapu kterou potřebuje a \textit{Painter} se o to tedy vůbec nemusí starat a nemusím mít žádný \verb|switch|, který by rozhodoval, jaký objekt to je a co mám tedy vlastně vykreslit.
+Dále bylo nutné se postarat o to, abych dokázal vykreslit herní pole se všemi objekty které v něm žijí. Bez toho by vůbec nemělo smysl implementovat nějaké chování objektů. Zde jsem se inspiroval kódem, který jsme využívali na cvičeních z Programování 2 při upravování hry s balvany. Rozhodl jsem se však pro větší obecnost a tudíž místo aby si informace o tom, jaké obrázky je potřeba vykreslit držela třída \textbf{Painter}, tak má každý herní objekt metodu \textbf{GetImageToDraw}, která vrátí jeho aktuální bitmapu (tedy objekt třídy \verb|Bitmap|) k vykreslení. To mi umožní, aby objekt sám mohl podle svého stavu vykreslit bitmapu kterou potřebuje a \textbf{Painter} se o to tedy vůbec nemusí starat a nemusím mít žádný \verb|switch|, který by rozhodoval, jaký objekt to je a co mám tedy vlastně vykreslit.
+\subsubsection{Grafika a pohyb objektů}
+Poté co jsem zprovoznil vykreslování nehybných objektů přišlo na řadu vyzkoušet. Jak si program povede s vykreslováním objektů, které se hýbou. Zde jsem v první řadě zapomněl vždy vyčistit komponentu \verb|Graphics| a tudíž se mi kreslily další vrstvy přes sebe. Nabízelo se snadné řešení: před každým dalším vykreslením všech objektů smazat celé plátno. S tím se však objevil nový problém, jelikož celá obrazovka vždy blikala. Zde mi hodně pomohla ChatGPT, která mi poradila, že to nejspíš bude tím, že program nestíhá tak rychle občerstvovat plátno a že bych měl kreslit jednotlivé obrázky do bufferu vedle a teprve až budou všechny připravené, tak výsledek překreslit do na plátno. Měla pravdu a grafika tím tedy byla úspěšně zprovozněna i pro dynamické objekty.
+\subsubsection{Rozdělení projektu do více souborů}
+V tomto momentu, kdy jsem se pro cokoliv co tomu alespoň trochu nahrávalo rozhodl vytvořit objekt, tak jsem měl opravdu mnoho kódu. Uvědomil jsem si, že mi dlouho zabere akorát jezdit nahoru a dolů po mém zdrojovém souboru a hledat tu správnou třídu, do které bych měl napsat nový kód nebo poupravit ten stávající. To byla veliká motivace k tomu, založit si více souborů, které by logicky odpovídaly různým částem programu. Tak jsem se tedy rozhodl pro to, mít pět hlavních zdrojových souborů. Těmi byly následující:
+\begin{itemize}
+    \item GameForm.cs
+    \item GameManager.cs
+    \item GameObjects.cs
+    \item HelperClasses.cs
+    \item InputManager.cs
+\end{itemize}
+Soubor \textbf{GameForm.cs} obsahuje kód nutný k inicializaci okénka hry a předání informací o okénku třídě \textbf{GameManager}, která žije ve vlastním stejnojmenném souboru. Tato třída se pak stará o samotnou logiku hry. Rozhoduje o tom, co se má vykreslovat na základě toho, v jakém je hra stavu, implementuje logiku herní smyčky a přijímá od Windows Forms stisknuté klávesy od uživatele, podle kterých se pak rozhoduje, co dělat, a v neposlední řadě si drží reference na všechny důležité objekty jako jsou třeba objekt \textbf{Map} nebo \textbf{Painter}. 
 \\\\
-Poté co jsem zprovoznil vykre
+Tyto dva objekty žijí ve vlastním souboru jménem \textbf{HelperClasses.cs} společně se strukturou \textbf{Direction}. To jsou v podstatě třídy, které mi neseděly do jiného souboru. V budoucnu možná ještě tyto třídy nějak logicky rozdělím. 
+\\\\
+Dalšími souborem je \textbf{GameObjects.cs}, který obsahuje kód všech objektů, které žijí ve hře, dají se nějak vykreslit (většinou), dá se s nimi nějak interagovat, nebo do nich narážet a nebo se samy pohybují. Tyto objekty všechny dědí od společné rodičovské třídy \textbf{Game Object}. 
+\\\\
+Posledním souborem, který ještě zbývá zmínit je soubor \textbf{InputManager}, který se stará o načítání a předzpracování vstupu, aby už si ho všechny objekty mohly jednoduše přečíst a nemusely se starat o nic dalšího. Rozhodl jsem se všechno obstarávání vstupu takto rozdělit také z důvodu přenositelnosti, kdybych se někdy rozhodl vstupní data reprezentovat jinak. Pak bude tedy stačit jednoduše upravit pouze tento soubor a nikde jinde nebude potřeba dělat (téměř) žádné změny.
 \end{document}
