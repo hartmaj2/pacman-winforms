@@ -16,7 +16,7 @@ namespace Pacman
             return Math.Sqrt(Math.Pow(Math.Abs(x - GetGridX()), 2) + Math.Pow(Math.Abs(y - GetGridY()), 2));
         }
     } 
-    abstract class GridObject
+    abstract class GridObject : GameObject
     {
         private int gridX;
         private int gridY;
@@ -25,11 +25,11 @@ namespace Pacman
             this.gridX = x;
             this.gridY = y;
         }
-        public int GetGridX()
+        public override int GetGridX()
         { 
             return gridX; 
         }
-        public int GetGridY() 
+        public override int GetGridY() 
         {  
             return gridY; 
         }
@@ -380,7 +380,12 @@ namespace Pacman
         }
         protected override void TryStartNextMovement(Map map)
         {
-            if (!CanGoInDirection(map,direction))
+            if (IAmAtIntersection(map))
+            {
+                StaticLayerBlankSpace targetNeighbour = FindNeighbourClosestToTarget(map);
+                SetDirectionTowardsNeighbor(targetNeighbour);
+            }
+            else if (!CanGoInDirection(map,direction))
             {
                 if (IAmHome(map))
                 {
@@ -389,14 +394,11 @@ namespace Pacman
                 else
                 {
                     TryTurnOnCurve(map);
-                }
-                
+                } 
             }
-            else
-            {
-                SetCurrentLocationLastOccupied();
-                SetMoving();
-            }
+            SetCurrentLocationLastOccupied();
+            SetMoving();
+            
         }
         protected override bool IsReachableCell(int x, int y, Map map)
         {
@@ -433,9 +435,36 @@ namespace Pacman
             lastOccupiedCell.X = GetGridX();
             lastOccupiedCell.Y = GetGridY();
         }
+
+        private StaticLayerBlankSpace FindNeighbourClosestToTarget(Map map)
+        {
+            double closestDistance = Double.MaxValue;
+            StaticLayerBlankSpace closestNeighbour = null;
+            foreach (StaticLayerBlankSpace neighbour in map.GetNeighboringBlankCells(GetGridX(),GetGridY()))
+            {
+                if (!WasLastOccupied(neighbour))
+                {
+                    double distanceToTarget = neighbour.GetDistanceToCell(target.X,target.Y);
+                    if (distanceToTarget < closestDistance)
+                    {
+                        closestDistance = distanceToTarget;
+                        closestNeighbour = neighbour;
+                    }
+                }
+            }
+            return closestNeighbour;
+        }
         private bool IAmHome(Map map)
         {
             if(map.IsGhostHome(GetGridX(), GetGridY()))
+            {
+                return true;
+            }
+            return false;
+        }
+        private bool IAmAtIntersection(Map map)
+        {
+            if (map.IsAnIntersection(GetGridX(), GetGridY()))
             {
                 return true;
             }
