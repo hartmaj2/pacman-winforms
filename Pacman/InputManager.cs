@@ -1,4 +1,6 @@
-﻿namespace Pacman
+﻿using System.IO;
+
+namespace Pacman
 {
     /*
      * Takes care of all the input data. It is an abstraction so that if I change the way the data is input
@@ -8,6 +10,10 @@
      */
     static class InputManager
     {
+
+        private const int cellSize = 48;
+        private const int heroSpeed = 12; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
+        private const int ghostSpeed = 10;
 
         /*
          * Sets how different game objects are represented in the map.txt file
@@ -20,10 +26,8 @@
         private const char ghostHomeChar = 'H';
         private const char fenceChar = 'F';
 
-        private const int cellSize = 48;
-        private const int heroSpeed = 12; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
-        private const int ghostSpeed = 10;
-
+        private const string mapFolder = "MapData";
+        private const string mapFile = "map.txt";
         /*
          * The sprites are just PNG images converted to a Bitmap to be rendered by the Painter class later.
          */
@@ -44,8 +48,6 @@
         private static Bitmap pelletSprite;
         private static Bitmap wallSprite;
 
-        private static readonly string map = Properties.Resources.map;
-
         private static StaticGridObject[,] staticGrid;
         private static InteractiveGridObject[,] dynamicGrid;
         private static List<TweeningObjects> tweeningObjects;
@@ -59,10 +61,6 @@
         public static int GetCellSize()
         {
             return cellSize;
-        }
-        public static string GetMap()
-        {
-            return map;
         }
         public static Bitmap GetFenceSprite()
         {
@@ -164,7 +162,7 @@
         {
             mapDataLoaded = true;
 
-            string mapString = GetMap();
+            string mapString = File.ReadAllText(Path.Combine(Application.StartupPath,mapFolder,mapFile));
             string[] separated = mapString.Split(new[] { "\r\n" }, StringSplitOptions.None);
 
             int height = separated.Length;

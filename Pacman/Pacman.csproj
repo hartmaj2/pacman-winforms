@@ -31,6 +31,19 @@
 	    <Content Include="Images\**">
 		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    </Content>
+		<Content Include="MapData\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\map.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="Resources\map.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>
