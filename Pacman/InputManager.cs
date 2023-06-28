@@ -41,7 +41,7 @@ namespace Pacman
 
         private static Bitmap blankSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, blankImage)), cellSize, cellSize);
         private static Bitmap fenceSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, fenceImage)), cellSize, cellSize);
-        private static Bitmap ghostSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostRedImage)), cellSize, cellSize);
+        private static Bitmap ghostRedSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostRedImage)), cellSize, cellSize);
         private static Bitmap heroSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, heroImage)), cellSize, cellSize);
         private static Bitmap pelletSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, pelletImage)), cellSize, cellSize);
         private static Bitmap wallSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, wallImage)), cellSize, cellSize);
@@ -82,7 +82,7 @@ namespace Pacman
         }
         public static Bitmap GetGhostSprite()
         {
-            return ghostSprite;
+            return ghostRedSprite;
         }
         public static Hero GetHero()
         {
@@ -158,39 +158,39 @@ namespace Pacman
                     switch (gameObjectChar)
                     {
                         case blankChar:
-                            staticGrid[x, y] = new StaticLayerBlankSpace(x,y);
-                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(x,y);
+                            staticGrid[x, y] = new StaticLayerBlankSpace(null,x,y);
+                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(null,x,y);
                             break;
                         case wallChar:
-                            staticGrid[x, y] = new Wall(x,y);
-                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(x,y);
+                            staticGrid[x, y] = new Wall(wallSprite,x,y);
+                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(null,x,y);
                             break;
                         case heroChar:
-                            hero = new Hero(x, y, heroSpeed);
+                            hero = new Hero(heroSprite,x, y, heroSpeed);
                             tweeningObjects.Add(hero);
-                            staticGrid[x, y] = new StaticLayerBlankSpace(x,y);
-                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(x,y);
+                            staticGrid[x, y] = new StaticLayerBlankSpace(null,x,y);
+                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(null,x,y);
                             break;
                         case pelletChar:
-                            staticGrid[x, y] = new StaticLayerBlankSpace(x,y);
-                            dynamicGrid[x, y] = new Pellet(x,y);
+                            staticGrid[x, y] = new StaticLayerBlankSpace(null, x,y);
+                            dynamicGrid[x, y] = new Pellet(pelletSprite,x,y);
                             break;
                         case ghostChar:
-                            Ghost ghost = new Ghost(x, y, ghostSpeed);
+                            Ghost ghost = new Ghost(ghostRedSprite,x, y, ghostSpeed);
                             tweeningObjects.Add(ghost);
                             ghosts.Add(ghost);
-                            staticGrid[x, y] = new GhostHome(x,y);
-                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(x,y);
+                            staticGrid[x, y] = new GhostHome(null, x,y);
+                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(null, x,y);
                             break;
                         case ghostHomeChar:
-                            staticGrid[x, y] = new GhostHome(x,y);
-                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(x,y);
+                            staticGrid[x, y] = new GhostHome(null, x,y);
+                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(null, x,y);
                             break;
                         case fenceChar:
-                            Fence fence = new Fence(x,y);
+                            Fence fence = new Fence(fenceSprite,x,y);
                             fences.Add(fence);
                             staticGrid[x, y] = fence;
-                            dynamicGrid[x,y ] = new InteractiveLayerBlankSpace(x,y);
+                            dynamicGrid[x,y ] = new InteractiveLayerBlankSpace(null, x,y);
                             break;
                     }
                 }

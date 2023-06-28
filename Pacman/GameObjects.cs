@@ -6,22 +6,33 @@ namespace Pacman
     /*
     * Everything that lives inside the game should inherit this. It has to be something that can 
     * be located somewhere in the game world. It doesn't have to be moving. It can be walls, pellets, anything.
+    * It also has to be something that can be drawn by the painter to the game bitmap.
     */
     abstract class GameObject
     {
+        protected Bitmap sprite;
         public abstract int GetGridX();
         public abstract int GetGridY();
         public double GetDistanceToCell(int x, int y)
         {
             return Math.Sqrt(Math.Pow(Math.Abs(x - GetGridX()), 2) + Math.Pow(Math.Abs(y - GetGridY()), 2));
         }
+        public virtual Bitmap GetBitmap()
+        {
+            return sprite;
+        }
+        public virtual bool IsDrawable()
+        {
+            return sprite != null;
+        }
     } 
     abstract class GridObject : GameObject
     {
         private int gridX;
         private int gridY;
-        public GridObject(int x, int y)
+        public GridObject(Bitmap image, int x, int y)
         {
+            this.sprite = image;
             this.gridX = x;
             this.gridY = y;
         }
@@ -40,7 +51,7 @@ namespace Pacman
      */
     abstract class StaticGridObject : GridObject
     {
-        public StaticGridObject(int x, int y) : base(x, y) { }
+        public StaticGridObject(Bitmap image, int x, int y) : base(image, x, y) { }
     }
     /*
      * These objects are not moving but can be eaten or otherwise interacted with by some kind of a player. 
@@ -48,7 +59,7 @@ namespace Pacman
      */
     abstract class InteractiveGridObject : GridObject
     {
-        public InteractiveGridObject(int x, int y) : base(x, y) { }
+        public InteractiveGridObject(Bitmap image, int x, int y) : base(image, x, y) { }
     }
     /* 
      * This is anything in the game that can move its position. It may be both something that can move 
@@ -58,6 +69,7 @@ namespace Pacman
     {       
 
         protected Direction direction;
+
         public void TurnAround()
         {
             direction = direction.OppositeDirection();
@@ -87,8 +99,9 @@ namespace Pacman
         protected int gridX;
         protected int gridY;
 
-        public DiscreteMovingObject(int x, int y)
+        public DiscreteMovingObject(Bitmap image, int x, int y)
         {
+            this.sprite = image;
             gridX = x;
             gridY = y;
         }
@@ -128,8 +141,9 @@ namespace Pacman
 
         protected bool isMoving;
 
-        public TweeningObjects(int gridX, int gridY, int speed)
+        public TweeningObjects(Bitmap image, int gridX, int gridY, int speed)
         {
+            this.sprite = image;
             pixelX = gridX * InputManager.GetCellSize();
             pixelY = gridY * InputManager.GetCellSize();
             SetTweenSpeed(speed); // automatically adjust movements speed to be a multiple of cell size
@@ -258,15 +272,15 @@ namespace Pacman
      */
     class StaticLayerBlankSpace : StaticGridObject
     {
-        public StaticLayerBlankSpace(int x, int y) : base(x, y) { }
+        public StaticLayerBlankSpace(Bitmap image, int x, int y) : base(image, x, y) { }
     }
     class InteractiveLayerBlankSpace : InteractiveGridObject
     {
-        public InteractiveLayerBlankSpace(int x, int y) : base(x, y) { }
+        public InteractiveLayerBlankSpace(Bitmap image, int x, int y) : base(image, x, y) { }
     }
     class Fence : StaticGridObject
     {
-        public Fence(int x, int y) : base(x, y) { }
+        public Fence(Bitmap image, int x, int y) : base(image, x, y) { }
 
         private bool open = false;
         public void Open()
@@ -281,17 +295,24 @@ namespace Pacman
         {
             return !open;
         }
+
+        public override bool IsDrawable()
+        {
+            return !open;
+        }
+
+
     }
     class GhostHome : StaticGridObject
     {
-        public GhostHome(int x, int y) : base(x, y) { }
+        public GhostHome(Bitmap image, int x, int y) : base(image, x, y) { }
     }
     /* 
      * A wall that the player will collide with.
      */
     class Wall : StaticGridObject
     {
-        public Wall(int x, int y) : base(x, y) { }
+        public Wall(Bitmap image, int x, int y) : base(image, x, y) { }
     }
     /*
      * Main playable character of the game. So far I will make it non playable but will
@@ -302,7 +323,7 @@ namespace Pacman
         private int pelletsEaten = 0;
         private Direction nextDirection;
 
-        public Hero(int x, int y, int speed) : base(x, y, speed)
+        public Hero(Bitmap image, int x, int y, int speed) : base(image, x, y, speed)
         {
             direction = Direction.Right;
         }
@@ -363,7 +384,7 @@ namespace Pacman
      */
     class Pellet : InteractiveGridObject
     {
-        public Pellet(int x, int y) : base(x, y) { }
+        public Pellet(Bitmap image, int x, int y) : base(image, x, y) { }
     }
     /* 
      * Enemies that will be chasing the player
@@ -372,7 +393,7 @@ namespace Pacman
     {
         private Point target;
         private Point lastOccupiedCell;
-        public Ghost(int x, int y, int speed) : base(x, y, speed)
+        public Ghost(Bitmap image, int x, int y, int speed) : base(image, x, y, speed)
         {
             direction = Direction.Up;
             target = new Point(3, 3);

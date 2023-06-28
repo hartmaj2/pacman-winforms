@@ -85,7 +85,7 @@
          */
         public void RemoveFromInteractiveGrid(int gridX,  int gridY)
         {
-            interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace(gridX,gridY);
+            interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace(null,gridX,gridY);
         }
         public bool ContainsPellet(int gridX, int gridY)
         {
@@ -227,12 +227,6 @@
         private Graphics bufferGraphics; // the buffer that we paint on before propagating change to formGraphics
         private Bitmap bufferBitmap;
 
-        private Bitmap wallSprite = InputManager.GetWallSprite();
-        private Bitmap heroSprite = InputManager.GetHeroSprite();
-        private Bitmap pelletSprite = InputManager.GetPelletSprite();
-        private Bitmap ghostSprite = InputManager.GetGhostSprite();
-        private Bitmap fenceSprite = InputManager.GetFenceSprite();
-
         private int spriteSize = InputManager.GetCellSize();
 
         public Painter(Form form, Map map)
@@ -253,25 +247,20 @@
         private void PaintStaticGridObjectAtCoordinate(Map map, int dx, int dy)
         {
             StaticGridObject staticObjectToPaint = map.GetStaticGridObject(dx, dy);
-            if (staticObjectToPaint is Wall)
+            if (staticObjectToPaint.IsDrawable())
             {
-                bufferGraphics.DrawImage(wallSprite, spriteSize * dx, spriteSize * dy);
+                bufferGraphics.DrawImage(staticObjectToPaint.GetBitmap(), spriteSize * dx, spriteSize * dy);
             }
-            if (staticObjectToPaint is Fence)
-            {
-                if (((Fence)staticObjectToPaint).IsClosed())
-                {
-                    bufferGraphics.DrawImage(fenceSprite, spriteSize * dx, spriteSize * dy);
-                }
-            }
+
         }
         private void PaintInteractiveGridObjectAtCoordinate(Map map, int dx, int dy)
         {
             InteractiveGridObject interactiveObjectToPaint = map.GetInteractiveGridObject(dx, dy);
-            if (interactiveObjectToPaint is Pellet)
+            if (interactiveObjectToPaint.IsDrawable())
             {
-                bufferGraphics.DrawImage(pelletSprite, spriteSize * dx, spriteSize * dy);
+                bufferGraphics.DrawImage(interactiveObjectToPaint.GetBitmap(), spriteSize * dx, spriteSize * dy);
             }
+            
         }
         private void PaintGrids(Map map)
         {
@@ -279,9 +268,7 @@
             {
                 for (int dx = 0; dx < map.GetGridWidth(); dx++)
                 {
-                    
                     PaintStaticGridObjectAtCoordinate(map, dx, dy);
-                    
                     PaintInteractiveGridObjectAtCoordinate(map, dx, dy);
                     
                 }
@@ -293,14 +280,8 @@
             {
                 int xPos = movingObjectToPaint.GetPixelX();
                 int yPos = movingObjectToPaint.GetPixelY();
-                if (movingObjectToPaint is Hero)
-                {
-                    bufferGraphics.DrawImage(heroSprite, xPos, yPos);
-                }
-                if (movingObjectToPaint is Ghost)
-                {
-                    bufferGraphics.DrawImage(ghostSprite, xPos, yPos);
-                }
+                bufferGraphics.DrawImage(movingObjectToPaint.GetBitmap(), xPos, yPos);
+ 
             }
         }
         public void Paint(Map map, int score)
