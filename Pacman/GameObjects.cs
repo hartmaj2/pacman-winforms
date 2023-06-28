@@ -234,12 +234,17 @@ namespace Pacman
          */
         protected void SetTweenSpeed(int newSpeed)
         {
+            newSpeed = ReduceToDivisibleWithoutRemainder(newSpeed);
+            movementSpeed = newSpeed;
+            maxMovementFrame = mapCellSize / movementSpeed;
+        }
+        private int ReduceToDivisibleWithoutRemainder(int newSpeed)
+        {
             while (mapCellSize % newSpeed != 0)
             {
                 newSpeed--;
             }
-            movementSpeed = newSpeed;
-            maxMovementFrame = mapCellSize / movementSpeed;
+            return newSpeed;
         }
         public bool IsTouchingTweeningObject(TweeningObjects other)
         {
