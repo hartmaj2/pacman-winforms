@@ -18,9 +18,9 @@ namespace Pacman
         private const int ghostSpeed = 10;
 
         private const int redGhostPrepareTime = 5;
-        private const int pinkGhostPrepareTime = 100000;
-        private const int blueGhostPrepareTime = 150000;
-        private const int orangeGhostPrepareTime = 200000;
+        private const int pinkGhostPrepareTime = 10;
+        private const int blueGhostPrepareTime = 15;
+        private const int orangeGhostPrepareTime = 20;
 
         public const double scatterModeDuration = 10;
         public const double chaseModeDuration = 15;

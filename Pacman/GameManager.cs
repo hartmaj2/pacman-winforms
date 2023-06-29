@@ -23,6 +23,7 @@ namespace Pacman
         private TimeSpan chaseModeDuration;
         private TimeSpan frightenedModeDuration;
 
+        private int frightenedGhostsEaten;
         private int score;
         private bool gameLost;
 
@@ -39,6 +40,7 @@ namespace Pacman
             gameState = GameState.MainScreen;
             gameForm = form;
             score = 0;
+            frightenedGhostsEaten = 0;
         }
         public void Update(Keys keyPressed)
         {
@@ -144,6 +146,7 @@ namespace Pacman
                 }
                 currentGhostMode = GhostMode.Frightened;
                 lastModeChange = DateTime.Now;
+                frightenedGhostsEaten = 0;
             }
         }
         private void CheckGameWon()
@@ -206,6 +209,8 @@ namespace Pacman
                 if (ghostTouched.GetCurrentMode() == GhostMode.Frightened)
                 {
                     ghostTouched.BeEaten();
+                    frightenedGhostsEaten++;
+                    score += 200 * frightenedGhostsEaten;
                 }
                 else
                 {
