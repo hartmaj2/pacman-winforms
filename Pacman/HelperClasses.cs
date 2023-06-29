@@ -67,12 +67,15 @@ namespace Pacman
         private List<Ghost> ghosts;
         private Hero hero;
 
+        private int startPelletsCount;
+        private int pelletsRemaining;
+
         private int gridWidth;
         private int gridHeight;
 
         private int cellSize;
 
-        public Map(int cellSize, Hero hero, List<Ghost> ghosts, List<Fence> fences, InteractiveGridObject[,] interactiveGrid, StaticGridObject[,] staticGrid, List<TweeningObject> movingObjects)
+        public Map(int cellSize, Hero hero, List<Ghost> ghosts, List<Fence> fences, InteractiveGridObject[,] interactiveGrid, StaticGridObject[,] staticGrid, List<TweeningObject> movingObjects, int pelletsCount)
         {
             this.cellSize = cellSize;
             this.hero = hero;
@@ -81,6 +84,8 @@ namespace Pacman
             this.interactiveGrid = interactiveGrid;
             this.staticGrid = staticGrid;
             this.movingObjects = movingObjects;
+            pelletsRemaining = pelletsCount;
+            startPelletsCount = pelletsCount;
             gridWidth = staticGrid.GetLength(0);
             gridHeight = staticGrid.GetLength(1);
 
@@ -97,11 +102,16 @@ namespace Pacman
         { 
             return cellSize; 
         }
+        public int GetRemainingPelletsCount()
+        {
+            return pelletsRemaining;
+        }
         /*
          * Writes the corresponding BlankSpace object to the interactive grid thus effectively removing the object
          */
-        public void RemoveFromInteractiveGrid(int gridX,  int gridY)
+        public void RemovePellet(int gridX,  int gridY)
         {
+            pelletsRemaining--;
             interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace(null,gridX,gridY);
         }
         public bool ContainsPellet(int gridX, int gridY)

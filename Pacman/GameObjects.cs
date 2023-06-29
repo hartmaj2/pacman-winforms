@@ -339,7 +339,7 @@ namespace Pacman
         {
             if (map.ContainsPellet(GetGridX(), GetGridY())) 
             {
-                map.RemoveFromInteractiveGrid(GetGridX(), GetGridY());
+                map.RemovePellet(GetGridX(), GetGridY());
                 pelletsEaten++;
             }
         }

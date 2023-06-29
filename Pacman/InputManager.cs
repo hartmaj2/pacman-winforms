@@ -62,6 +62,8 @@ namespace Pacman
             List<Fence> fences = new List<Fence>();
             Hero hero = null;
 
+            int pelletsCount = 0;
+
             for (int y = 0; y < height; y++)
             {
                 char[] lineChars = separated[y].ToCharArray();
@@ -86,6 +88,7 @@ namespace Pacman
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null,x,y);
                             break;
                         case pelletChar:
+                            pelletsCount++;
                             staticGrid[x, y] = new StaticLayerBlankSpace(null, x,y);
                             interactiveGrid[x, y] = new Pellet(pelletSprite,x,y);
                             break;
@@ -110,7 +113,7 @@ namespace Pacman
                 }
             }
 
-            return new Map(cellSize,hero,ghosts,fences,interactiveGrid,staticGrid,tweeningObjects);
+            return new Map(cellSize,hero,ghosts,fences,interactiveGrid,staticGrid,tweeningObjects,pelletsCount);
 
 
         }

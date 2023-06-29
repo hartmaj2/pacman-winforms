@@ -38,6 +38,7 @@ namespace Pacman
                     MoveAllMovingObjects();
                     CheckGhostCollisions();
                     UpdateScore();
+                    CheckGameWon();
                     break;
                 case GameState.GameOver:
                     CheckGameOverKeyPresses(keyPressed);
@@ -118,6 +119,14 @@ namespace Pacman
         {
             score = map.GetHero().GetPelletsEaten();
         }
+
+        private void CheckGameWon()
+        {
+            if (map.GetRemainingPelletsCount() == 0)
+            {
+                gameState = GameState.GameOver;
+            }
+        }
         private void CheckGhostCollisions()
         {
             if (map.GetHero().IsTouchingAnyGhost(map.GetGhosts()))
@@ -133,7 +142,6 @@ namespace Pacman
                 objectToMove.Move(map);
             }
         }
-
         private void RestartGame()
         {
             map = InputManager.PrepareAndReturnMap();
