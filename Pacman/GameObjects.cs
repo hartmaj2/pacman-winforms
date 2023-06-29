@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Security.Policy;
 
 namespace Pacman
@@ -110,7 +111,7 @@ namespace Pacman
             int newX = gridX + direction.X;
             int newY = gridY + direction.Y;
 
-            if (map.IsFreeGridCell(newX, newY))
+            if (map.IsBlankCell(newX, newY))
             {
                 gridX += direction.X;
                 gridY += direction.Y;
@@ -380,7 +381,7 @@ namespace Pacman
         }
         protected override bool IsReachableCell(int x, int y, Map map)
         {
-            if (map.IsFreeGridCell(x,y))
+            if (map.IsBlankCell(x,y))
             {
                 return true;
             }
@@ -397,19 +398,72 @@ namespace Pacman
     /* 
      * Enemies that will be chasing the player
      */
+
+    enum GhostMode { Preparing ,Chase, Scatter, Frightened };
     class Ghost : TweeningObject
     {
+        private GhostMode currentMode;
+
         private Point target;
         private Point lastOccupiedCell;
-        public Ghost(Bitmap image, int x, int y, int speed, int mapCellSize) : base(image, x, y, speed, mapCellSize)
+
+        private TimeSpan prepareDuration;
+        private DateTime ghostHouseEnterTime;
+        public Ghost(Bitmap image, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize)
         {
+            currentMode = GhostMode.Preparing;
             direction = Direction.Up;
             target = new Point(3, 3);
+            prepareDuration = TimeSpan.FromSeconds(prepareTimeInSeconds);
+            ghostHouseEnterTime = DateTime.Now;
             lastOccupiedCell = new Point(GetGridX(),GetGridY());
         }
+
+        private void TryExitGhostHouse()
+        {
+            DateTime currentTime = DateTime.Now;
+            if (currentTime - ghostHouseEnterTime > prepareDuration)
+            {
+                currentMode = GhostMode.Scatter;
+                Console.WriteLine("I switched to scatter mode");
+            }
+        }
+        private void SetTargetToRandom(Map map)
+        {
+            Random rand = new Random();
+            int randomGridX = rand.Next(map.GetGridWidth());
+            int randomGridY = rand.Next(map.GetGridHeight());
+            target = new Point(randomGridX, randomGridY);
+        }
+        private void SetTargetToCorner(Map map)
+        {
+            target = new Point(map.GetGridWidth(), 0);
+        }
+        private void SetTargetBasedOnMode(Map map)
+        {
+            switch(currentMode) 
+            {
+                case GhostMode.Scatter:
+                    SetTargetToCorner(map);
+                    break;
+                case GhostMode.Chase:
+                    SetTargetOnHero(map);
+                    break;
+                case GhostMode.Frightened:
+                    SetTargetToRandom(map);
+                    break;
+            }
+        }
+        /*
+         * The target is ony taken into account if the ghost is at an intersection
+         */
         protected override void TryStartNextMovement(Map map)
         {
-            SetTargetOnHero(map);
+            if (currentMode == GhostMode.Preparing)
+            {
+                TryExitGhostHouse();
+            }
+            SetTargetBasedOnMode(map);
             if (IAmAtIntersection(map))
             {
                 StaticLayerBlankSpace targetNeighbour = FindNeighbourClosestToTarget(map);
@@ -432,11 +486,19 @@ namespace Pacman
         }
         protected override bool IsReachableCell(int x, int y, Map map)
         {
-            if (map.IsFreeGridCell(x,y) || map.IsGhostHome(x,y) || map.IsOpenFence(x,y))
+            switch (currentMode)
             {
-                return true;
+                case GhostMode.Preparing:
+                    return (map.IsBlankCell(x, y) || map.IsGhostHome(x, y));
+                case GhostMode.Chase:
+                case GhostMode.Frightened:
+                case GhostMode.Scatter:
+                    return (map.IsBlankCell(x, y) || map.IsGhostHome(x, y) || map.IsFence(x,y));
+                   
             }
             return false;
+                
+
         }
         private bool WasLastOccupied(StaticLayerBlankSpace neighbour)
         {

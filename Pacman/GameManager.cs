@@ -31,7 +31,7 @@ namespace Pacman
             switch(gameState)
             {
                 case GameState.MainScreen:
-                    CheckMainScreenKeyPresses(keyPressed);
+                    CheckStartScreenKeyPresses(keyPressed);
                     break;
                 case GameState.Running:
                     CheckRunningGameKeyPresses(keyPressed);
@@ -71,11 +71,12 @@ namespace Pacman
             
             
         }
-        private void CheckMainScreenKeyPresses(Keys keyPressed)
+        private void CheckStartScreenKeyPresses(Keys keyPressed)
         {
             switch (keyPressed)
             {
                 case Keys.Enter:
+                    InitializeGame();
                     gameState = GameState.Running;
                     break;
             }
@@ -108,7 +109,7 @@ namespace Pacman
             switch(keyPressed)
             {
                 case Keys.Enter:
-                    RestartGame();
+                    InitializeGame();
                     break;
                 case Keys.Q:
                     Application.Exit();
@@ -119,7 +120,6 @@ namespace Pacman
         {
             score = map.GetHero().GetPelletsEaten();
         }
-
         private void CheckGameWon()
         {
             if (map.GetRemainingPelletsCount() == 0)
@@ -142,7 +142,7 @@ namespace Pacman
                 objectToMove.Move(map);
             }
         }
-        private void RestartGame()
+        private void InitializeGame()
         {
             map = InputManager.PrepareAndReturnMap();
             painter = new Painter(gameForm, map);

@@ -146,7 +146,7 @@ namespace Pacman
         {
             return interactiveGrid[x,y];
         }
-        public bool IsFreeGridCell(int x, int y)
+        public bool IsBlankCell(int x, int y)
         {
             if (staticGrid[x,y] is StaticLayerBlankSpace)
             {
@@ -161,6 +161,10 @@ namespace Pacman
                 return true;
             }
             return false;
+        }
+        public bool IsFence(int x, int y)
+        {
+            return staticGrid[x, y] is Fence;
         }
         public bool IsOpenFence(int x, int y)
         {

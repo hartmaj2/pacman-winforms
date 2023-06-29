@@ -14,6 +14,7 @@ namespace Pacman
         private const int cellSize = 48;
         private const int heroSpeed = 12; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
         private const int ghostSpeed = 10;
+        private const int ghostPrepareTime = 5;
 
         /*
          * Sets how different game objects are represented in the map.txt file
@@ -93,7 +94,7 @@ namespace Pacman
                             interactiveGrid[x, y] = new Pellet(pelletSprite,x,y);
                             break;
                         case ghostChar:
-                            Ghost ghost = new Ghost(ghostRedSprite,x, y, ghostSpeed, cellSize);
+                            Ghost ghost = new Ghost(ghostRedSprite,x, y, ghostSpeed, cellSize, ghostPrepareTime);
                             tweeningObjects.Add(ghost);
                             ghosts.Add(ghost);
                             staticGrid[x, y] = new GhostHome(null, x,y);
