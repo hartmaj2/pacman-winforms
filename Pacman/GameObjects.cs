@@ -463,7 +463,6 @@ namespace Pacman
             {
                 TryExitGhostHouse();
             }
-            
             if (IAmAtIntersection(map))
             {
                 SetTargetBasedOnMode(map);

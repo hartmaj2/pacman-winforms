@@ -36,6 +36,9 @@ namespace Pacman
         private const string blankImage = "blank.png";
         private const string fenceImage = "fence.png";
         private const string ghostRedImage = "ghost_red.png";
+        private const string ghostPinkImage = "ghost_pink.png";
+        private const string ghostBlueImage = "ghost_blue.png";
+        private const string ghostOrangeImage = "ghost_orange.png";
         private const string heroImage = "hero.png";
         private const string pelletImage = "pellet.png";
         private const string wallImage = "wall.png";
