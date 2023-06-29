@@ -542,9 +542,7 @@ namespace Pacman
         }
         protected override void SetTargetToChaseTarget(Map map)
         {
-            Console.WriteLine($"Pacmans location is {map.GetHeroGridLocation()}");
             SetTargetAheadOfHero(map,0);
-            Console.WriteLine($"Red set his location to {target}");
         }
         protected override void SetTargetToScatterTarget(Map map)
         {
