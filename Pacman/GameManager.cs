@@ -133,10 +133,14 @@ namespace Pacman
             {
                 score += 10;
             }
+            if (map.GetHero().TryEatEnergizer(map))
+            {
+                score += 50;
+            }
         }
         private void CheckGameWon()
         {
-            if (map.GetRemainingPelletsCount() == 0)
+            if (map.GetRemainingPelletsCount() == 0 && map.GetRemainingEnergizersCount() == 0)
             {
                 gameState = GameState.GameOver;
             }

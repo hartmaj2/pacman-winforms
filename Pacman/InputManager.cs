@@ -17,10 +17,10 @@ namespace Pacman
         private const int heroSpeed = 12; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
         private const int ghostSpeed = 10;
 
-        private const int redGhostPrepareTime = 5;
-        private const int pinkGhostPrepareTime = 10;
-        private const int blueGhostPrepareTime = 15;
-        private const int orangeGhostPrepareTime = 20;
+        private const int redGhostPrepareTime = 50000;
+        private const int pinkGhostPrepareTime = 100000;
+        private const int blueGhostPrepareTime = 150000;
+        private const int orangeGhostPrepareTime = 200000;
 
         public const double scatterModeDuration = 10;
         public const double chaseModeDuration = 15;
@@ -86,6 +86,7 @@ namespace Pacman
             Ghost redGhost = null;
 
             int pelletsCount = 0;
+            int energizersCount = 0;
 
             for (int y = 0; y < height; y++)
             {
@@ -157,12 +158,13 @@ namespace Pacman
                             Energizer energizer = new Energizer(energizerSprite,x,y);
                             staticGrid[x, y] = new StaticLayerBlankSpace(null, x, y);
                             interactiveGrid[x, y] = energizer;
+                            energizersCount++;
                             break;
                     }
                 }
             }
 
-            return new Map(cellSize,hero,redGhost,ghosts,fences,interactiveGrid,staticGrid,tweeningObjects,pelletsCount);
+            return new Map(cellSize,hero,redGhost,ghosts,fences,interactiveGrid,staticGrid,tweeningObjects,pelletsCount,energizersCount);
 
 
         }

@@ -314,6 +314,15 @@ namespace Pacman
             }
             return false;
         }
+        public bool TryEatEnergizer(Map map)
+        {
+            if (map.ContainsEnergizer(GetGridX(), GetGridY())) 
+            {
+                map.RemoveEnergizer(GetGridX(), GetGridY());
+                return true;
+            }
+            return false;
+        }
         public void SetNextDirection(Direction newDirection)
         {   
             nextDirection = newDirection;

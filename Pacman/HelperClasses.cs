@@ -68,15 +68,15 @@ namespace Pacman
         private Hero hero;
         private Ghost redGhost;
 
-        private int startPelletsCount;
         private int pelletsRemaining;
+        private int energizersRemaining;
 
         private int gridWidth;
         private int gridHeight;
 
         private int cellSize;
 
-        public Map(int cellSize, Hero hero, Ghost redGhost, List<Ghost> ghosts, List<Fence> fences, InteractiveGridObject[,] interactiveGrid, StaticGridObject[,] staticGrid, List<TweeningObject> movingObjects, int pelletsCount)
+        public Map(int cellSize, Hero hero, Ghost redGhost, List<Ghost> ghosts, List<Fence> fences, InteractiveGridObject[,] interactiveGrid, StaticGridObject[,] staticGrid, List<TweeningObject> movingObjects, int pelletsCount, int energizersCount)
         {
             this.cellSize = cellSize;
             this.hero = hero;
@@ -87,7 +87,7 @@ namespace Pacman
             this.staticGrid = staticGrid;
             this.movingObjects = movingObjects;
             pelletsRemaining = pelletsCount;
-            startPelletsCount = pelletsCount;
+            energizersRemaining = energizersCount;
             gridWidth = staticGrid.GetLength(0);
             gridHeight = staticGrid.GetLength(1);
 
@@ -108,6 +108,10 @@ namespace Pacman
         {
             return pelletsRemaining;
         }
+        public int GetRemainingEnergizersCount()
+        {
+            return energizersRemaining;
+        }
         /*
          * Writes the corresponding BlankSpace object to the interactive grid thus effectively removing the object
          */
@@ -116,9 +120,22 @@ namespace Pacman
             pelletsRemaining--;
             interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace(null,gridX,gridY);
         }
+        public void RemoveEnergizer(int gridX, int gridY)
+        {
+            energizersRemaining--;
+            interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace(null, gridX, gridY);
+        }
         public bool ContainsPellet(int gridX, int gridY)
         {
             if (interactiveGrid[gridX, gridY] is Pellet)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool ContainsEnergizer(int gridX, int gridY)
+        {
+            if (interactiveGrid[gridX, gridY] is Energizer)
             {
                 return true;
             }
@@ -168,7 +185,6 @@ namespace Pacman
         {
             return staticGrid[x, y] is Fence;
         }
-
         public int GetWrappedXCoordinate(int x)
         {
             if (x >= gridWidth) return x - gridWidth;
@@ -181,7 +197,6 @@ namespace Pacman
             if (y < 0) return y + gridHeight;
             return y;
         }
-
         public int GetWrappedPixelXCoordinate(int pixelX)
         {
             if (pixelX < 0)
