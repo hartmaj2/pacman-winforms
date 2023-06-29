@@ -543,16 +543,15 @@ namespace Pacman
         }
         protected override void SetTargetToChaseTarget(Map map)
         {
-            SetTargetOnHero(map);
+            Console.WriteLine($"Pacmans location is {map.GetHeroGridLocation()}");
+            SetTargetAheadOfHero(map,0);
+            Console.WriteLine($"Red set his location to {target}");
         }
         protected override void SetTargetToScatterTarget(Map map)
         {
             target = new Point(map.GetGridWidth(), 0);
         }
-        private void SetTargetOnHero(Map map)
-        {
-            target = map.GetHeroGridLocation();
-        }
+
     }
 
     class PinkGhost : Ghost
@@ -601,11 +600,20 @@ namespace Pacman
         }
         protected override void SetTargetToChaseTarget(Map map)
         {
-            //TODO: Implement chase or flight target based on distance to hero
+            SetTargetBasedOnHeroDistance(map, 8);
         }
         protected override void SetTargetToScatterTarget(Map map)
         {
             target = new Point(0, map.GetGridHeight());
+        }
+
+        private void SetTargetBasedOnHeroDistance(Map map, double distanceLimit)
+        {
+            double distanceToHero = GetDistanceToCell(map.GetHeroGridLocation().X, map.GetHeroGridLocation().Y);
+            if (distanceToHero > distanceLimit) 
+            {
+                SetTargetAheadOfHero(map, 0);
+            }
         }
     }
 }
