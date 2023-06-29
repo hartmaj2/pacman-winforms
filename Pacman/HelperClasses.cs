@@ -250,11 +250,11 @@ namespace Pacman
             }
             return neighbours;
         }
-        public Point GetHeroLocation()
+        public Point GetHeroGridLocation()
         {
             return new Point(hero.GetGridX(), hero.GetGridY());
         }
-        public Point GetRedGhostLocation()
+        public Point GetRedGhostGridLocation()
         {
             return new Point(redGhost.GetGridX(), redGhost.GetGridY());
         }
