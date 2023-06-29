@@ -37,6 +37,7 @@ namespace Pacman
             painter = new Painter(form, map);
             gameState = GameState.MainScreen;
             gameForm = form;
+            score = 0;
         }
         public void Update(Keys keyPressed)
         {
@@ -194,6 +195,8 @@ namespace Pacman
             painter = new Painter(gameForm, map);
             gameLost = false;
             gameState = GameState.Running;
+            score = 0;
+            currentGhostMode = GhostMode.Scatter;
         }
     }
 }
