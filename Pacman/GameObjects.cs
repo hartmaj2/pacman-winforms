@@ -586,16 +586,11 @@ namespace Pacman
         {
             target = new Point(map.GetGridWidth(), map.GetGridHeight());
         }
-
         private void MoveTargetAwayFromRedGhost(Map map)
         {
-            Console.WriteLine($"Pacman is at location {map.GetHeroGridLocation().X} {map.GetHeroGridLocation().Y}");
-            Console.WriteLine($"Blue had target before moving at location {target.X} {target.Y}");
-            Console.WriteLine($"Red ghost is at location {map.GetRedGhostGridLocation().X} {map.GetRedGhostGridLocation().Y}");
             int vectorXToAdd = (target.X - map.GetRedGhostGridLocation().X);
             int vectorYToAdd = (target.Y - map.GetRedGhostGridLocation().Y);
             target = new Point(map.GetWrappedXCoordinate(vectorXToAdd+target.X),map.GetWrappedYCoordinate(vectorYToAdd+target.Y));
-            Console.WriteLine($"Blue ghost set its target to {target.X} {target.Y}");
         }
     }
 
