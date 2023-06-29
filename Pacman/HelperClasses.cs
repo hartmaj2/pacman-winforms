@@ -323,10 +323,10 @@ namespace Pacman
             DisplayScore(score);
             WriteBuffer();
         }
-        public void PaintGameOverScreen(int score)
+        public void PaintGameOverScreen(string gameOverText)
         {
             ClearBuffer();
-            DisplayGameOverText(score);
+            DisplayGameOverText(gameOverText);
             WriteBuffer();
         }
         private void DisplayScore(int score)
@@ -338,11 +338,10 @@ namespace Pacman
             float textWidth = bufferGraphics.MeasureString(FormConstants.startScreenText, FormConstants.textFont).Width;
             bufferGraphics.DrawString(FormConstants.startScreenText, FormConstants.startScreenFont, FormConstants.textBrush, (formWidth-textWidth)/2, formHeight/2);
         }
-        private void DisplayGameOverText(int score)
+        private void DisplayGameOverText(string gameOverText)
         {
-            string endScreenText = FormConstants.GetEndScreenText(score);
-            float textWidth = bufferGraphics.MeasureString(endScreenText, FormConstants.startScreenFont).Width;
-            bufferGraphics.DrawString(endScreenText,FormConstants.startScreenFont,FormConstants.textBrush, (formWidth-textWidth)/2,formHeight/2);
+            float textWidth = bufferGraphics.MeasureString(gameOverText, FormConstants.startScreenFont).Width;
+            bufferGraphics.DrawString(gameOverText,FormConstants.startScreenFont,FormConstants.textBrush, (formWidth-textWidth)/2,formHeight/2);
         }
 
     }

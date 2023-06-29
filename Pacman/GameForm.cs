@@ -14,9 +14,15 @@ namespace Pacman
         public static Font textFont = new Font("Arial", 16);
         public const string scoreText = "Score:";
 
-        public static string GetEndScreenText(int score)
+        public const string playAgainOrQuitText = "\nPress enter to play again or q to quit";
+        public static string GetGameLostText(int score)
         {
-            return "Game Over\nYour score was " + score + "\nPress enter to play again or q to quit";
+            return "You lost\nYour score was " + score + playAgainOrQuitText;
+        }
+
+        public static string GetGameWonText(int score)
+        {
+            return "You Won\nYour score is " + score + playAgainOrQuitText;
         }
     }
     public partial class GameForm : Form

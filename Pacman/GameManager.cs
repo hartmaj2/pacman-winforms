@@ -2,7 +2,7 @@
 
 namespace Pacman
 {
-    enum GameState { MainScreen, Running, GameOver };
+    enum GameState { MainScreen, Running, GameOver};
      /*
      * Takes care of all the game logic. Holds the Map, has access to the Painter and all the variables that 
      * shouldn't be own by some specific object but that should be visible in the entire game as a whole
@@ -17,6 +17,7 @@ namespace Pacman
         private Painter painter;
 
         private int score;
+        private bool gameLost = false;
 
         public GameManager(GameForm form)
         {
@@ -56,7 +57,14 @@ namespace Pacman
                     painter.PaintRunningGame(map, score);
                     break;
                 case GameState.GameOver:
-                    painter.PaintGameOverScreen(score);
+                    if (gameLost)
+                    {
+                        painter.PaintGameOverScreen(FormConstants.GetGameLostText(score));
+                    }
+                    else
+                    {
+                        painter.PaintGameOverScreen(FormConstants.GetGameWonText(score));
+                    }
                     break;
             }
             
@@ -99,9 +107,7 @@ namespace Pacman
             switch(keyPressed)
             {
                 case Keys.Enter:
-                    map = InputManager.PrepareAndReturnMap();
-                    painter = new Painter(gameForm, map);
-                    gameState= GameState.Running;
+                    RestartGame();
                     break;
                 case Keys.Q:
                     Application.Exit();
@@ -116,6 +122,7 @@ namespace Pacman
         {
             if (map.GetHero().IsTouchingAnyGhost(map.GetGhosts()))
             {
+                gameLost = true;
                 gameState = GameState.GameOver;
             }
         }
@@ -125,6 +132,14 @@ namespace Pacman
             {
                 objectToMove.Move(map);
             }
+        }
+
+        private void RestartGame()
+        {
+            map = InputManager.PrepareAndReturnMap();
+            painter = new Painter(gameForm, map);
+            gameLost = false;
+            gameState = GameState.Running;
         }
     }
 }
