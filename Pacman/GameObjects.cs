@@ -424,7 +424,7 @@ namespace Pacman
             DateTime currentTime = DateTime.Now;
             if (currentTime - ghostHouseEnterTime > prepareDuration)
             {
-                currentMode = GhostMode.Scatter;
+                currentMode = GhostMode.Chase;
                 Console.WriteLine("I switched to scatter mode");
             }
         }
@@ -463,9 +463,10 @@ namespace Pacman
             {
                 TryExitGhostHouse();
             }
-            SetTargetBasedOnMode(map);
+            
             if (IAmAtIntersection(map))
             {
+                SetTargetBasedOnMode(map);
                 StaticLayerBlankSpace targetNeighbour = FindNeighbourClosestToTarget(map);
                 SetDirectionTowardsNeighbor(targetNeighbour);
             }
