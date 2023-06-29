@@ -320,7 +320,6 @@ namespace Pacman
         }
         protected override void TryStartNextMovement(Map map)
         {
-            //TryEatPellet(map);
             if (CanGoInDirection(map, nextDirection))
             {
                 direction = nextDirection;
