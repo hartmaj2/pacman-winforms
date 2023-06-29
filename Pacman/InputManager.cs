@@ -38,6 +38,7 @@ namespace Pacman
         private const char ghostOrangeChar = 'O';
         private const char ghostHomeChar = 'H';
         private const char fenceChar = 'F';
+        private const char energizerChar = 'E';
 
         private const string mapFolder = "MapData";
         private const string mapFile = "map.txt";
@@ -53,6 +54,7 @@ namespace Pacman
         private const string heroImage = "hero.png";
         private const string pelletImage = "pellet.png";
         private const string wallImage = "wall.png";
+        private const string energizerImage = "energizer.png";
 
         //private static Bitmap blankSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, blankImage)), cellSize, cellSize);
         private static Bitmap fenceSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, fenceImage)), cellSize, cellSize);
@@ -63,6 +65,7 @@ namespace Pacman
         private static Bitmap heroSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, heroImage)), cellSize, cellSize);
         private static Bitmap pelletSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, pelletImage)), cellSize, cellSize);
         private static Bitmap wallSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, wallImage)), cellSize, cellSize);
+        private static Bitmap energizerSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, energizerImage)), cellSize, cellSize);
 
         public static Map PrepareAndReturnMap()
         {
@@ -148,6 +151,11 @@ namespace Pacman
                             fences.Add(fence);
                             staticGrid[x, y] = fence;
                             interactiveGrid[x,y ] = new InteractiveLayerBlankSpace(null, x,y);
+                            break;
+                        case energizerChar:
+                            Energizer energizer = new Energizer(energizerSprite,x,y);
+                            staticGrid[x, y] = new StaticLayerBlankSpace(null, x, y);
+                            interactiveGrid[x, y] = energizer;
                             break;
                     }
                 }

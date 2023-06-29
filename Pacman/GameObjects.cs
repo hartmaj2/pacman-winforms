@@ -278,6 +278,10 @@ namespace Pacman
         public Fence(Bitmap image, int x, int y) : base(image, x, y) { }
 
     }
+    class Energizer : InteractiveGridObject
+    {
+        public Energizer(Bitmap image, int x, int y) : base(image, x, y) { }
+    }
     class GhostHome : StaticGridObject
     {
         public GhostHome(Bitmap image, int x, int y) : base(image, x, y) { }

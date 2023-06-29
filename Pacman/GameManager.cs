@@ -137,7 +137,6 @@ namespace Pacman
                 gameState = GameState.GameOver;
             }
         }
-
         private void ChangeModeIfTime()
         {
             DateTime currentTime = DateTime.Now;
