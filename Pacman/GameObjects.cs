@@ -299,24 +299,20 @@ namespace Pacman
      */
     class Hero : TweeningObject
     {
-        private int pelletsEaten = 0;
         private Direction nextDirection;
 
         public Hero(Bitmap image, int x, int y, int speed, int mapCellSize) : base(image, x, y, speed, mapCellSize)
         {
             direction = Direction.Right;
         }
-        private void TryEatPellet(Map map)
+        public bool TryEatPellet(Map map)
         {
             if (map.ContainsPellet(GetGridX(), GetGridY())) 
             {
                 map.RemovePellet(GetGridX(), GetGridY());
-                pelletsEaten++;
+                return true;
             }
-        }
-        public int GetPelletsEaten()
-        {
-            return pelletsEaten;
+            return false;
         }
         public void SetNextDirection(Direction newDirection)
         {   
@@ -324,7 +320,7 @@ namespace Pacman
         }
         protected override void TryStartNextMovement(Map map)
         {
-            TryEatPellet(map);
+            //TryEatPellet(map);
             if (CanGoInDirection(map, nextDirection))
             {
                 direction = nextDirection;

@@ -50,7 +50,7 @@ namespace Pacman
                     MoveAllMovingObjects();
                     CheckGhostCollisions();
                     ChangeModeIfTime();
-                    UpdateScore();
+                    TryEat();
                     CheckGameWon();
                     break;
                 case GameState.GameOver:
@@ -126,9 +126,12 @@ namespace Pacman
                     break;
             }
         }
-        private void UpdateScore()
+        private void TryEat()
         {
-            score = map.GetHero().GetPelletsEaten();
+            if (map.GetHero().TryEatPellet(map))
+            {
+                score += 10;
+            }
         }
         private void CheckGameWon()
         {
