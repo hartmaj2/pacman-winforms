@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.CodeDom;
+using System.IO;
 using System.Net.Mime;
 
 namespace Pacman
@@ -19,6 +20,10 @@ namespace Pacman
         private const int pinkGhostPrepareTime = 10;
         private const int blueGhostPrepareTime = 15;
         private const int orangeGhostPrepareTime = 20;
+
+        public const double scatterModeDuration = 10;
+        public const double chaseModeDuration = 15;
+        public const double frightenedModeDuration = 10;
 
         /*
          * Sets how different game objects are represented in the map.txt file

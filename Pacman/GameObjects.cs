@@ -364,7 +364,6 @@ namespace Pacman
     /* 
      * Enemies that will be chasing the player
      */
-
     enum GhostMode { Preparing ,Chase, Scatter, Frightened };
     abstract class Ghost : TweeningObject
     {
@@ -403,6 +402,18 @@ namespace Pacman
         protected abstract void SetTargetToScatterTarget(Map map);
         protected abstract void SetTargetToChaseTarget(Map map);
         
+        /*
+         * I need to check if the mode is scatter because otherwise if the ghosts are frightened
+         * or preparing I don't want to change the mode
+         */
+        public void SetChaseModeIfValid()
+        {
+            if (currentMode == GhostMode.Scatter) currentMode = GhostMode.Chase;
+        }
+        public void SetScatterModeIfValid()
+        {
+            if (currentMode == GhostMode.Chase) currentMode = GhostMode.Scatter;
+        }
         private void SetTargetBasedOnMode(Map map)
         {
             switch(currentMode) 

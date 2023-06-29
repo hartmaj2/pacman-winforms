@@ -10,18 +10,30 @@ namespace Pacman
     class GameManager
     {
         private GameState gameState;
+        private GhostMode currentGhostMode;
 
         private GameForm gameForm;
 
         private Map map;
         private Painter painter;
 
+        private DateTime lastModeChange;
+        private TimeSpan scatterModeDuration;
+        private TimeSpan chaseModeDuration;
+        private TimeSpan frightenedModeDuration;
+
         private int score;
-        private bool gameLost = false;
+        private bool gameLost;
 
         public GameManager(GameForm form)
         {
             map = InputManager.PrepareAndReturnMap();
+            lastModeChange = DateTime.Now;
+            scatterModeDuration = TimeSpan.FromSeconds(InputManager.scatterModeDuration);
+            chaseModeDuration = TimeSpan.FromSeconds(InputManager.chaseModeDuration);
+            frightenedModeDuration = TimeSpan.FromSeconds(InputManager.frightenedModeDuration);
+            currentGhostMode = GhostMode.Scatter;
+            gameLost = false;
             painter = new Painter(form, map);
             gameState = GameState.MainScreen;
             gameForm = form;
@@ -37,6 +49,7 @@ namespace Pacman
                     CheckRunningGameKeyPresses(keyPressed);
                     MoveAllMovingObjects();
                     CheckGhostCollisions();
+                    ChangeModeIfTime();
                     UpdateScore();
                     CheckGameWon();
                     break;
@@ -123,6 +136,40 @@ namespace Pacman
             {
                 gameState = GameState.GameOver;
             }
+        }
+
+        private void ChangeModeIfTime()
+        {
+            DateTime currentTime = DateTime.Now;
+            switch (currentGhostMode)
+            {
+                case GhostMode.Scatter:
+                    if (currentTime - lastModeChange > scatterModeDuration)
+                    {
+                        Console.WriteLine("Mode changed to chase");
+                        foreach (Ghost ghost in map.GetGhosts())
+                        {
+                            ghost.SetChaseModeIfValid();
+                        }
+                        lastModeChange = currentTime;
+                        currentGhostMode = GhostMode.Chase;
+                    }
+                    break;
+                case GhostMode.Chase:
+                    if (currentTime - lastModeChange > chaseModeDuration)
+                    {
+                        Console.WriteLine("Mode changed to scatter");
+                        foreach (Ghost ghost in map.GetGhosts())
+                        {
+                            ghost.SetScatterModeIfValid();
+                        }
+                        lastModeChange = currentTime;
+                        currentGhostMode = GhostMode.Scatter;
+                    }
+                    break;
+            }
+            
+            
         }
         private void CheckGhostCollisions()
         {
