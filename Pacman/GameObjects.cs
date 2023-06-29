@@ -560,7 +560,14 @@ namespace Pacman
             }
             return false;
         }
-        
+        protected void SetTargetAheadOfHero(Map map, int tilesAhead)
+        {
+            Direction heroDirection = map.GetHero().GetDirection();
+            int xAhead = map.GetWrappedXCoordinate((tilesAhead * heroDirection.X) + map.GetHeroLocation().X);
+            int yAhead = map.GetWrappedYCoordinate((tilesAhead * heroDirection.Y) + map.GetHeroLocation().Y);
+            target = new Point(xAhead, yAhead);
+        }
+
     }
 
     class RedGhost : Ghost
@@ -596,13 +603,6 @@ namespace Pacman
             target = new Point(0, 0);
         }
 
-        private void SetTargetAheadOfHero(Map map, int tilesAhead)
-        {
-            Direction heroDirection = map.GetHero().GetDirection();
-            int xAhead = map.GetWrappedXCoordinate((tilesAhead * heroDirection.X) + map.GetHeroLocation().X);
-            int yAhead = map.GetWrappedYCoordinate((tilesAhead * heroDirection.Y) + map.GetHeroLocation().Y);
-            target = new Point(xAhead, yAhead);
-        }
     }
 
     class BlueGhost : Ghost
