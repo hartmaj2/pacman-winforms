@@ -8,8 +8,6 @@
     {
         private Map map;
         private Painter painter;
-        private List<Ghost> ghosts;
-        private Hero hero;
 
         private int score;
 
@@ -17,8 +15,6 @@
         {
             map = InputManager.PrepareAndReturnMap();
             painter = new Painter(form, map);
-            hero = map.GetHero();
-            ghosts = map.GetGhosts();
         }
         public void Update(Keys keyPressed)
         {
@@ -37,16 +33,16 @@
             switch (keyPressed)
             {
                 case Keys.Up:
-                    hero.SetNextDirection(Direction.Up);
+                    map.GetHero().SetNextDirection(Direction.Up);
                     break;
                 case Keys.Right:
-                    hero.SetNextDirection(Direction.Right);
+                    map.GetHero().SetNextDirection(Direction.Right);
                     break;
                 case Keys.Down:
-                    hero.SetNextDirection(Direction.Down);
+                    map.GetHero().SetNextDirection(Direction.Down);
                     break;
                 case Keys.Left:
-                    hero.SetNextDirection(Direction.Left);
+                    map.GetHero().SetNextDirection(Direction.Left);
                     break;
                 case Keys.Enter:
                     map.OpenAllFences();
@@ -55,11 +51,11 @@
         }
         private void UpdateScore()
         {
-            score = hero.GetPelletsEaten();
+            score = map.GetHero().GetPelletsEaten();
         }
         private void CheckGhostCollisions()
         {
-            if (hero.IsTouchingAnyGhost(ghosts))
+            if (map.GetHero().IsTouchingAnyGhost(map.GetGhosts()))
             {
                 Console.WriteLine("I've touched a ghost and I liked iiitt");
             }
