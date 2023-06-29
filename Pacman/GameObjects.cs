@@ -614,6 +614,10 @@ namespace Pacman
             {
                 SetTargetAheadOfHero(map, 0);
             }
+            else
+            {
+                SetTargetToScatterTarget(map);
+            }
         }
     }
 }
