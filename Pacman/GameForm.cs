@@ -13,6 +13,11 @@ namespace Pacman
         public static SolidBrush textBrush = new SolidBrush(Color.White);
         public static Font textFont = new Font("Arial", 16);
         public const string scoreText = "Score:";
+
+        public static string GetEndScreenText(int score)
+        {
+            return "Game Over\nYour score was " + score + "\nPress enter to play again or q to quit";
+        }
     }
     public partial class GameForm : Form
     {

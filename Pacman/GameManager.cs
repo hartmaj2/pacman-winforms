@@ -2,25 +2,28 @@
 
 namespace Pacman
 {
-    enum GameState { MainScreen, Running, RestartScreen };
+    enum GameState { MainScreen, Running, GameOver };
      /*
      * Takes care of all the game logic. Holds the Map, has access to the Painter and all the variables that 
      * shouldn't be own by some specific object but that should be visible in the entire game as a whole
      */
     class GameManager
     {
-        GameState gameState;
+        private GameState gameState;
+
+        private GameForm gameForm;
 
         private Map map;
         private Painter painter;
 
         private int score;
 
-        public GameManager(Form form)
+        public GameManager(GameForm form)
         {
             map = InputManager.PrepareAndReturnMap();
             painter = new Painter(form, map);
             gameState = GameState.MainScreen;
+            gameForm = form;
         }
         public void Update(Keys keyPressed)
         {
@@ -35,6 +38,10 @@ namespace Pacman
                     CheckGhostCollisions();
                     UpdateScore();
                     break;
+                case GameState.GameOver:
+                    CheckGameOverKeyPresses(keyPressed);
+                    break;
+                    
             }
             
         }
@@ -48,9 +55,22 @@ namespace Pacman
                 case GameState.Running:
                     painter.PaintRunningGame(map, score);
                     break;
+                case GameState.GameOver:
+                    painter.PaintGameOverScreen(score);
+                    break;
             }
             
             
+        }
+        private void CheckMainScreenKeyPresses(Keys keyPressed)
+        {
+            switch (keyPressed)
+            {
+                case Keys.Enter:
+                    gameState = GameState.Running;
+                    break;
+            }
+             
         }
         private void CheckRunningGameKeyPresses(Keys keyPressed)
         {
@@ -74,15 +94,19 @@ namespace Pacman
                     break;
             }
         }
-        private void CheckMainScreenKeyPresses(Keys keyPressed)
+        private void CheckGameOverKeyPresses(Keys keyPressed)
         {
-            switch (keyPressed)
+            switch(keyPressed)
             {
                 case Keys.Enter:
-                    gameState = GameState.Running;
+                    map = InputManager.PrepareAndReturnMap();
+                    painter = new Painter(gameForm, map);
+                    gameState= GameState.Running;
+                    break;
+                case Keys.Q:
+                    Application.Exit();
                     break;
             }
-             
         }
         private void UpdateScore()
         {
@@ -92,7 +116,7 @@ namespace Pacman
         {
             if (map.GetHero().IsTouchingAnyGhost(map.GetGhosts()))
             {
-                Console.WriteLine("I've touched a ghost and I liked iiitt");
+                gameState = GameState.GameOver;
             }
         }
         private void MoveAllMovingObjects()

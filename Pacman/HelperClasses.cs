@@ -309,6 +309,12 @@ namespace Pacman
                 }
             }
         }
+        public void PaintStartScreen()
+        {
+            ClearBuffer();
+            DisplayStartScreen();
+            WriteBuffer();
+        }
         public void PaintRunningGame(Map map, int score)
         {
             ClearBuffer();
@@ -317,10 +323,10 @@ namespace Pacman
             DisplayScore(score);
             WriteBuffer();
         }
-        public void PaintStartScreen()
+        public void PaintGameOverScreen(int score)
         {
             ClearBuffer();
-            DisplayStartScreen();
+            DisplayGameOverText(score);
             WriteBuffer();
         }
         private void DisplayScore(int score)
@@ -332,5 +338,12 @@ namespace Pacman
             float textWidth = bufferGraphics.MeasureString(FormConstants.startScreenText, FormConstants.textFont).Width;
             bufferGraphics.DrawString(FormConstants.startScreenText, FormConstants.startScreenFont, FormConstants.textBrush, (formWidth-textWidth)/2, formHeight/2);
         }
+        private void DisplayGameOverText(int score)
+        {
+            string endScreenText = FormConstants.GetEndScreenText(score);
+            float textWidth = bufferGraphics.MeasureString(endScreenText, FormConstants.startScreenFont).Width;
+            bufferGraphics.DrawString(endScreenText,FormConstants.startScreenFont,FormConstants.textBrush, (formWidth-textWidth)/2,formHeight/2);
+        }
+
     }
 }
