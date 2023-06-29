@@ -99,9 +99,6 @@ namespace Pacman
                 case Keys.Left:
                     map.GetHero().SetNextDirection(Direction.Left);
                     break;
-                case Keys.Enter:
-                    map.OpenAllFences();
-                    break;
             }
         }
         private void CheckGameOverKeyPresses(Keys keyPressed)
