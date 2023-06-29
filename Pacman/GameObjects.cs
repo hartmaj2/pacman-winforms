@@ -363,10 +363,6 @@ namespace Pacman
             {
                 SetMoving();
             }
-            else
-            {
-                ClearDirection();
-            }
         }
         public bool IsTouchingAnyGhost(List<Ghost> ghosts)
         {
@@ -386,6 +382,10 @@ namespace Pacman
                 return true;
             }
             return false;
+        }
+        public Direction GetDirection()
+        {
+            return direction;
         }
     }
     /*
@@ -424,7 +424,7 @@ namespace Pacman
             DateTime currentTime = DateTime.Now;
             if (currentTime - ghostHouseEnterTime > prepareDuration)
             {
-                currentMode = GhostMode.Scatter;
+                currentMode = GhostMode.Chase;
                 Console.WriteLine("I switched to scatter mode");
             }
         }
@@ -570,7 +570,7 @@ namespace Pacman
         }
         protected override void SetTargetToChaseTarget(Map map)
         {
-            SetTargetOnHero(map);
+            //SetTargetOnHero(map);
         }
         protected override void SetTargetToScatterTarget(Map map)
         {
@@ -578,7 +578,7 @@ namespace Pacman
         }
         private void SetTargetOnHero(Map map)
         {
-            target = map.GetHeroLocaion();
+            target = map.GetHeroLocation();
         }
     }
 
@@ -589,11 +589,19 @@ namespace Pacman
         }
         protected override void SetTargetToChaseTarget(Map map)
         {
-            //TODO: Implement ambush code
+            SetTargetAheadOfHero(map, 4);
         }
         protected override void SetTargetToScatterTarget(Map map)
         {
             target = new Point(0, 0);
+        }
+
+        private void SetTargetAheadOfHero(Map map, int tilesAhead)
+        {
+            Direction heroDirection = map.GetHero().GetDirection();
+            int xAhead = map.GetWrappedXCoordinate((tilesAhead * heroDirection.X) + map.GetHeroLocation().X);
+            int yAhead = map.GetWrappedYCoordinate((tilesAhead * heroDirection.Y) + map.GetHeroLocation().Y);
+            target = new Point(xAhead, yAhead);
         }
     }
 

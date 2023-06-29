@@ -240,7 +240,7 @@ namespace Pacman
                 fence.Open();
             }
         }
-        public Point GetHeroLocaion()
+        public Point GetHeroLocation()
         {
             return new Point(hero.GetGridX(), hero.GetGridY());
         }
