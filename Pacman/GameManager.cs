@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using Accessibility;
+using System.Net.Http.Headers;
 
 namespace Pacman
 {
@@ -136,6 +137,13 @@ namespace Pacman
             if (map.GetHero().TryEatEnergizer(map))
             {
                 score += 50;
+                Console.WriteLine("Ghosts set to frightened mode");
+                foreach (Ghost ghost in map.GetGhosts())
+                {
+                    ghost.SetFrightenedModeIfValid();
+                }
+                currentGhostMode = GhostMode.Frightened;
+                lastModeChange = DateTime.Now;
             }
         }
         private void CheckGameWon()
@@ -172,6 +180,18 @@ namespace Pacman
                         }
                         lastModeChange = currentTime;
                         currentGhostMode = GhostMode.Scatter;
+                    }
+                    break;
+                case GhostMode.Frightened:
+                    if (currentTime - lastModeChange > frightenedModeDuration) 
+                    {
+                        Console.WriteLine("Mode changed to chase");
+                        foreach (Ghost ghost in map.GetGhosts())
+                        {
+                            ghost.SetChaseModeIfValid();
+                        }
+                        lastModeChange = currentTime;
+                        currentGhostMode = GhostMode.Chase;
                     }
                     break;
             }

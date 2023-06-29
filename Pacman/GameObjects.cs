@@ -376,13 +376,14 @@ namespace Pacman
     abstract class Ghost : TweeningObject
     {
         protected GhostMode currentMode;
+        protected Bitmap frighenedModeSprite;
 
         protected Point target;
         protected Point lastOccupiedCell;
 
         protected TimeSpan prepareDuration;
         protected DateTime ghostHouseEnterTime;
-        public Ghost(Bitmap image, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize)
+        public Ghost(Bitmap image, Bitmap frightenedImage, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize)
         {
             currentMode = GhostMode.Preparing;
             direction = Direction.Up;
@@ -390,6 +391,7 @@ namespace Pacman
             prepareDuration = TimeSpan.FromSeconds(prepareTimeInSeconds);
             ghostHouseEnterTime = DateTime.Now;
             lastOccupiedCell = new Point(GetGridX(),GetGridY());
+            frighenedModeSprite = frightenedImage;
         }
 
         private void TryExitGhostHouse()
@@ -411,16 +413,19 @@ namespace Pacman
         protected abstract void SetTargetToChaseTarget(Map map);
         
         /*
-         * I need to check if the mode is scatter because otherwise if the ghosts are frightened
-         * or preparing I don't want to change the mode
+         * I need to check if the mode is scatter because otherwise if the ghosts preparing I don't want to change the mode
          */
         public void SetChaseModeIfValid()
         {
-            if (currentMode == GhostMode.Scatter) currentMode = GhostMode.Chase;
+            if (currentMode != GhostMode.Preparing) currentMode = GhostMode.Chase;
         }
         public void SetScatterModeIfValid()
         {
-            if (currentMode == GhostMode.Chase) currentMode = GhostMode.Scatter;
+            if (currentMode != GhostMode.Preparing) currentMode = GhostMode.Scatter;
+        }
+        public void SetFrightenedModeIfValid()
+        {
+            if (currentMode != GhostMode.Preparing) currentMode = GhostMode.Frightened;
         }
         private void SetTargetBasedOnMode(Map map)
         {
@@ -552,11 +557,17 @@ namespace Pacman
             target = new Point(xAhead, yAhead);
         }
 
+        public override Bitmap GetImageToDraw()
+        {
+            if (currentMode == GhostMode.Frightened) return frighenedModeSprite;
+            return sprite;
+        }
+
     }
 
     class RedGhost : Ghost
     {
-        public RedGhost(Bitmap image, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image,x,y,speed,mapCellSize,prepareTimeInSeconds)
+        public RedGhost(Bitmap image, Bitmap frightenedImage, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, frightenedImage,x, y,speed,mapCellSize,prepareTimeInSeconds)
         { 
         }
         protected override void SetTargetToChaseTarget(Map map)
@@ -572,7 +583,7 @@ namespace Pacman
 
     class PinkGhost : Ghost
     {
-        public PinkGhost(Bitmap image, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize, prepareTimeInSeconds)
+        public PinkGhost(Bitmap image, Bitmap frightenedImage, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, frightenedImage, x, y, speed, mapCellSize, prepareTimeInSeconds)
         {
         }
         protected override void SetTargetToChaseTarget(Map map)
@@ -588,7 +599,7 @@ namespace Pacman
 
     class BlueGhost : Ghost
     {
-        public BlueGhost(Bitmap image, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize, prepareTimeInSeconds)
+        public BlueGhost(Bitmap image, Bitmap frightenedImage, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, frightenedImage, x, y, speed, mapCellSize, prepareTimeInSeconds)
         {
         }
         protected override void SetTargetToChaseTarget(Map map)
@@ -611,7 +622,7 @@ namespace Pacman
 
     class OrangeGhost : Ghost
     {
-        public OrangeGhost(Bitmap image, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize, prepareTimeInSeconds)
+        public OrangeGhost(Bitmap image,Bitmap frightenedImage, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, frightenedImage, x, y, speed, mapCellSize, prepareTimeInSeconds)
         {
         }
         protected override void SetTargetToChaseTarget(Map map)

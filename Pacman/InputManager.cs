@@ -17,7 +17,7 @@ namespace Pacman
         private const int heroSpeed = 12; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
         private const int ghostSpeed = 10;
 
-        private const int redGhostPrepareTime = 50000;
+        private const int redGhostPrepareTime = 5;
         private const int pinkGhostPrepareTime = 100000;
         private const int blueGhostPrepareTime = 150000;
         private const int orangeGhostPrepareTime = 200000;
@@ -52,6 +52,7 @@ namespace Pacman
         private const string ghostPinkImage = "ghost_pink.png";
         private const string ghostBlueImage = "ghost_blue.png";
         private const string ghostOrangeImage = "ghost_orange.png";
+        private const string ghostFrightenedImage = "ghost_scared.png";
         private const string heroImage = "hero.png";
         private const string pelletImage = "pellet.png";
         private const string wallImage = "wall.png";
@@ -63,6 +64,7 @@ namespace Pacman
         private static Bitmap ghostPinkSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostPinkImage)), cellSize, cellSize);
         private static Bitmap ghostBlueSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostBlueImage)), cellSize, cellSize);
         private static Bitmap ghostOrangeSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostOrangeImage)), cellSize, cellSize);
+        private static Bitmap ghostFrightenedSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostFrightenedImage)), cellSize, cellSize);
         private static Bitmap heroSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, heroImage)), cellSize, cellSize);
         private static Bitmap pelletSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, pelletImage)), cellSize, cellSize);
         private static Bitmap wallSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, wallImage)), cellSize, cellSize);
@@ -117,28 +119,28 @@ namespace Pacman
                             interactiveGrid[x, y] = new Pellet(pelletSprite,x,y);
                             break;
                         case ghostRedChar:
-                            redGhost = new RedGhost(ghostRedSprite,x, y, ghostSpeed, cellSize, redGhostPrepareTime);
+                            redGhost = new RedGhost(ghostRedSprite, ghostFrightenedSprite,x, y, ghostSpeed, cellSize, redGhostPrepareTime);
                             tweeningObjects.Add(redGhost);
                             ghosts.Add(redGhost);
                             staticGrid[x, y] = new GhostHome(null, x,y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x,y);
                             break;
                         case ghostPinkChar:
-                            PinkGhost pinkGhost = new PinkGhost(ghostPinkSprite, x, y, ghostSpeed, cellSize, pinkGhostPrepareTime);
+                            PinkGhost pinkGhost = new PinkGhost(ghostPinkSprite, ghostFrightenedSprite, x, y, ghostSpeed, cellSize, pinkGhostPrepareTime);
                             tweeningObjects.Add(pinkGhost);
                             ghosts.Add(pinkGhost);
                             staticGrid[x, y] = new GhostHome(null, x, y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
                             break;
                         case ghostBlueChar:
-                            BlueGhost blueGhost = new BlueGhost(ghostBlueSprite, x, y, ghostSpeed, cellSize, blueGhostPrepareTime);
+                            BlueGhost blueGhost = new BlueGhost(ghostBlueSprite, ghostFrightenedSprite, x, y, ghostSpeed, cellSize, blueGhostPrepareTime);
                             tweeningObjects.Add(blueGhost);
                             ghosts.Add(blueGhost);
                             staticGrid[x, y] = new GhostHome(null, x, y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
                             break;
                         case ghostOrangeChar:
-                            OrangeGhost orangeGhost = new OrangeGhost(ghostOrangeSprite, x, y, ghostSpeed, cellSize, orangeGhostPrepareTime);
+                            OrangeGhost orangeGhost = new OrangeGhost(ghostOrangeSprite, ghostFrightenedSprite, x, y, ghostSpeed, cellSize, orangeGhostPrepareTime);
                             tweeningObjects.Add(orangeGhost);
                             ghosts.Add(orangeGhost);
                             staticGrid[x, y] = new GhostHome(null, x, y);
