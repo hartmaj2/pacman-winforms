@@ -33,7 +33,6 @@ namespace Pacman
          * The sprites are just PNG images converted to a Bitmap to be rendered by the Painter class later.
          */
         private const string imageFolder = "Images";
-        private const string blankImage = "blank.png";
         private const string fenceImage = "fence.png";
         private const string ghostRedImage = "ghost_red.png";
         private const string ghostPinkImage = "ghost_pink.png";
@@ -43,9 +42,12 @@ namespace Pacman
         private const string pelletImage = "pellet.png";
         private const string wallImage = "wall.png";
 
-        private static Bitmap blankSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, blankImage)), cellSize, cellSize);
+        //private static Bitmap blankSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, blankImage)), cellSize, cellSize);
         private static Bitmap fenceSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, fenceImage)), cellSize, cellSize);
         private static Bitmap ghostRedSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostRedImage)), cellSize, cellSize);
+        private static Bitmap ghostPinkSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostPinkImage)), cellSize, cellSize);
+        private static Bitmap ghostBlueSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostBlueImage)), cellSize, cellSize);
+        private static Bitmap ghostOrangeSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, ghostOrangeImage)), cellSize, cellSize);
         private static Bitmap heroSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, heroImage)), cellSize, cellSize);
         private static Bitmap pelletSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, pelletImage)), cellSize, cellSize);
         private static Bitmap wallSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, wallImage)), cellSize, cellSize);
