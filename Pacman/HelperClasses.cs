@@ -1,4 +1,6 @@
-﻿namespace Pacman
+﻿using static System.Formats.Asn1.AsnWriter;
+
+namespace Pacman
 {
     /*
      * Represents a 2D integer vector with unit size or a zero vector
@@ -314,6 +316,11 @@
         private void DisplayScore(int score)
         {
             bufferGraphics.DrawString(FormConstantsManager.scoreText + " " + score, FormConstantsManager.textFont, FormConstantsManager.textBrush, 0, 0);
+        }
+
+        private void DisplayStartScreen()
+        {
+            bufferGraphics.DrawString(FormConstantsManager.startScreenText, FormConstantsManager.textFont, FormConstantsManager.textBrush, 0, 0);
         }
     }
 }

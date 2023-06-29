@@ -7,11 +7,7 @@ namespace Pacman
     {
         public const string gameFormText = "Pacman Game";
 
-        public const int startButtonHeightValue = 10;
-        public const int startButtonWidthValue = 5;
-        public const string startButtonText = "Start Game";
-
-        public static readonly TimeSpan TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / 60);
+        public const string startScreenText = "Press enter to start the game";
 
         public static SolidBrush textBrush = new SolidBrush(Color.White);
         public static Font textFont = new Font("Arial", 16);
@@ -19,6 +15,8 @@ namespace Pacman
     }
     public partial class GameForm : Form
     {
+
+        readonly TimeSpan TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / 60);
 
         Keys keyPressed = Keys.None;
         Stopwatch stopWatch = Stopwatch.StartNew();
@@ -47,10 +45,10 @@ namespace Pacman
             bool updated = false;
 
             // If there was lots of accumulated time, the game ticks many times without rendering
-            while (accumulatedTime >= FormConstantsManager.TargetElapsedTime)
+            while (accumulatedTime >= TargetElapsedTime)
             {
                 Tick();
-                accumulatedTime -= FormConstantsManager.TargetElapsedTime;
+                accumulatedTime -= TargetElapsedTime;
                 updated = true;
             }
 
