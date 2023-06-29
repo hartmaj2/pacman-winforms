@@ -15,7 +15,10 @@ namespace Pacman
         private const int cellSize = 48;
         private const int heroSpeed = 12; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
         private const int ghostSpeed = 10;
-        private const int ghostPrepareTime = 5;
+        private const int redGhostPrepareTime = 5;
+        private const int pinkGhostPrepareTime = 10;
+        private const int blueGhostPrepareTime = 15;
+        private const int orangeGhostPrepareTime = 20;
 
         /*
          * Sets how different game objects are represented in the map.txt file
@@ -25,9 +28,9 @@ namespace Pacman
         private const char heroChar = 'C';
         private const char pelletChar = '.';
         private const char ghostRedChar = 'R';
-        private const char ghostOrangeChar = 'O';
-        private const char ghostBlueChar = 'B';
         private const char ghostPinkChar = 'P';
+        private const char ghostBlueChar = 'B';
+        private const char ghostOrangeChar = 'O';
         private const char ghostHomeChar = 'H';
         private const char fenceChar = 'F';
 
@@ -103,28 +106,28 @@ namespace Pacman
                             interactiveGrid[x, y] = new Pellet(pelletSprite,x,y);
                             break;
                         case ghostRedChar:
-                            Ghost ghost = new Ghost(ghostRedSprite,x, y, ghostSpeed, cellSize, ghostPrepareTime);
+                            Ghost ghost = new Ghost(ghostRedSprite,x, y, ghostSpeed, cellSize, redGhostPrepareTime);
                             tweeningObjects.Add(ghost);
                             ghosts.Add(ghost);
                             staticGrid[x, y] = new GhostHome(null, x,y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x,y);
                             break;
-                        case ghostOrangeChar:
-                            ghost = new Ghost(ghostOrangeSprite, x, y, ghostSpeed, cellSize, ghostPrepareTime);
+                        case ghostPinkChar:
+                            ghost = new Ghost(ghostPinkSprite, x, y, ghostSpeed, cellSize, pinkGhostPrepareTime);
                             tweeningObjects.Add(ghost);
                             ghosts.Add(ghost);
                             staticGrid[x, y] = new GhostHome(null, x, y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
                             break;
                         case ghostBlueChar:
-                            ghost = new Ghost(ghostBlueSprite, x, y, ghostSpeed, cellSize, ghostPrepareTime);
+                            ghost = new Ghost(ghostBlueSprite, x, y, ghostSpeed, cellSize, blueGhostPrepareTime);
                             tweeningObjects.Add(ghost);
                             ghosts.Add(ghost);
                             staticGrid[x, y] = new GhostHome(null, x, y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
                             break;
-                        case ghostPinkChar:
-                            ghost = new Ghost(ghostPinkSprite, x, y, ghostSpeed, cellSize, ghostPrepareTime);
+                        case ghostOrangeChar:
+                            ghost = new Ghost(ghostOrangeSprite, x, y, ghostSpeed, cellSize, orangeGhostPrepareTime);
                             tweeningObjects.Add(ghost);
                             ghosts.Add(ghost);
                             staticGrid[x, y] = new GhostHome(null, x, y);
