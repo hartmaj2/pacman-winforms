@@ -291,26 +291,6 @@ namespace Pacman
     {
         public Fence(Bitmap image, int x, int y) : base(image, x, y) { }
 
-        private bool open = false;
-        public void Open()
-        {
-            open = true;
-        }
-        public void Close()
-        {
-            open = false;
-        }
-        public bool IsClosed()
-        {
-            return !open;
-        }
-
-        public override bool IsDrawable()
-        {
-            return !open;
-        }
-
-
     }
     class GhostHome : StaticGridObject
     {
@@ -612,7 +592,7 @@ namespace Pacman
         }
         protected override void SetTargetToChaseTarget(Map map)
         {
-            //TODO: Implement code to ambush using the red ghost's location
+            SetTargetAheadOfHero(map, 2);
         }
         protected override void SetTargetToScatterTarget(Map map)
         {

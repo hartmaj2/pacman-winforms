@@ -166,17 +166,7 @@ namespace Pacman
         {
             return staticGrid[x, y] is Fence;
         }
-        public bool IsOpenFence(int x, int y)
-        {
-            if (staticGrid[x, y] is Fence)
-            {
-                if (!((Fence)staticGrid[x, y]).IsClosed())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+
         public int GetWrappedXCoordinate(int x)
         {
             if (x > gridWidth - 1) return 0;
@@ -233,13 +223,7 @@ namespace Pacman
             }
             return neighbours;
         }
-        public void OpenAllFences()
-        {
-            foreach (Fence fence in fences)
-            {
-                fence.Open();
-            }
-        }
+
         public Point GetHeroLocation()
         {
             return new Point(hero.GetGridX(), hero.GetGridY());
