@@ -257,22 +257,8 @@ namespace Pacman
         }
         private void WraparoundIfOutOfBounds(Map map)
         {
-            if (pixelX < 0)
-            {
-                pixelX = map.GetPixelWidth() - map.GetCellSize() + pixelX;
-            }
-            if (pixelX > map.GetPixelWidth() - map.GetCellSize())
-            {
-                pixelX = pixelX - (map.GetPixelWidth() - map.GetCellSize());
-            }
-            if (pixelY < 0)
-            { 
-                pixelY = map.GetPixelHeight() - map.GetCellSize() + pixelY;
-            }
-            if (pixelY > map.GetPixelHeight() - map.GetCellSize())
-            {
-                pixelY = pixelY - (map.GetPixelHeight() - map.GetCellSize());
-            }
+            pixelX = map.GetWrappedPixelXCoordinate(pixelX);
+            pixelY = map.GetWrappedPixelYCoordinate(pixelY);
         }
     }
     /* 
@@ -557,7 +543,7 @@ namespace Pacman
         }
         protected override void SetTargetToChaseTarget(Map map)
         {
-            //SetTargetOnHero(map);
+            SetTargetOnHero(map);
         }
         protected override void SetTargetToScatterTarget(Map map)
         {

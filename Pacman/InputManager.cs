@@ -74,6 +74,7 @@ namespace Pacman
             List<Ghost> ghosts = new List<Ghost>();
             List<Fence> fences = new List<Fence>();
             Hero hero = null;
+            Ghost redGhost = null;
 
             int pelletsCount = 0;
 
@@ -106,7 +107,7 @@ namespace Pacman
                             interactiveGrid[x, y] = new Pellet(pelletSprite,x,y);
                             break;
                         case ghostRedChar:
-                            RedGhost redGhost = new RedGhost(ghostRedSprite,x, y, ghostSpeed, cellSize, redGhostPrepareTime);
+                            redGhost = new RedGhost(ghostRedSprite,x, y, ghostSpeed, cellSize, redGhostPrepareTime);
                             tweeningObjects.Add(redGhost);
                             ghosts.Add(redGhost);
                             staticGrid[x, y] = new GhostHome(null, x,y);
@@ -147,7 +148,7 @@ namespace Pacman
                 }
             }
 
-            return new Map(cellSize,hero,ghosts,fences,interactiveGrid,staticGrid,tweeningObjects,pelletsCount);
+            return new Map(cellSize,hero,redGhost,ghosts,fences,interactiveGrid,staticGrid,tweeningObjects,pelletsCount);
 
 
         }

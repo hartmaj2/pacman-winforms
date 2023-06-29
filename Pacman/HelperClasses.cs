@@ -66,6 +66,7 @@ namespace Pacman
         private List<Fence> fences;
         private List<Ghost> ghosts;
         private Hero hero;
+        private Ghost redGhost;
 
         private int startPelletsCount;
         private int pelletsRemaining;
@@ -75,10 +76,11 @@ namespace Pacman
 
         private int cellSize;
 
-        public Map(int cellSize, Hero hero, List<Ghost> ghosts, List<Fence> fences, InteractiveGridObject[,] interactiveGrid, StaticGridObject[,] staticGrid, List<TweeningObject> movingObjects, int pelletsCount)
+        public Map(int cellSize, Hero hero, Ghost redGhost, List<Ghost> ghosts, List<Fence> fences, InteractiveGridObject[,] interactiveGrid, StaticGridObject[,] staticGrid, List<TweeningObject> movingObjects, int pelletsCount)
         {
             this.cellSize = cellSize;
             this.hero = hero;
+            this.redGhost = redGhost;
             this.ghosts = ghosts;
             this.fences = fences;
             this.interactiveGrid = interactiveGrid;
@@ -179,6 +181,31 @@ namespace Pacman
             if (y < 0) return gridHeight - 1;
             return y;
         }
+
+        public int GetWrappedPixelXCoordinate(int pixelX)
+        {
+            if (pixelX < 0)
+            {
+                pixelX = GetPixelWidth() - GetCellSize() + pixelX;
+            }
+            if (pixelX > GetPixelWidth() - GetCellSize())
+            {
+                pixelX = pixelX - (GetPixelWidth() - GetCellSize());
+            }
+            return pixelX;
+        }
+        public int GetWrappedPixelYCoordinate(int pixelY)
+        {
+            if (pixelY < 0)
+            {
+                pixelY = GetPixelHeight() - GetCellSize() + pixelY;
+            }
+            if (pixelY > GetPixelHeight() - GetCellSize())
+            {
+                pixelY = pixelY - (GetPixelHeight() - GetCellSize());
+            }
+            return pixelY;
+        }
         public List<TweeningObject> GetMovingObjects() 
         {
             return movingObjects;
@@ -223,10 +250,13 @@ namespace Pacman
             }
             return neighbours;
         }
-
         public Point GetHeroLocation()
         {
             return new Point(hero.GetGridX(), hero.GetGridY());
+        }
+        public Point GetRedGhostLocation()
+        {
+            return new Point(redGhost.GetGridX(), redGhost.GetGridY());
         }
     }
     /*
