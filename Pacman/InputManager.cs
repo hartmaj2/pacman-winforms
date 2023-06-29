@@ -106,30 +106,30 @@ namespace Pacman
                             interactiveGrid[x, y] = new Pellet(pelletSprite,x,y);
                             break;
                         case ghostRedChar:
-                            Ghost ghost = new Ghost(ghostRedSprite,x, y, ghostSpeed, cellSize, redGhostPrepareTime);
-                            tweeningObjects.Add(ghost);
-                            ghosts.Add(ghost);
+                            RedGhost redGhost = new RedGhost(ghostRedSprite,x, y, ghostSpeed, cellSize, redGhostPrepareTime);
+                            tweeningObjects.Add(redGhost);
+                            ghosts.Add(redGhost);
                             staticGrid[x, y] = new GhostHome(null, x,y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x,y);
                             break;
                         case ghostPinkChar:
-                            ghost = new Ghost(ghostPinkSprite, x, y, ghostSpeed, cellSize, pinkGhostPrepareTime);
-                            tweeningObjects.Add(ghost);
-                            ghosts.Add(ghost);
+                            PinkGhost pinkGhost = new PinkGhost(ghostPinkSprite, x, y, ghostSpeed, cellSize, pinkGhostPrepareTime);
+                            tweeningObjects.Add(pinkGhost);
+                            ghosts.Add(pinkGhost);
                             staticGrid[x, y] = new GhostHome(null, x, y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
                             break;
                         case ghostBlueChar:
-                            ghost = new Ghost(ghostBlueSprite, x, y, ghostSpeed, cellSize, blueGhostPrepareTime);
-                            tweeningObjects.Add(ghost);
-                            ghosts.Add(ghost);
+                            BlueGhost blueGhost = new BlueGhost(ghostBlueSprite, x, y, ghostSpeed, cellSize, blueGhostPrepareTime);
+                            tweeningObjects.Add(blueGhost);
+                            ghosts.Add(blueGhost);
                             staticGrid[x, y] = new GhostHome(null, x, y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
                             break;
                         case ghostOrangeChar:
-                            ghost = new Ghost(ghostOrangeSprite, x, y, ghostSpeed, cellSize, orangeGhostPrepareTime);
-                            tweeningObjects.Add(ghost);
-                            ghosts.Add(ghost);
+                            OrangeGhost orangeGhost = new OrangeGhost(ghostOrangeSprite, x, y, ghostSpeed, cellSize, orangeGhostPrepareTime);
+                            tweeningObjects.Add(orangeGhost);
+                            ghosts.Add(orangeGhost);
                             staticGrid[x, y] = new GhostHome(null, x, y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
                             break;

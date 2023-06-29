@@ -400,15 +400,15 @@ namespace Pacman
      */
 
     enum GhostMode { Preparing ,Chase, Scatter, Frightened };
-    class Ghost : TweeningObject
+    abstract class Ghost : TweeningObject
     {
-        private GhostMode currentMode;
+        protected GhostMode currentMode;
 
-        private Point target;
-        private Point lastOccupiedCell;
+        protected Point target;
+        protected Point lastOccupiedCell;
 
-        private TimeSpan prepareDuration;
-        private DateTime ghostHouseEnterTime;
+        protected TimeSpan prepareDuration;
+        protected DateTime ghostHouseEnterTime;
         public Ghost(Bitmap image, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize)
         {
             currentMode = GhostMode.Preparing;
@@ -424,7 +424,7 @@ namespace Pacman
             DateTime currentTime = DateTime.Now;
             if (currentTime - ghostHouseEnterTime > prepareDuration)
             {
-                currentMode = GhostMode.Chase;
+                currentMode = GhostMode.Scatter;
                 Console.WriteLine("I switched to scatter mode");
             }
         }
@@ -435,19 +435,18 @@ namespace Pacman
             int randomGridY = rand.Next(map.GetGridHeight());
             target = new Point(randomGridX, randomGridY);
         }
-        private void SetTargetToCorner(Map map)
-        {
-            target = new Point(map.GetGridWidth(), 0);
-        }
+        protected abstract void SetTargetToScatterTarget(Map map);
+        protected abstract void SetTargetToChaseTarget(Map map);
+        
         private void SetTargetBasedOnMode(Map map)
         {
             switch(currentMode) 
             {
                 case GhostMode.Scatter:
-                    SetTargetToCorner(map);
+                    SetTargetToScatterTarget(map);
                     break;
                 case GhostMode.Chase:
-                    SetTargetOnHero(map);
+                    SetTargetToChaseTarget(map);
                     break;
                 case GhostMode.Frightened:
                     SetTargetToRandom(map);
@@ -561,9 +560,70 @@ namespace Pacman
             }
             return false;
         }
+        
+    }
+
+    class RedGhost : Ghost
+    {
+        public RedGhost(Bitmap image, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image,x,y,speed,mapCellSize,prepareTimeInSeconds)
+        { 
+        }
+        protected override void SetTargetToChaseTarget(Map map)
+        {
+            SetTargetOnHero(map);
+        }
+        protected override void SetTargetToScatterTarget(Map map)
+        {
+            target = new Point(map.GetGridWidth(), 0);
+        }
         private void SetTargetOnHero(Map map)
         {
             target = map.GetHeroLocaion();
+        }
+    }
+
+    class PinkGhost : Ghost
+    {
+        public PinkGhost(Bitmap image, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize, prepareTimeInSeconds)
+        {
+        }
+        protected override void SetTargetToChaseTarget(Map map)
+        {
+            //TODO: Implement ambush code
+        }
+        protected override void SetTargetToScatterTarget(Map map)
+        {
+            target = new Point(0, 0);
+        }
+    }
+
+    class BlueGhost : Ghost
+    {
+        public BlueGhost(Bitmap image, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize, prepareTimeInSeconds)
+        {
+        }
+        protected override void SetTargetToChaseTarget(Map map)
+        {
+            //TODO: Implement code to ambush using the red ghost's location
+        }
+        protected override void SetTargetToScatterTarget(Map map)
+        {
+            target = new Point(map.GetGridWidth(), map.GetGridHeight());
+        }
+    }
+
+    class OrangeGhost : Ghost
+    {
+        public OrangeGhost(Bitmap image, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize, prepareTimeInSeconds)
+        {
+        }
+        protected override void SetTargetToChaseTarget(Map map)
+        {
+            //TODO: Implement chase or flight target based on distance to hero
+        }
+        protected override void SetTargetToScatterTarget(Map map)
+        {
+            target = new Point(0, map.GetGridHeight());
         }
     }
 }
