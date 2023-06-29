@@ -391,7 +391,6 @@ namespace Pacman
             if (currentTime - ghostHouseEnterTime > prepareDuration)
             {
                 currentMode = GhostMode.Chase;
-                Console.WriteLine("I switched to scatter mode");
             }
         }
         private void SetTargetToRandom(Map map)
