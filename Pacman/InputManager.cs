@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Net.Mime;
 
 namespace Pacman
 {
@@ -21,9 +22,12 @@ namespace Pacman
          */
         private const char blankChar = '-';
         private const char wallChar = '#';
-        private const char heroChar = 'P';
+        private const char heroChar = 'C';
         private const char pelletChar = '.';
-        private const char ghostChar = 'G';
+        private const char ghostRedChar = 'R';
+        private const char ghostOrangeChar = 'O';
+        private const char ghostBlueChar = 'B';
+        private const char ghostPinkChar = 'P';
         private const char ghostHomeChar = 'H';
         private const char fenceChar = 'F';
 
@@ -98,12 +102,33 @@ namespace Pacman
                             staticGrid[x, y] = new StaticLayerBlankSpace(null, x,y);
                             interactiveGrid[x, y] = new Pellet(pelletSprite,x,y);
                             break;
-                        case ghostChar:
+                        case ghostRedChar:
                             Ghost ghost = new Ghost(ghostRedSprite,x, y, ghostSpeed, cellSize, ghostPrepareTime);
                             tweeningObjects.Add(ghost);
                             ghosts.Add(ghost);
                             staticGrid[x, y] = new GhostHome(null, x,y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x,y);
+                            break;
+                        case ghostOrangeChar:
+                            ghost = new Ghost(ghostOrangeSprite, x, y, ghostSpeed, cellSize, ghostPrepareTime);
+                            tweeningObjects.Add(ghost);
+                            ghosts.Add(ghost);
+                            staticGrid[x, y] = new GhostHome(null, x, y);
+                            interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
+                            break;
+                        case ghostBlueChar:
+                            ghost = new Ghost(ghostBlueSprite, x, y, ghostSpeed, cellSize, ghostPrepareTime);
+                            tweeningObjects.Add(ghost);
+                            ghosts.Add(ghost);
+                            staticGrid[x, y] = new GhostHome(null, x, y);
+                            interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
+                            break;
+                        case ghostPinkChar:
+                            ghost = new Ghost(ghostPinkSprite, x, y, ghostSpeed, cellSize, ghostPrepareTime);
+                            tweeningObjects.Add(ghost);
+                            ghosts.Add(ghost);
+                            staticGrid[x, y] = new GhostHome(null, x, y);
+                            interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
                             break;
                         case ghostHomeChar:
                             staticGrid[x, y] = new GhostHome(null, x,y);
