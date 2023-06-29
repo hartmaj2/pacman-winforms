@@ -60,30 +60,6 @@ namespace Pacman
         {
             return cellSize;
         }
-        public static Bitmap GetFenceSprite()
-        {
-            return fenceSprite;
-        }
-        public static Bitmap GetBlankSprite()
-        {
-            return blankSprite;
-        }
-        public static Bitmap GetWallSprite()
-        {
-            return wallSprite;
-        }
-        public static Bitmap GetHeroSprite()
-        {
-            return heroSprite;
-        }
-        public static Bitmap GetPelletSprite()
-        {
-            return pelletSprite;
-        }
-        public static Bitmap GetGhostSprite()
-        {
-            return ghostRedSprite;
-        }
         public static Hero GetHero()
         {
             if (!mapDataLoaded)
