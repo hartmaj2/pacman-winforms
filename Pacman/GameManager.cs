@@ -202,8 +202,17 @@ namespace Pacman
         {
             if (map.GetHero().IsTouchingAnyGhost(map.GetGhosts()))
             {
-                gameLost = true;
-                gameState = GameState.GameOver;
+                Ghost ghostTouched = map.GetHero().GetOneNearbyGhost(map.GetGhosts());
+                if (ghostTouched.GetCurrentMode() == GhostMode.Frightened)
+                {
+                    ghostTouched.BeEaten();
+                }
+                else
+                {
+                    gameLost = true;
+                    gameState = GameState.GameOver;
+                }
+                    
             }
         }
         private void MoveAllMovingObjects()

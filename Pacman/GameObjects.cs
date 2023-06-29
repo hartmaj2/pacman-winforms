@@ -349,6 +349,18 @@ namespace Pacman
             }
             return false;
         }
+
+        public Ghost GetOneNearbyGhost(List<Ghost> ghosts)
+        {
+            foreach (Ghost ghost in ghosts)
+            {
+                if (IsTouchingTweeningObject(ghost))
+                {
+                    return ghost;
+                }
+            }
+            return null;
+        }
         protected override bool IsReachableCell(int x, int y, Map map)
         {
             if (map.IsBlankCell(x,y))
@@ -378,6 +390,7 @@ namespace Pacman
         protected GhostMode currentMode;
         protected Bitmap frighenedModeSprite;
 
+        protected Point startingLocation;
         protected Point target;
         protected Point lastOccupiedCell;
 
@@ -387,7 +400,8 @@ namespace Pacman
         {
             currentMode = GhostMode.Preparing;
             direction = Direction.Up;
-            target = new Point(3, 3);
+            startingLocation = new Point(x, y);
+            target = new Point(mapCellSize - 1, mapCellSize - 1);
             prepareDuration = TimeSpan.FromSeconds(prepareTimeInSeconds);
             ghostHouseEnterTime = DateTime.Now;
             lastOccupiedCell = new Point(GetGridX(),GetGridY());
@@ -412,6 +426,15 @@ namespace Pacman
         protected abstract void SetTargetToScatterTarget(Map map);
         protected abstract void SetTargetToChaseTarget(Map map);
         
+        public void BeEaten()
+        {
+            currentMode = GhostMode.Preparing;
+            ghostHouseEnterTime = DateTime.Now;
+            pixelX = startingLocation.X * mapCellSize;
+            pixelY = startingLocation.Y * mapCellSize;
+            direction = Direction.Up;
+            SetNotMoving();
+        }
         /*
          * I need to check if the mode is scatter because otherwise if the ghosts preparing I don't want to change the mode
          */
@@ -561,6 +584,11 @@ namespace Pacman
         {
             if (currentMode == GhostMode.Frightened) return frighenedModeSprite;
             return sprite;
+        }
+
+        public GhostMode GetCurrentMode()
+        {
+            return currentMode;
         }
 
     }
