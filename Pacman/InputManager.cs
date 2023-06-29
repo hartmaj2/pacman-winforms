@@ -46,71 +46,8 @@ namespace Pacman
         private static Bitmap pelletSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, pelletImage)), cellSize, cellSize);
         private static Bitmap wallSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, wallImage)), cellSize, cellSize);
 
-        private static StaticGridObject[,] staticGrid;
-        private static InteractiveGridObject[,] dynamicGrid;
-        private static List<TweeningObjects> tweeningObjects;
-        private static Hero hero;
-        private static List<Ghost> ghosts;
-        private static List<Fence> fences;
-
-        private static bool mapDataLoaded = false;
-        private static bool spriteSizeAdjusted = false;
-
-        public static int GetCellSize()
+        public static Map PrepareAndReturnMap()
         {
-            return cellSize;
-        }
-        public static Hero GetHero()
-        {
-            if (!mapDataLoaded)
-            {
-                PrepareMapData();
-            }
-            return hero;
-        }
-        public static List<Fence> GetFences()
-        {
-            if (!mapDataLoaded) 
-            { 
-                PrepareMapData();
-            }
-            return fences;
-        }
-        public static List<Ghost> GetGhosts()
-        {
-            if (!mapDataLoaded)
-            {
-                PrepareMapData();
-            }
-            return ghosts;
-        }
-        public static InteractiveGridObject[,] GetDynamicGrid()
-        {
-            if (!mapDataLoaded)
-            {
-                PrepareMapData();
-            }
-            return dynamicGrid;
-        }
-        public static StaticGridObject[,] GetStaticGrid()
-        {
-            if (!mapDataLoaded)
-            {
-                PrepareMapData();
-            }
-            return staticGrid;
-        }
-        public static List<TweeningObjects> GetTweeningObjects()
-        {
-            if (!mapDataLoaded)
-            {
-                PrepareMapData();
-            }
-            return tweeningObjects;
-        }
-        private static void PrepareMapData()
-        {
-            mapDataLoaded = true;
 
             string mapString = File.ReadAllText(Path.Combine(Application.StartupPath,mapFolder,mapFile));
             string[] separated = mapString.Split(new[] { "\r\n" }, StringSplitOptions.None);
@@ -118,11 +55,12 @@ namespace Pacman
             int height = separated.Length;
             int width = separated[0].Length;
 
-            staticGrid = new StaticGridObject[width, height];
-            dynamicGrid = new InteractiveGridObject[width, height];
-            tweeningObjects = new List<TweeningObjects>();
-            ghosts = new List<Ghost>();
-            fences = new List<Fence>();
+            StaticGridObject[,] staticGrid = new StaticGridObject[width, height];
+            InteractiveGridObject[,] interactiveGrid = new InteractiveGridObject[width, height];
+            List<TweeningObject> tweeningObjects = new List<TweeningObject>();
+            List<Ghost> ghosts = new List<Ghost>();
+            List<Fence> fences = new List<Fence>();
+            Hero hero = null;
 
             for (int y = 0; y < height; y++)
             {
@@ -135,42 +73,44 @@ namespace Pacman
                     {
                         case blankChar:
                             staticGrid[x, y] = new StaticLayerBlankSpace(null,x,y);
-                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(null,x,y);
+                            interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null,x,y);
                             break;
                         case wallChar:
                             staticGrid[x, y] = new Wall(wallSprite,x,y);
-                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(null,x,y);
+                            interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null,x,y);
                             break;
                         case heroChar:
                             hero = new Hero(heroSprite,x, y, heroSpeed, cellSize);
                             tweeningObjects.Add(hero);
                             staticGrid[x, y] = new StaticLayerBlankSpace(null,x,y);
-                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(null,x,y);
+                            interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null,x,y);
                             break;
                         case pelletChar:
                             staticGrid[x, y] = new StaticLayerBlankSpace(null, x,y);
-                            dynamicGrid[x, y] = new Pellet(pelletSprite,x,y);
+                            interactiveGrid[x, y] = new Pellet(pelletSprite,x,y);
                             break;
                         case ghostChar:
                             Ghost ghost = new Ghost(ghostRedSprite,x, y, ghostSpeed, cellSize);
                             tweeningObjects.Add(ghost);
                             ghosts.Add(ghost);
                             staticGrid[x, y] = new GhostHome(null, x,y);
-                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(null, x,y);
+                            interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x,y);
                             break;
                         case ghostHomeChar:
                             staticGrid[x, y] = new GhostHome(null, x,y);
-                            dynamicGrid[x, y] = new InteractiveLayerBlankSpace(null, x,y);
+                            interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x,y);
                             break;
                         case fenceChar:
                             Fence fence = new Fence(fenceSprite,x,y);
                             fences.Add(fence);
                             staticGrid[x, y] = fence;
-                            dynamicGrid[x,y ] = new InteractiveLayerBlankSpace(null, x,y);
+                            interactiveGrid[x,y ] = new InteractiveLayerBlankSpace(null, x,y);
                             break;
                     }
                 }
             }
+
+            return new Map(cellSize,hero,ghosts,fences,interactiveGrid,staticGrid,tweeningObjects);
 
 
         }

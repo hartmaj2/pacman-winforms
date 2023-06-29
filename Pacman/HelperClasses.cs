@@ -58,23 +58,38 @@
      */
     class Map
     {
-        private StaticGridObject[,] staticGrid = InputManager.GetStaticGrid();
-        private InteractiveGridObject[,] interactiveGrid = InputManager.GetDynamicGrid();
-        private List<TweeningObjects> movingObjects = InputManager.GetTweeningObjects();
-        private List<Fence> fences = InputManager.GetFences();
-        private Hero hero = InputManager.GetHero();
+        private StaticGridObject[,] staticGrid;
+        private InteractiveGridObject[,] interactiveGrid;
+        private List<TweeningObject> movingObjects;
+        private List<Fence> fences;
+        private List<Ghost> ghosts;
+        private Hero hero;
 
         private int gridWidth;
         private int gridHeight;
 
-        private int cellSize = InputManager.GetCellSize();
+        private int cellSize;
 
-        public Map()
+        public Map(int cellSize, Hero hero, List<Ghost> ghosts, List<Fence> fences, InteractiveGridObject[,] interactiveGrid, StaticGridObject[,] staticGrid, List<TweeningObject> movingObjects)
         {
-
+            this.cellSize = cellSize;
+            this.hero = hero;
+            this.ghosts = ghosts;
+            this.fences = fences;
+            this.interactiveGrid = interactiveGrid;
+            this.staticGrid = staticGrid;
+            this.movingObjects = movingObjects;
             gridWidth = staticGrid.GetLength(0);
             gridHeight = staticGrid.GetLength(1);
 
+        }
+        public List<Ghost> GetGhosts()
+        {
+            return ghosts;
+        }
+        public Hero GetHero() 
+        { 
+            return hero; 
         }
         public int GetCellSize()
         { 
@@ -158,7 +173,7 @@
             if (y < 0) return gridHeight - 1;
             return y;
         }
-        public List<TweeningObjects> GetMovingObjects() 
+        public List<TweeningObject> GetMovingObjects() 
         {
             return movingObjects;
         }
@@ -227,10 +242,11 @@
         private Graphics bufferGraphics; // the buffer that we paint on before propagating change to formGraphics
         private Bitmap bufferBitmap;
 
-        private int spriteSize = InputManager.GetCellSize();
+        private int spriteSize;
 
         public Painter(Form form, Map map)
         {
+            spriteSize = map.GetCellSize();
             form.ClientSize = new Size(map.GetPixelWidth(), map.GetPixelHeight());
             formGraphics = form.CreateGraphics();
             bufferBitmap = new Bitmap(map.GetPixelWidth(), map.GetPixelHeight());
@@ -276,7 +292,7 @@
         }
         private void PaintMovingObjects(Map map)
         {
-            foreach (TweeningObjects movingObjectToPaint in map.GetMovingObjects())
+            foreach (TweeningObject movingObjectToPaint in map.GetMovingObjects())
             {
                 
                 if (movingObjectToPaint.IsDrawable())

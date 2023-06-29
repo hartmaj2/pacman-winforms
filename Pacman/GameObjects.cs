@@ -130,7 +130,7 @@ namespace Pacman
      * These objects can move independently of the game grid but are able to tell you what would be their 
      * corresponding location on the game grid
      */
-    abstract class TweeningObjects : MovingObject
+    abstract class TweeningObject : MovingObject
     {
         protected int pixelX;
         protected int pixelY;
@@ -143,7 +143,7 @@ namespace Pacman
 
         protected bool isMoving;
 
-        public TweeningObjects(Bitmap image, int gridX, int gridY, int speed, int cellSize)
+        public TweeningObject(Bitmap image, int gridX, int gridY, int speed, int cellSize)
         {
             sprite = image;
             mapCellSize = cellSize;
@@ -246,7 +246,7 @@ namespace Pacman
             }
             return newSpeed;
         }
-        public bool IsTouchingTweeningObject(TweeningObjects other)
+        public bool IsTouchingTweeningObject(TweeningObject other)
         {
             if (Math.Abs(other.pixelX - pixelX) < mapCellSize && Math.Abs(other.pixelY - pixelY) < mapCellSize)
             {
@@ -326,7 +326,7 @@ namespace Pacman
      * Main playable character of the game. So far I will make it non playable but will
      * add controls later.
      */
-    class Hero : TweeningObjects
+    class Hero : TweeningObject
     {
         private int pelletsEaten = 0;
         private Direction nextDirection;
@@ -397,7 +397,7 @@ namespace Pacman
     /* 
      * Enemies that will be chasing the player
      */
-    class Ghost : TweeningObjects
+    class Ghost : TweeningObject
     {
         private Point target;
         private Point lastOccupiedCell;

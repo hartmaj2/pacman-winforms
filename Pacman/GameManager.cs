@@ -15,10 +15,10 @@
 
         public GameManager(Form form)
         {
-            map = new Map();
+            map = InputManager.PrepareAndReturnMap();
             painter = new Painter(form, map);
-            hero = InputManager.GetHero();
-            ghosts = InputManager.GetGhosts();
+            hero = map.GetHero();
+            ghosts = map.GetGhosts();
         }
         public void Update(Keys keyPressed)
         {
@@ -66,7 +66,7 @@
         }
         private void MoveAllMovingObjects()
         {
-            foreach (TweeningObjects objectToMove in map.GetMovingObjects())
+            foreach (TweeningObject objectToMove in map.GetMovingObjects())
             {
                 objectToMove.Move(map);
             }
