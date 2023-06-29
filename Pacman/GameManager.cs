@@ -1,11 +1,16 @@
-﻿namespace Pacman
+﻿using System.Net.Http.Headers;
+
+namespace Pacman
 {
+    enum GameState { MainScreen, Running, RestartScreen };
      /*
      * Takes care of all the game logic. Holds the Map, has access to the Painter and all the variables that 
      * shouldn't be own by some specific object but that should be visible in the entire game as a whole
      */
     class GameManager
     {
+        GameState gameState;
+
         private Map map;
         private Painter painter;
 
@@ -15,19 +20,39 @@
         {
             map = InputManager.PrepareAndReturnMap();
             painter = new Painter(form, map);
+            gameState = GameState.MainScreen;
         }
         public void Update(Keys keyPressed)
         {
-            CheckKeyPressed(keyPressed);
-            MoveAllMovingObjects();
-            CheckGhostCollisions();
-            UpdateScore();
+            switch(gameState)
+            {
+                case GameState.MainScreen:
+                    CheckMainScreenKeyPresses(keyPressed);
+                    break;
+                case GameState.Running:
+                    CheckRunningGameKeyPresses(keyPressed);
+                    MoveAllMovingObjects();
+                    CheckGhostCollisions();
+                    UpdateScore();
+                    break;
+            }
+            
         }
         public void Render()
         {
-            painter.Paint(map,score);
+            switch (gameState)
+            {
+                case GameState.MainScreen:
+                    painter.PaintStartScreen();
+                    break;
+                case GameState.Running:
+                    painter.PaintRunningGame(map, score);
+                    break;
+            }
+            
+            
         }
-        private void CheckKeyPressed(Keys keyPressed)
+        private void CheckRunningGameKeyPresses(Keys keyPressed)
         {
 
             switch (keyPressed)
@@ -48,6 +73,16 @@
                     map.OpenAllFences();
                     break;
             }
+        }
+        private void CheckMainScreenKeyPresses(Keys keyPressed)
+        {
+            switch (keyPressed)
+            {
+                case Keys.Enter:
+                    gameState = GameState.Running;
+                    break;
+            }
+             
         }
         private void UpdateScore()
         {

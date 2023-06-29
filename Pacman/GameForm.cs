@@ -3,11 +3,12 @@ using System.Runtime.InteropServices;
 
 namespace Pacman
 {
-    public static class FormConstantsManager
+    public static class FormConstants
     {
         public const string gameFormText = "Pacman Game";
 
         public const string startScreenText = "Press enter to start the game";
+        public static Font startScreenFont = new Font("Arial", 20);
 
         public static SolidBrush textBrush = new SolidBrush(Color.White);
         public static Font textFont = new Font("Arial", 16);

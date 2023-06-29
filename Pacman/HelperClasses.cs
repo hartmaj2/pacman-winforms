@@ -245,10 +245,14 @@ namespace Pacman
         private Bitmap bufferBitmap;
 
         private int spriteSize;
+        private int formWidth;
+        private int formHeight;
 
         public Painter(Form form, Map map)
         {
             spriteSize = map.GetCellSize();
+            formWidth = map.GetPixelWidth();
+            formHeight = map.GetPixelHeight();
             form.ClientSize = new Size(map.GetPixelWidth(), map.GetPixelHeight());
             formGraphics = form.CreateGraphics();
             bufferBitmap = new Bitmap(map.GetPixelWidth(), map.GetPixelHeight());
@@ -305,7 +309,7 @@ namespace Pacman
                 }
             }
         }
-        public void Paint(Map map, int score)
+        public void PaintRunningGame(Map map, int score)
         {
             ClearBuffer();
             PaintGrids(map);
@@ -313,14 +317,20 @@ namespace Pacman
             DisplayScore(score);
             WriteBuffer();
         }
+        public void PaintStartScreen()
+        {
+            ClearBuffer();
+            DisplayStartScreen();
+            WriteBuffer();
+        }
         private void DisplayScore(int score)
         {
-            bufferGraphics.DrawString(FormConstantsManager.scoreText + " " + score, FormConstantsManager.textFont, FormConstantsManager.textBrush, 0, 0);
+            bufferGraphics.DrawString(FormConstants.scoreText + " " + score, FormConstants.textFont, FormConstants.textBrush, 0, 0);
         }
-
         private void DisplayStartScreen()
         {
-            bufferGraphics.DrawString(FormConstantsManager.startScreenText, FormConstantsManager.textFont, FormConstantsManager.textBrush, 0, 0);
+            float textWidth = bufferGraphics.MeasureString(FormConstants.startScreenText, FormConstants.textFont).Width;
+            bufferGraphics.DrawString(FormConstants.startScreenText, FormConstants.startScreenFont, FormConstants.textBrush, (formWidth-textWidth)/2, formHeight/2);
         }
     }
 }
