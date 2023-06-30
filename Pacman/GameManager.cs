@@ -14,41 +14,67 @@ namespace Pacman
 
      /*
      * Takes care of all the game logic. Holds the Map, has access to the Painter and all the variables that 
-     * shouldn't be own by some specific object but that should be visible in the entire game as a whole
+     * shouldn't be owned by some specific object but that should be visible in the entire game as a whole.
+     * This includes the score, durations of different ghost modes or the amount of ghosts eaten during
+     * the current frightened ghost mode
      */
     class GameManager
     {
-        private GameState gameState;
-        private GhostMode currentGhostMode;
-
+        // holds reference to the Windows Forms form, this form would usually be named Form1
         private GameForm gameForm;
 
         private Map map;
         private Painter painter;
 
+        private GameState gameState;
+
+
+        // BEGINNING OF GHOST RELATED CODE
+        // takes care of ghost modes that are switched on simultaneously for all ghosts
+        // ghosts also have their own private modes in case the are preparing or frightened because those durations vary from ghost to ghost
+        // the mode GhostMode.Preparing is never set as a global ghost mode (it is always unique to each ghost)
+        private GhostMode currentGhostMode;
+
+
+        // variables that have to do with timing changes of global ghost modes
+        // these could be constants at this phase of the program because they do not change (except for lastModeChange)
+        // in the future those could be made to be decreasing over time so that's why I didn't want them to be constants
         private DateTime lastModeChange;
         private TimeSpan scatterModeDuration;
         private TimeSpan chaseModeDuration;
         private TimeSpan frightenedModeDuration;
 
+        // in order to calculate how much score player should receive for eating a ghost during frightened phase
+        // we need to know how many ghosts he has eaten so far during this mode (it gets reset at the beginning of every frightened mode start)
         private int frightenedGhostsEaten;
+
+        // END OF GHOST RELATED CODE
+
         private int score;
-        private bool gameLost;
+
+        // is used to decide, which game over screen to print (either a YOU LOST or YOU WON message)
+        // other option would be to have two separate GameStates, one for GameLost and one for GameWon but I didn't want to go that way
+        private bool gameLost; 
 
         public GameManager(GameForm form)
         {
+            gameForm = form;
+
             map = InputManager.PrepareAndReturnMap();
+            painter = new Painter(form, map);
+
+            gameState = GameState.StartScreen;
+
+            currentGhostMode = GhostMode.Scatter;
+
             lastModeChange = DateTime.Now;
             scatterModeDuration = TimeSpan.FromSeconds(InputManager.scatterModeDuration);
             chaseModeDuration = TimeSpan.FromSeconds(InputManager.chaseModeDuration);
             frightenedModeDuration = TimeSpan.FromSeconds(InputManager.frightenedModeDuration);
-            currentGhostMode = GhostMode.Scatter;
-            gameLost = false;
-            painter = new Painter(form, map);
-            gameState = GameState.StartScreen;
-            gameForm = form;
-            score = 0;
+
             frightenedGhostsEaten = 0;
+            score = 0;
+            gameLost = false;
         }
         public void Update(Keys keyPressed)
         {
@@ -196,7 +222,7 @@ namespace Pacman
                 case GhostMode.Frightened:
                     if (currentTime - lastModeChange > frightenedModeDuration) 
                     {
-                        Console.WriteLine("Mode changed to chase");
+                        // set all ghosts to chase mode if I can (if they are preparing, we don't want to change the mode)
                         foreach (Ghost ghost in map.GetGhosts())
                         {
                             ghost.SetChaseModeIfValid();

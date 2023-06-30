@@ -70,6 +70,7 @@ namespace Pacman
                 updated = true;
             }
 
+            // we only draw to the screen once even if there were many ticks of the game logic
             if (updated)
             {
                 Render();
@@ -87,16 +88,27 @@ namespace Pacman
         /* 
          *  Because I am using the built in enum Keys, I don't have to create my own enum
          */
-protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             keyPressed = keyData;
             return true;
         }
+        
+        /*
+         * Calls the PeekMessage function. We are only interested in getting true or false and not in the
+         * message itself
+         */
         private bool IsApplicatoinIdle()
         {
             NativeMessage result;
             return PeekMessage(out result, IntPtr.Zero, (uint)0, (uint)0, (uint)0) == 0;
         }
+
+        /*
+         * This takes care that we try to tick the game loop when there are no messages on Windows Message Queue
+         * this allowed me to tick whenever it is possible and thus I don't have to rely on the 
+         * Windows Forms Timer which is not as reliable as the Stopwatch builtin class
+         */
         private void HandleApplicationIdle(object sender, EventArgs e)
         {
             while(IsApplicatoinIdle())
@@ -105,11 +117,11 @@ protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
             }
         }
         /*
-         * This is some kind of a hack that allows me to use the PeekMessage() function that returns 
-         * true if the windows message pump is empty. If it is I can just go on continuing my game loop
+         * .NET doesn't allow for direct access of Windows APIs so we need to define the structure ourselves. 
+         * It represents a Windows OS message (the native windows equivalent is called MSG)
          */
-        [StructLayout(LayoutKind.Sequential)]
-        public struct NativeMessage
+        [StructLayout(LayoutKind.Sequential)] // this tells .NET to lay out the memory fields in the same order as declared (so it behaves like C++)
+        public struct NativeMessage 
         {
             public IntPtr Handle;
             public uint Message;
