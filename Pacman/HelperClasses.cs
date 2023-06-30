@@ -25,10 +25,6 @@ namespace Pacman
             X = x;
             Y = y;
         }
-        public Direction OppositeDirection()
-        {
-            return new Direction(-X, -Y);
-        }
 
         /*
          * Rotating a cardinal direciotn always switches the x and y component.

@@ -97,7 +97,8 @@ namespace Pacman
 
         public void TurnAround()
         {
-            direction = direction.OppositeDirection();
+            direction.RotateRight();
+            direction.RotateRight();
         }
 
         /*
