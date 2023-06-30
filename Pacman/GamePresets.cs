@@ -12,7 +12,7 @@ namespace Pacman
      * 
      * Also all the program settings can be found here and are not spread across the program.
      */
-    static class InputManager
+    static class GamePresets
     {
 
         private const int cellSize = 48;
@@ -27,6 +27,10 @@ namespace Pacman
         public const double scatterModeDuration = 10;
         public const double chaseModeDuration = 15;
         public const double frightenedModeDuration = 10;
+
+        public const int scorePerPellet = 10;
+        public const int scorePerEnergizer = 50;
+        public const int scoreIncreasePerGhostEaten = 200;
 
         /*
          * Sets how different game objects are represented in the map.txt file
@@ -45,6 +49,7 @@ namespace Pacman
 
         private const string mapFolder = "MapData";
         private const string mapFile = "map.txt";
+
         /*
          * The sprites are just PNG images converted to a Bitmap to be rendered by the Painter class later.
          */
@@ -72,6 +77,10 @@ namespace Pacman
         private static Bitmap wallSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, wallImage)), cellSize, cellSize);
         private static Bitmap energizerSprite = new Bitmap(new Bitmap(Path.Combine(Application.StartupPath, imageFolder, energizerImage)), cellSize, cellSize);
 
+        /*
+         * Takes care of reading all the data from the map.txt text file that holds the layout of the map
+         * after reading this data it creates and returns a corresponding Map object
+         */
         public static Map PrepareAndReturnMap()
         {
 

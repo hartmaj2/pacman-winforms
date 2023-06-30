@@ -9,7 +9,7 @@ namespace Pacman
     /*
     * Everything that lives inside the game should inherit this. It has to be something that can 
     * be located somewhere in the game world. It doesn't have to be moving. It can be walls, pellets, anything.
-    * It also has to be something that can be drawn by the painter to the game bitmap.
+    * It can be something that can be drawn but it necessarily doesn't have to (hence the IsDrawable method).
     */
     abstract class GameObject
     {
@@ -35,9 +35,9 @@ namespace Pacman
         private int gridY;
         public GridObject(Bitmap image, int x, int y)
         {
-            this.sprite = image;
-            this.gridX = x;
-            this.gridY = y;
+            sprite = image;
+            gridX = x;
+            gridY = y;
         }
         public override int GetGridX()
         { 
