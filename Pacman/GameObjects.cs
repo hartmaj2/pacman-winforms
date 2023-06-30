@@ -281,11 +281,10 @@ namespace Pacman
      */
     class Hero : TweeningObject
     {
-        private Direction nextDirection;
+        private Direction nextDirection; // allows player to preset direction of pacman before it is possible to go that way
 
         public Hero(Bitmap image, int x, int y, int speed, int mapCellSize) : base(image, x, y, speed, mapCellSize)
-        {
-            direction = Direction.Right;
+        {        
         }
         public bool TryEatPellet(Map map)
         {

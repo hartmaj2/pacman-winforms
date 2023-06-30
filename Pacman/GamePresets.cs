@@ -16,6 +16,7 @@ namespace Pacman
     {
 
         private const int cellSize = 48;
+
         private const int heroSpeed = 10; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
         private const int ghostSpeed = 5;
 
