@@ -85,18 +85,30 @@ namespace Pacman
         {
             gameManager.Render();
         }
+
         /* 
-         *  Because I am using the built in enum Keys, I don't have to create my own enum
+         *  We are overriding a message processing pipeline Windows Forms method that lets us handle
+         *  key presses before regular key processing would take place
          */
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            keyPressed = keyData;
-            return true;
+            switch (keyData)
+            {
+                case Keys.Enter:
+                case Keys.Q:
+                case Keys.Up:
+                case Keys.Right:
+                case Keys.Down:
+                case Keys.Left:
+                    keyPressed = keyData;
+                    return true; // we should return true if the key was processed
+            }
+            return base.ProcessCmdKey(ref msg, keyData); // otherwise we propagate the key message up the control hierarchy
         }
         
         /*
          * Calls the PeekMessage function. We are only interested in getting true or false and not in the
-         * message itself.
+         * message itself which is saved to the `result` variable
          */
         private bool IsApplicatoinIdle()
         {
