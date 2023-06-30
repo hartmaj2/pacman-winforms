@@ -120,21 +120,25 @@ namespace Pacman
             mapCellSize = cellSize;
             pixelX = gridX * mapCellSize;
             pixelY = gridY * mapCellSize;
-            SetTweenSpeed(speed); // automatically adjust movements speed to be a multiple of cell size
+            SetTweenSpeed(speed); // automatically adjust movements speed to divide cell size without remiander
             SetNotMoving();
         }
+
+        /*
+         * Implements the basic outline of how a general tweening object moves (both player and ghosts)
+         */
         public override void Move(Map map)
         { 
             if (isMoving)
             {
-                ContinueMoving();
+                ContinueMoving(); // move by certain number of pixels
             }
             if (!isMoving)
             {
-                StartNextMovementCycle(map);
-                ContinueMoving();
+                StartNextMovementCycle(map); // decide where to move next
+                ContinueMoving(); // start moving (this can also mean no movement if direction is set to none)
             }
-            WraparoundIfOutOfBounds(map);
+            WraparoundIfOutOfBounds(map); // if character could get out of bounds, we put him on the other end of map
         }   
         
         /*
@@ -143,6 +147,10 @@ namespace Pacman
          */
         protected abstract void StartNextMovementCycle(Map map);
  
+        /*
+         * Moves the character by the amount of pixels represented by movement speed 
+         * and checks whether we have reached the end of movement cycle
+         */
         private void ContinueMoving()
         {
             if (movementFrame < maxMovementFrame)
@@ -210,13 +218,15 @@ namespace Pacman
             }
             return newSpeed;
         }
+
+        /*
+         * Checks the X and Y pixel coordinates of the other object and if they are less than a cell size 
+         * away, we determine that as a collision
+         */
         public bool IsTouchingTweeningObject(TweeningObject other)
         {
-            if (Math.Abs(other.pixelX - pixelX) < mapCellSize && Math.Abs(other.pixelY - pixelY) < mapCellSize)
-            {
-                return true;
-            }
-            return false;
+            return Math.Abs(other.pixelX - pixelX) < mapCellSize && Math.Abs(other.pixelY - pixelY) < mapCellSize;
+
         }
         private void WraparoundIfOutOfBounds(Map map)
         {
