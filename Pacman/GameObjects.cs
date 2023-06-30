@@ -265,12 +265,12 @@ namespace Pacman
          */
         private void WraparoundIfOutOfBounds(Map map)
         {
-            if (map.PixelXOutOfBound(pixelX))
+            if (map.IsOutOfBoundsPixelX(pixelX))
             {
                 pixelX = map.GetWrappedPixelXCoordinate(pixelX);
                 UpdateLastOccupied();
             }
-            if (map.PixelYOutOfBounds(pixelY)) 
+            if (map.IsOutOfBoundsPixelY(pixelY)) 
             {
                 pixelY = map.GetWrappedPixelYCoordinate(pixelY);
                 UpdateLastOccupied();

@@ -295,7 +295,7 @@ namespace Pacman
          */
         private void MoveAllMovingObjects()
         {
-            foreach (TweeningObject objectToMove in map.GetMovingObjects())
+            foreach (MovingObject objectToMove in map.GetAllMovingObjects())
             {
                 objectToMove.Move(map);
             }

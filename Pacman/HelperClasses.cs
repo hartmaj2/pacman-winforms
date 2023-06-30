@@ -104,6 +104,7 @@ namespace Pacman
         {
             return energizersRemaining;
         }
+
         /*
          * Writes the corresponding BlankSpace object to the interactive grid thus effectively removing the object
          */
@@ -119,19 +120,12 @@ namespace Pacman
         }
         public bool ContainsPellet(int gridX, int gridY)
         {
-            if (interactiveGrid[gridX, gridY] is Pellet)
-            {
-                return true;
-            }
-            return false;
+            return interactiveGrid[gridX, gridY] is Pellet;
         }
         public bool ContainsEnergizer(int gridX, int gridY)
         {
-            if (interactiveGrid[gridX, gridY] is Energizer)
-            {
-                return true;
-            }
-            return false;
+            return interactiveGrid[gridX, gridY] is Energizer;
+   
         }
         public int GetPixelWidth()
         {
@@ -159,11 +153,7 @@ namespace Pacman
         }
         public bool IsBlankCell(int x, int y)
         {
-            if (staticGrid[x,y] is StaticLayerBlankSpace)
-            {
-                return true;
-            }
-            return false;
+            return staticGrid[x,y] is StaticLayerBlankSpace;
         }
         public bool IsFence(int x, int y)
         {
@@ -181,26 +171,25 @@ namespace Pacman
             if (y < 0) return y + gridHeight;
             return y;
         }
-
-        public bool PixelXOutOfBound(int pixelX)
+        public bool IsOutOfBoundsPixelX(int pixelX)
         {
             if (pixelX < 0)
             {
                 return true;
             }
-            if (pixelX > GetPixelWidth() - GetCellSize())
+            if (pixelX > GetPixelWidth() - cellSize)
             {
                 return true;
             }
             return false;
         }
-        public bool PixelYOutOfBounds(int pixelY)
+        public bool IsOutOfBoundsPixelY(int pixelY)
         {
             if (pixelY < 0)
             {
                 return true;
             }
-            if (pixelY > GetPixelHeight() - GetCellSize())
+            if (pixelY > GetPixelHeight() - cellSize)
             {
                 return true;
             }
@@ -210,11 +199,11 @@ namespace Pacman
         {
             if (pixelX < 0)
             {
-                pixelX = GetPixelWidth() - GetCellSize() + pixelX;
+                pixelX = GetPixelWidth() - cellSize + pixelX;
             }
-            if (pixelX > GetPixelWidth() - GetCellSize())
+            if (pixelX > GetPixelWidth() - cellSize)
             {
-                pixelX = pixelX - (GetPixelWidth() - GetCellSize());
+                pixelX = pixelX - (GetPixelWidth() - cellSize);
             }
             return pixelX;
         }
@@ -222,15 +211,15 @@ namespace Pacman
         {
             if (pixelY < 0)
             {
-                pixelY = GetPixelHeight() - GetCellSize() + pixelY;
+                pixelY = GetPixelHeight() - cellSize + pixelY;
             }
-            if (pixelY > GetPixelHeight() - GetCellSize())
+            if (pixelY > GetPixelHeight() - cellSize)
             {
-                pixelY = pixelY - (GetPixelHeight() - GetCellSize());
+                pixelY = pixelY - (GetPixelHeight() - cellSize);
             }
             return pixelY;
         }
-        public List<TweeningObject> GetMovingObjects() 
+        public List<TweeningObject> GetAllMovingObjects() 
         {
             return movingObjects;
         }
@@ -269,13 +258,13 @@ namespace Pacman
      */
     class Painter
     {
-        private Graphics formGraphics; // the actual graphics elements that gets painted on the form
-        private Graphics bufferGraphics; // the buffer that we paint on before propagating change to formGraphics
-        private Bitmap bufferBitmap;
+        private readonly Graphics formGraphics; // the actual graphics elements that gets painted on the form
+        private readonly Graphics bufferGraphics; // the buffer that we paint on before propagating change to formGraphics
+        private readonly Bitmap bufferBitmap;
 
-        private int spriteSize;
-        private int formWidth;
-        private int formHeight;
+        private readonly int spriteSize;
+        private readonly int formWidth;
+        private readonly int formHeight;
 
         public Painter(Form form, Map map)
         {
@@ -327,7 +316,7 @@ namespace Pacman
         }
         private void PaintMovingObjects(Map map)
         {
-            foreach (TweeningObject movingObjectToPaint in map.GetMovingObjects())
+            foreach (TweeningObject movingObjectToPaint in map.GetAllMovingObjects())
             {
                 
                 if (movingObjectToPaint.IsDrawable())
