@@ -264,15 +264,15 @@ namespace Pacman
          */
         private void WraparoundIfOutOfBounds(Map map)
         {
-            if (map.IsOutOfBoundsPixelX(pixelX))
+            if (map.IsOutOfBoundsPixelLocation(pixelX, pixelY))
             {
-                pixelX = map.GetWrappedPixelXCoordinate(pixelX);
-                UpdateLastOccupied();
-            }
-            if (map.IsOutOfBoundsPixelY(pixelY)) 
-            {
-                pixelY = map.GetWrappedPixelYCoordinate(pixelY);
-                UpdateLastOccupied();
+                Point wrappedLocation = map.GetWrappedPixelLocation(pixelX, pixelY);
+                pixelX = wrappedLocation.X;
+                pixelY = wrappedLocation.Y;
+
+                // the following UpdateLastOccupied call fixes a bug when ghost appears on the other side of the map if out of bounds, 
+                // if unhandled the ghost wouldn't recognize the new tile where it appeared as his last location and would turn around during next move
+                UpdateLastOccupied(); 
             }
         }
 
@@ -665,9 +665,10 @@ namespace Pacman
          */
         protected void SetTargetAheadOfHero(Map map, int tilesAhead)
         {
-            Direction heroDirection = map.GetHero().GetDirection();
-            int rawTargetX = (tilesAhead * heroDirection.X) + map.GetHeroGridLocation().X;
-            int rawTargetY = (tilesAhead * heroDirection.Y) + map.GetHeroGridLocation().Y;
+            Hero hero = map.GetHero();
+            Direction heroDirection = hero.GetDirection();
+            int rawTargetX = (tilesAhead * heroDirection.X) + hero.GetGridX();
+            int rawTargetY = (tilesAhead * heroDirection.Y) + hero.GetGridY();
             target = map.GetWrappedGridLocation(rawTargetX,rawTargetY);
         }
 
@@ -740,9 +741,10 @@ namespace Pacman
         }
         private void MoveTargetAwayFromRedGhost(Map map)
         {
+            Ghost redGhost = map.GetRedGhost();
             // calculate components of the vector pointing from red ghost to pacman
-            int vectorXToAdd = (target.X - map.GetRedGhostGridLocation().X);
-            int vectorYToAdd = (target.Y - map.GetRedGhostGridLocation().Y);
+            int vectorXToAdd = (target.X - redGhost.GetGridX());
+            int vectorYToAdd = (target.Y - redGhost.GetGridY());
 
             // add this vector to the current target location and wrap the coordinates on over/underflow
             target = map.GetWrappedGridLocation(vectorXToAdd+target.X, vectorYToAdd+target.Y);
@@ -766,7 +768,8 @@ namespace Pacman
 
         private void SetTargetBasedOnHeroDistance(Map map, double distanceLimit)
         {
-            double distanceToHero = GetDistanceToCell(map.GetHeroGridLocation().X, map.GetHeroGridLocation().Y);
+            Hero hero = map.GetHero();
+            double distanceToHero = GetDistanceToCell(hero.GetGridX(), hero.GetGridY());
             if (distanceToHero > distanceLimit) 
             {
                 SetTargetAheadOfHero(map, 0); // set target directly on hero 

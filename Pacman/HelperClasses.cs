@@ -100,6 +100,11 @@ namespace Pacman
             return hero; 
         }
 
+        public Ghost GetRedGhost() 
+        {
+            return redGhost;
+        }
+
         public int GetRemainingPelletsCount()
         {
             return pelletsRemaining;
@@ -131,57 +136,40 @@ namespace Pacman
             return interactiveGrid[gridX, gridY] is Energizer;
    
         }
-        public StaticGridObject GetStaticGridObject(int x, int y)
+        public StaticGridObject GetStaticGridObject(int gridX, int gridY)
         {
-            return staticGrid[x,y];
+            return staticGrid[gridX,gridY];
         }
-        public InteractiveGridObject GetInteractiveGridObject(int x,int y)
+        public InteractiveGridObject GetInteractiveGridObject(int gridX,int gridY)
         {
-            return interactiveGrid[x,y];
-        }
-        public bool IsBlankCell(int x, int y)
-        {
-            return staticGrid[x,y] is StaticLayerBlankSpace;
-        }
-        public bool IsFence(int x, int y)
-        {
-            return staticGrid[x, y] is Fence;
+            return interactiveGrid[gridX,gridY];
         }
 
-        public Point GetWrappedGridLocation(int x, int y)
+        /*
+         * The two following are used by moving objects to determine which cells they can reach
+         * The second one is used by ghosts specifically
+         */
+        public bool IsBlankCell(int gridX, int gridY)
         {
-            if (x >= gridWidth) x = x - gridWidth;
-            if (x < 0) x = x + gridWidth;
-            if (y >= gridHeight) y = y - gridHeight;
-            if (y < 0) y = y + gridHeight;
-            return new Point(x, y);
+            return staticGrid[gridX,gridY] is StaticLayerBlankSpace;
+        }
+        public bool IsFence(int gridX, int gridY)
+        {
+            return staticGrid[gridX, gridY] is Fence;
         }
 
-        public bool IsOutOfBoundsPixelX(int pixelX)
+        /*
+         * The following two methods help moving game objects to appear on the other side of the map if they leave the map
+         */
+        public Point GetWrappedGridLocation(int gridX, int gridY)
         {
-            if (pixelX < 0)
-            {
-                return true;
-            }
-            if (pixelX > pixelWidth - cellSize)
-            {
-                return true;
-            }
-            return false;
+            if (gridX >= gridWidth) gridX = gridX - gridWidth;
+            if (gridX < 0) gridX = gridX + gridWidth;
+            if (gridY >= gridHeight) gridY = gridY - gridHeight;
+            if (gridY < 0) gridY = gridY + gridHeight;
+            return new Point(gridX, gridY);
         }
-        public bool IsOutOfBoundsPixelY(int pixelY)
-        {
-            if (pixelY < 0)
-            {
-                return true;
-            }
-            if (pixelY > pixelHeight - cellSize)
-            {
-                return true;
-            }
-            return false;
-        }
-        public int GetWrappedPixelXCoordinate(int pixelX)
+        public Point GetWrappedPixelLocation(int pixelX, int pixelY)
         {
             if (pixelX < 0)
             {
@@ -191,10 +179,7 @@ namespace Pacman
             {
                 pixelX = pixelX - (pixelWidth - cellSize);
             }
-            return pixelX;
-        }
-        public int GetWrappedPixelYCoordinate(int pixelY)
-        {
+
             if (pixelY < 0)
             {
                 pixelY = pixelHeight - cellSize + pixelY;
@@ -203,19 +188,42 @@ namespace Pacman
             {
                 pixelY = pixelY - (pixelHeight - cellSize);
             }
-            return pixelY;
+
+            return new Point(pixelX, pixelY);
+        }
+
+        /*
+         * Returns true if either one of the pixel coordinates is out of bounds
+         */
+        public bool IsOutOfBoundsPixelLocation(int pixelX, int pixelY)
+        {
+            if (pixelX < 0 || pixelX > pixelWidth - cellSize)
+            {
+                return true;
+            }
+            if (pixelY < 0 || pixelY > pixelHeight - cellSize)
+            {
+                return true;
+            }
+            return false;
         }
         public List<TweeningObject> GetAllMovingObjects() 
         {
             return movingObjects;
         }
-        public List<StaticLayerBlankSpace> GetAdjacentBlankCells(int x, int y)
+
+        /* 
+         * Returns all adjacent cells that are blank. It is used by ghosts pathfinding algorithm
+         */
+        public List<StaticLayerBlankSpace> GetAdjacentBlankCells(int gridX, int gridY)
         {
             List<StaticLayerBlankSpace> adjacentExits = new List<StaticLayerBlankSpace>();
+
+            // we start with pointing up from the current tile and then we rotate the direction four times to check all adjacent cells
             Direction direction = Direction.Up;
             for (int i = 0; i < 4; i++)
             {
-                Point adjacentLocation = GetWrappedGridLocation(x + direction.X, y + direction.Y);
+                Point adjacentLocation = GetWrappedGridLocation(gridX + direction.X, gridY + direction.Y);
                 StaticGridObject neighboringCell = GetStaticGridObject(adjacentLocation.X, adjacentLocation.Y);
                 if (neighboringCell is StaticLayerBlankSpace)
                 {
@@ -225,14 +233,7 @@ namespace Pacman
             }
             return adjacentExits;
         }
-        public Point GetHeroGridLocation()
-        {
-            return new Point(hero.GetGridX(), hero.GetGridY());
-        }
-        public Point GetRedGhostGridLocation()
-        {
-            return new Point(redGhost.GetGridX(), redGhost.GetGridY());
-        }
+
     }
     /*
      * Takes care of drawing to the form. Implements double buffering to get rid of the flickering.
