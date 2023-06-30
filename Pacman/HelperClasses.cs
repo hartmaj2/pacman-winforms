@@ -147,18 +147,16 @@ namespace Pacman
         {
             return staticGrid[x, y] is Fence;
         }
-        public int GetWrappedXCoordinate(int x)
+
+        public Point GetWrappedGridLocation(int x, int y)
         {
-            if (x >= gridWidth) return x - gridWidth;
-            if (x < 0) return x + gridWidth;
-            return x;
+            if (x >= gridWidth) x = x - gridWidth;
+            if (x < 0) x = x + gridWidth;
+            if (y >= gridHeight) y = y - gridHeight;
+            if (y < 0) y = y + gridHeight;
+            return new Point(x, y);
         }
-        public int GetWrappedYCoordinate(int y)
-        {
-            if (y >= gridHeight) return y - gridHeight;
-            if (y < 0) return y + gridHeight;
-            return y;
-        }
+
         public bool IsOutOfBoundsPixelX(int pixelX)
         {
             if (pixelX < 0)
@@ -217,9 +215,8 @@ namespace Pacman
             Direction direction = Direction.Up;
             for (int i = 0; i < 4; i++)
             {
-                int adjacentX = GetWrappedXCoordinate(x + direction.X);
-                int adjacentY = GetWrappedYCoordinate(y + direction.Y);
-                StaticGridObject neighboringCell = GetStaticGridObject(adjacentX, adjacentY);
+                Point adjacentLocation = GetWrappedGridLocation(x + direction.X, y + direction.Y);
+                StaticGridObject neighboringCell = GetStaticGridObject(adjacentLocation.X, adjacentLocation.Y);
                 if (neighboringCell is StaticLayerBlankSpace)
                 {
                     adjacentExits.Add((StaticLayerBlankSpace)neighboringCell);

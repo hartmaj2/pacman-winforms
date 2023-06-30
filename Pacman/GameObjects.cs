@@ -222,9 +222,8 @@ namespace Pacman
          */
         protected bool CanGoInDirection(Map map, Direction proposedDirection)
         {
-            int nextGridX = map.GetWrappedXCoordinate(GetGridX() + proposedDirection.X);
-            int nextGridY = map.GetWrappedYCoordinate(GetGridY() + proposedDirection.Y);
-            return IsReachableCell(nextGridX, nextGridY, map);
+            Point newLocation = map.GetWrappedGridLocation(GetGridX() + proposedDirection.X, GetGridY() + proposedDirection.Y);
+            return IsReachableCell(newLocation.X, newLocation.Y, map);
         }
 
         /*
@@ -667,9 +666,9 @@ namespace Pacman
         protected void SetTargetAheadOfHero(Map map, int tilesAhead)
         {
             Direction heroDirection = map.GetHero().GetDirection();
-            int xAhead = map.GetWrappedXCoordinate((tilesAhead * heroDirection.X) + map.GetHeroGridLocation().X);
-            int yAhead = map.GetWrappedYCoordinate((tilesAhead * heroDirection.Y) + map.GetHeroGridLocation().Y);
-            target = new Point(xAhead, yAhead);
+            int rawTargetX = (tilesAhead * heroDirection.X) + map.GetHeroGridLocation().X;
+            int rawTargetY = (tilesAhead * heroDirection.Y) + map.GetHeroGridLocation().Y;
+            target = map.GetWrappedGridLocation(rawTargetX,rawTargetY);
         }
 
         /*
@@ -746,7 +745,7 @@ namespace Pacman
             int vectorYToAdd = (target.Y - map.GetRedGhostGridLocation().Y);
 
             // add this vector to the current target location and wrap the coordinates on over/underflow
-            target = new Point(map.GetWrappedXCoordinate(vectorXToAdd+target.X),map.GetWrappedYCoordinate(vectorYToAdd+target.Y));
+            target = map.GetWrappedGridLocation(vectorXToAdd+target.X, vectorYToAdd+target.Y);
         }
     }
 
