@@ -84,10 +84,18 @@ namespace Pacman
         /*
          * Sets the direction towards a neighboring cell. DOESN'T WORK ON DIAGONAL PIECES
          */
-        protected void SetDirectionTowardsNeighbor(StaticGridObject neighbor)
+        protected void SetDirectionTowardsExit(StaticGridObject neighbor)
         {
             Direction newDirection = Direction.None;
             newDirection.X = neighbor.GetGridX() - GetGridX();
+            if (newDirection.X < -1)
+            {
+                newDirection.X = 1;
+            }
+            else if (newDirection.X > 1)
+            {
+                newDirection.X = -1;
+            }
             newDirection.Y = neighbor.GetGridY() - GetGridY();
             direction = newDirection;
 
@@ -110,6 +118,8 @@ namespace Pacman
         protected int movementFrame;
         protected int movementSpeed;
 
+        protected Point lastOccupiedCell;
+
         protected int mapCellSize;
 
         protected bool isMoving; // tracks if we are currenly inside a movement cycle or just finished moving
@@ -120,6 +130,7 @@ namespace Pacman
             mapCellSize = cellSize;
             pixelX = gridX * mapCellSize;
             pixelY = gridY * mapCellSize;
+            lastOccupiedCell = new Point(gridX, gridY);
             SetTweenSpeed(speed); // automatically adjust movements speed to divide cell size without remiander
             SetNotMoving();
         }
@@ -222,8 +233,22 @@ namespace Pacman
          */
         private void WraparoundIfOutOfBounds(Map map)
         {
-            pixelX = map.GetWrappedPixelXCoordinate(pixelX);
-            pixelY = map.GetWrappedPixelYCoordinate(pixelY);
+            if (map.PixelXOutOfBound(pixelX))
+            {
+                pixelX = map.GetWrappedPixelXCoordinate(pixelX);
+                UpdateLastOccupied();
+            }
+            if (map.PixelYOutOfBounds(pixelY)) 
+            {
+                pixelY = map.GetWrappedPixelYCoordinate(pixelY);
+                UpdateLastOccupied();
+            }
+        }
+
+        protected void UpdateLastOccupied()
+        {
+            lastOccupiedCell.X = GetGridX();
+            lastOccupiedCell.Y = GetGridY();
         }
 
         public override int GetGridX()
@@ -388,7 +413,7 @@ namespace Pacman
         protected readonly TimeSpan prepareDuration;
 
         protected Point target; // the location the ghost is trying to reach currently
-        protected Point lastOccupiedCell;
+        
         protected DateTime ghostHouseEnterTime;
         protected GhostMode currentMode;
         protected bool leftHouse; // track if the ghost has left the house already (we check if he crossed a fence)
@@ -482,6 +507,7 @@ namespace Pacman
          */
         protected override void StartNextMovementCycle(Map map)
         {
+            Console.WriteLine($"My location is {GetGridX()} {GetGridY()}");
             if (currentMode == GhostMode.Preparing)
             {
                 TryStopPreparing(); // checks time to see if we should change this ghost's mode
@@ -502,11 +528,11 @@ namespace Pacman
                 {
                     SetTargetBasedOnMode(map);
                     StaticLayerBlankSpace chosenIntersectionExit = FindExitClosestToTarget(map, adjacentExits);
-                    SetDirectionTowardsNeighbor(chosenIntersectionExit);
+                    SetDirectionTowardsExit(chosenIntersectionExit);
                 }
                 else if (numberOfExits == 2)
                 {
-                    TryTurnOnCurve(map, adjacentExits);
+                    ChooseNonReturningExit(map, adjacentExits);
                 }
                 else // this happends only when the ghost reached a dead end (doesn't happen on the classic pacman map)
                 {
@@ -556,22 +582,18 @@ namespace Pacman
         /*
          * If there are exactly two exits the ghost can choose, he picks the one that he didn't came from
          */
-        private void TryTurnOnCurve(Map map, List<StaticLayerBlankSpace> adjacentExits)
+        private void ChooseNonReturningExit(Map map, List<StaticLayerBlankSpace> adjacentExits)
         {
-                foreach (StaticLayerBlankSpace neighbour in adjacentExits)
+            foreach (StaticLayerBlankSpace neighbour in adjacentExits)
+            {
+                if (!WasLastOccupied(neighbour))
                 {
-                    if (!WasLastOccupied(neighbour))
-                    {
-                        SetDirectionTowardsNeighbor(neighbour);
-                    }
-                } 
+                    SetDirectionTowardsExit(neighbour);
+                }
+            } 
         }
 
-        private void UpdateLastOccupied()
-        {
-            lastOccupiedCell.X = GetGridX();
-            lastOccupiedCell.Y = GetGridY();
-        }
+
 
         /*
          * Picks a neighbouring tile that is closest to this ghost's target

@@ -17,13 +17,13 @@ namespace Pacman
 
         private const int cellSize = 48;
 
-        private const int heroSpeed = 12; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
-        private const int ghostSpeed = 6;
+        private const int heroSpeed = 4; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
+        private const int ghostSpeed = 2;
 
-        private const int redGhostPrepareTime = 5;
-        private const int pinkGhostPrepareTime = 10;
-        private const int blueGhostPrepareTime = 15;
-        private const int orangeGhostPrepareTime = 20;
+        private const int redGhostPrepareTime = 1;
+        private const int pinkGhostPrepareTime = 10000;
+        private const int blueGhostPrepareTime = 15000;
+        private const int orangeGhostPrepareTime = 20000;
 
         public const double scatterModeDuration = 10;
         public const double chaseModeDuration = 15;

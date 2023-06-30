@@ -4,6 +4,8 @@
  * Programming NPRG031
 */
 
+using System.Reflection.Metadata.Ecma335;
+
 namespace Pacman
 {
     /*
@@ -175,7 +177,6 @@ namespace Pacman
             }
             return false;
         }
-
         public bool IsFence(int x, int y)
         {
             return staticGrid[x, y] is Fence;
@@ -191,6 +192,31 @@ namespace Pacman
             if (y >= gridHeight) return y - gridHeight;
             if (y < 0) return y + gridHeight;
             return y;
+        }
+
+        public bool PixelXOutOfBound(int pixelX)
+        {
+            if (pixelX < 0)
+            {
+                return true;
+            }
+            if (pixelX > GetPixelWidth() - GetCellSize())
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool PixelYOutOfBounds(int pixelY)
+        {
+            if (pixelY < 0)
+            {
+                return true;
+            }
+            if (pixelY > GetPixelHeight() - GetCellSize())
+            {
+                return true;
+            }
+            return false;
         }
         public int GetWrappedPixelXCoordinate(int pixelX)
         {
@@ -220,38 +246,15 @@ namespace Pacman
         {
             return movingObjects;
         }
-        public bool IsAnIntersection(int x, int y)
-        {
-            if (GetNeighboringBlankCellsCount(x,y) > 2)
-            {
-                return true;
-            }
-            return false;
-        }
-        public int GetNeighboringBlankCellsCount(int currentX, int currentY)
-        {
-            Direction direction = Direction.Up;
-            int blankSpacesCount = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                int neighbourX = GetWrappedXCoordinate(currentX + direction.X);
-                int neighbourY = GetWrappedYCoordinate(currentY + direction.Y);
-                StaticGridObject neighboringCell = GetStaticGridObject(neighbourX, neighbourY);
-                if (neighboringCell is StaticLayerBlankSpace)
-                {
-                    blankSpacesCount++;
-                }
-                direction.RotateRight();
-            }
-            return blankSpacesCount;
-        }
         public List<StaticLayerBlankSpace> GetAdjacentBlankCells(int x, int y)
         {
             List<StaticLayerBlankSpace> neighbours = new List<StaticLayerBlankSpace>();
             Direction direction = Direction.Up;
             for (int i = 0; i < 4; i++)
             {
-                StaticGridObject neighboringCell = GetStaticGridObject(x + direction.X, y + direction.Y);
+                int adjacentX = GetWrappedXCoordinate(x + direction.X);
+                int adjacentY = GetWrappedYCoordinate(y + direction.Y);
+                StaticGridObject neighboringCell = GetStaticGridObject(adjacentX, adjacentY);
                 if (neighboringCell is StaticLayerBlankSpace)
                 {
                     neighbours.Add((StaticLayerBlankSpace)neighboringCell);
