@@ -48,34 +48,40 @@ namespace Pacman
      */
     class Map
     {
+        private readonly int gridWidth;
+        private readonly int gridHeight;
+        private readonly int cellSize;
+
         private StaticGridObject[,] staticGrid;
         private InteractiveGridObject[,] interactiveGrid;
+
         private List<TweeningObject> movingObjects;
+
         private List<Ghost> ghosts;
         private Hero hero;
-        private Ghost redGhost;
+        private Ghost redGhost; // we need reference to the red ghost because orange ghost uses its position
 
         private int pelletsRemaining;
         private int energizersRemaining;
 
-        private int gridWidth;
-        private int gridHeight;
-
-        private int cellSize;
 
         public Map(int cellSize, Hero hero, Ghost redGhost, List<Ghost> ghosts, InteractiveGridObject[,] interactiveGrid, StaticGridObject[,] staticGrid, List<TweeningObject> movingObjects, int pelletsCount, int energizersCount)
         {
-            this.cellSize = cellSize;
-            this.hero = hero;
-            this.redGhost = redGhost;
-            this.ghosts = ghosts;
-            this.interactiveGrid = interactiveGrid;
-            this.staticGrid = staticGrid;
-            this.movingObjects = movingObjects;
-            pelletsRemaining = pelletsCount;
-            energizersRemaining = energizersCount;
             gridWidth = staticGrid.GetLength(0);
             gridHeight = staticGrid.GetLength(1);
+            this.cellSize = cellSize;
+
+            this.staticGrid = staticGrid;
+            this.interactiveGrid = interactiveGrid;
+
+            this.movingObjects = movingObjects;
+
+            this.ghosts = ghosts;
+            this.hero = hero;
+            this.redGhost = redGhost;
+
+            pelletsRemaining = pelletsCount;
+            energizersRemaining = energizersCount;
 
         }
         public List<Ghost> GetGhosts()
