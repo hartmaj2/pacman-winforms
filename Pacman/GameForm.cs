@@ -34,7 +34,7 @@ namespace Pacman
     public partial class GameForm : Form
     {
 
-        readonly TimeSpan TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / 60);
+        readonly TimeSpan gameTickInterval = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / 60);
 
         Keys keyPressed = Keys.None;
         Stopwatch stopWatch = Stopwatch.StartNew();
@@ -52,21 +52,25 @@ namespace Pacman
             Application.Idle += HandleApplicationIdle;
 
         }
+
+        /* This simulates a game loop which makes the game update at an interval calculated by 
+         * the stopWatch
+         */
         private void Loop()
         {
-            TimeSpan currentTime = stopWatch.Elapsed;
-            TimeSpan elapsedTime = currentTime - lastTime;
-            lastTime = currentTime;
-
-            accumulatedTime += elapsedTime;
+            TimeSpan currentTime = stopWatch.Elapsed; // how much time elapsed since the stopwatch started 
+            TimeSpan elapsedSinceLastAccumulation = currentTime - lastTime; // calculate how much time elapsed since last game update
+            
+            accumulatedTime += elapsedSinceLastAccumulation; 
+            lastTime = currentTime; // we accumulated time passed since last time in the previous instruction so we need to reset lastTime
 
             bool updated = false;
 
-            // If there was lots of accumulated time, the game ticks many times without rendering
-            while (accumulatedTime >= TargetElapsedTime)
+            // If there was lots of accumulated time, the game simulation updates many times without rendering
+            while (accumulatedTime >= gameTickInterval)
             {
                 Update();
-                accumulatedTime -= TargetElapsedTime;
+                accumulatedTime -= gameTickInterval;
                 updated = true;
             }
 
