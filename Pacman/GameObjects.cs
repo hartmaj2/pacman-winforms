@@ -460,6 +460,9 @@ namespace Pacman
             
         }
 
+        /*
+         * Calls mostly ghost specific target setting methods except when this ghost is frightened (frightened behavior is same for all ghosts)
+         */
         private void SetTargetBasedOnMode(Map map)
         {
             switch(currentMode) 
@@ -488,8 +491,7 @@ namespace Pacman
             if (IAmAtIntersection(map))
             {
                 SetTargetBasedOnMode(map);
-                StaticLayerBlankSpace targetNeighbour = FindNeighbourClosestToTarget(map);
-                SetDirectionTowardsNeighbor(targetNeighbour);
+                SetDirectionToPreferredIntersectionExit(map);
             }
             else if (!CanGoInDirection(map,direction))
             {
@@ -501,9 +503,13 @@ namespace Pacman
                 {
                     TryTurnOnCurve(map);
                 } 
+                if (!CanGoInDirection(map,direction)) // we must be at a dead end if this happens (can't happen on a usual pacman map)
+                {
+                    TurnAround();
+                }
             }
-            SetCurrentLocationLastOccupied();
-            SetMoving();
+            UpdateLastOccupied();
+            SetMoving(); // at this point the ghost has decided on some valid direction so we know we can start his movement
             
         }
 
@@ -550,11 +556,25 @@ namespace Pacman
             }
         }
 
-        private void SetCurrentLocationLastOccupied()
+        /*
+         * Implements ghost pathfinding behavior. The ghost just picks the exit closest to the target cell.
+         * THE GHOST NEVER CHOOSES TO GO BACK FROM WHERE HE CAME FROM
+         */
+        private void SetDirectionToPreferredIntersectionExit(Map map)
+        {
+            StaticLayerBlankSpace chosenIntersectionExit = FindNeighbourClosestToTarget(map);
+            SetDirectionTowardsNeighbor(chosenIntersectionExit);
+        }
+
+        private void UpdateLastOccupied()
         {
             lastOccupiedCell.X = GetGridX();
             lastOccupiedCell.Y = GetGridY();
         }
+
+        /*
+         * Picks a neighbouring tile that is closest to this ghost's target
+         */
         private StaticLayerBlankSpace FindNeighbourClosestToTarget(Map map)
         {
             double closestDistance = Double.MaxValue;
