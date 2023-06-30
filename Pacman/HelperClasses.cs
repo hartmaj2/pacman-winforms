@@ -378,17 +378,17 @@ namespace Pacman
         }
         private void DisplayScore(int score)
         {
-            bufferGraphics.DrawString(FormConstants.scoreText + " " + score, FormConstants.textFont, FormConstants.textBrush, 0, 0);
+            bufferGraphics.DrawString(FormText.scoreText + " " + score, FormText.scoreTextFont, FormText.textBrush, 0, 0);
         }
         private void DisplayStartScreen()
         {
-            float textWidth = bufferGraphics.MeasureString(FormConstants.startScreenText, FormConstants.textFont).Width;
-            bufferGraphics.DrawString(FormConstants.startScreenText, FormConstants.startScreenFont, FormConstants.textBrush, (formWidth-textWidth)/2, formHeight/2);
+            float textWidth = bufferGraphics.MeasureString(FormText.startScreenText, FormText.scoreTextFont).Width;
+            bufferGraphics.DrawString(FormText.startScreenText, FormText.startScreenFont, FormText.textBrush, (formWidth-textWidth)/2, formHeight/2);
         }
         private void DisplayGameOverText(string gameOverText)
         {
-            float textWidth = bufferGraphics.MeasureString(gameOverText, FormConstants.startScreenFont).Width;
-            bufferGraphics.DrawString(gameOverText,FormConstants.startScreenFont,FormConstants.textBrush, (formWidth-textWidth)/2,formHeight/2);
+            float textWidth = bufferGraphics.MeasureString(gameOverText, FormText.startScreenFont).Width;
+            bufferGraphics.DrawString(gameOverText,FormText.startScreenFont,FormText.textBrush, (formWidth-textWidth)/2,formHeight/2);
         }
 
     }

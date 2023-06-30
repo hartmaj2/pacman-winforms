@@ -111,11 +111,11 @@ namespace Pacman
                 case GameState.GameOverScreen:
                     if (gameLost)
                     {
-                        painter.PaintGameOverScreen(FormConstants.GetGameLostText(score));
+                        painter.PaintGameOverScreen(FormText.GetGameLostText(score));
                     }
                     else
                     {
-                        painter.PaintGameOverScreen(FormConstants.GetGameWonText(score));
+                        painter.PaintGameOverScreen(FormText.GetGameWonText(score));
                     }
                     break;
             }

@@ -9,18 +9,25 @@ using System.Runtime.InteropServices;
 
 namespace Pacman
 {
-    public static class FormConstants
+    /*
+     * Holds all the presets that have to do with writing text to the form
+     */
+    public static class FormText
     {
-        public const string gameFormText = "Pacman Game";
 
-        public const string startScreenText = "Press \"enter\" to start the game";
-        public static Font startScreenFont = new Font("Arial", 25);
+        public const string formHeading = "Pacman Game";
 
-        public static SolidBrush textBrush = new SolidBrush(Color.Yellow);
-        public static Font textFont = new Font("Arial", 20);
+        public const string fontStyle = "Arial";
+        public static Color fontColor = Color.Yellow;
+        
+        public const int scoreTextFontSize = 20;
         public const string scoreText = "Score: ";
 
+        public const int startScreenTextFontSize = 25;
+        public const string startScreenText = "Press \"enter\" to start the game";
+
         public const string playAgainOrQuitText = "\nPress \"enter\" to play again or \"q\" to quit";
+
         public static string GetGameLostText(int score)
         {
             return "You lost !\nYour score was: " + score + playAgainOrQuitText;
@@ -30,13 +37,27 @@ namespace Pacman
         {
             return "You Won !\nYour score is: " + score + playAgainOrQuitText;
         }
+
+        public static Font startScreenFont = new Font(fontStyle, startScreenTextFontSize);
+        public static SolidBrush textBrush = new SolidBrush(fontColor);
+        public static Font scoreTextFont = new Font(fontStyle, scoreTextFontSize);
+
     }
     public partial class GameForm : Form
     {
 
-        readonly TimeSpan gameTickInterval = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / 60);
+        // sets the FPS rate
+        private const int framesPerSecond = 60;
 
-        private Keys keyPressed = Keys.None;
+        // sets where the entire game form should be placed on screen
+        private static Point formLeftCornerLocation = new Point(0, 0);
+
+        readonly TimeSpan gameTickInterval = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / framesPerSecond);
+
+        // remembers the last key that was pressed till next game loop update
+        private Keys keyPressed = Keys.None; 
+
+        // variables used to handle game loop update and render timing
         private Stopwatch stopWatch = Stopwatch.StartNew();
         private TimeSpan accumulatedTime;
         private TimeSpan lastTime;
@@ -49,7 +70,7 @@ namespace Pacman
 
             // following two lines of code allow me to manually set the location of the form to the upper left corner
             StartPosition = FormStartPosition.Manual;
-            Location = new Point(0, 0);
+            Location = formLeftCornerLocation;
 
             gameManager = new GameManager(this);
             Application.Idle += HandleApplicationIdle; // add event handler when application becomes idle (receives no messages but we still want to process the game)
