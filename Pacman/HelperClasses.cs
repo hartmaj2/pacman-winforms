@@ -105,6 +105,9 @@ namespace Pacman
             return redGhost;
         }
 
+        /*
+         * Two following methods used by GameManager to determine if the game is over
+         */
         public int GetRemainingPelletsCount()
         {
             return pelletsRemaining;
@@ -115,7 +118,7 @@ namespace Pacman
         }
 
         /*
-         * The two following check whether the interactive grid contains pellet/energizer
+         * The two following methods check whether the interactive grid contains pellet/energizer
          * If yes, the methods decrease the current pellet/energizer counter, remove the pellet/energizer from the cell
          * Finally they return true if the pellet/energizer was removed and false otherwise
          */
@@ -141,6 +144,9 @@ namespace Pacman
    
         }
 
+        /*
+         * Two following methods used by painter to render the grids
+         */
         public StaticGridObject GetStaticGridObject(int gridX, int gridY)
         {
             return staticGrid[gridX,gridY];
@@ -229,7 +235,7 @@ namespace Pacman
             for (int i = 0; i < 4; i++)
             {
                 Point adjacentLocation = GetWrappedGridLocation(gridX + direction.X, gridY + direction.Y);
-                StaticGridObject neighboringCell = GetStaticGridObject(adjacentLocation.X, adjacentLocation.Y);
+                StaticGridObject neighboringCell = staticGrid[adjacentLocation.X, adjacentLocation.Y];
                 if (neighboringCell is StaticLayerBlankSpace)
                 {
                     adjacentExits.Add((StaticLayerBlankSpace)neighboringCell);
