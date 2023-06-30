@@ -386,7 +386,7 @@ namespace Pacman
         }
 
         /*
-         * Used when ghost is in scatter mode
+         * Used when ghost is frightened. On each intersection it randomly places its target somewhere on the map
          */
         private void SetTargetToRandom(Map map)
         {
@@ -395,6 +395,8 @@ namespace Pacman
             int randomGridY = rand.Next(map.GetGridHeight());
             target = new Point(randomGridX, randomGridY);
         }
+
+        // the two following methods are implemented in a unique way by each ghost
         protected abstract void SetTargetToScatterTarget(Map map);
         protected abstract void SetTargetToChaseTarget(Map map);
         
@@ -436,6 +438,7 @@ namespace Pacman
                     break;
             }
         }
+
         /*
          * The target is ony taken into account if the ghost is at an intersection
          */
@@ -466,6 +469,11 @@ namespace Pacman
             SetMoving();
             
         }
+
+        //HACK: even though the ghosts could theoretically enter ghost home again when they
+        // are in chase/scatter/frightened mode this doesn't happen because the ghost home
+        // is surrounded by fence tiles which are not taken into account when the ghost is 
+        // deciding where to go at an intersection
         protected override bool IsReachableCell(int x, int y, Map map)
         {
             switch (currentMode)
