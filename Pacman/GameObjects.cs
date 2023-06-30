@@ -164,29 +164,6 @@ namespace Pacman
                 SetNotMoving();
             }      
         }
-        public int GetPixelX()
-        {
-            return pixelX;
-        }
-        public int GetPixelY()
-        {
-            return pixelY;
-        }
-        protected bool CanGoInDirection(Map map, Direction proposedDirection)
-        {
-            int nextGridX = map.GetWrappedXCoordinate(GetGridX() + proposedDirection.X);
-            int nextGridY = map.GetWrappedYCoordinate(GetGridY() + proposedDirection.Y);
-            return IsReachableCell(nextGridX, nextGridY, map);
-        }
-        public override int GetGridX()
-        {
-            return (pixelX + (mapCellSize / 2)) / mapCellSize;
-        }
-        public override int GetGridY()
-        {
-            return (pixelY + (mapCellSize / 2)) / mapCellSize;
-        }
-
         protected void SetNotMoving()
         {
             isMoving = false;
@@ -196,6 +173,17 @@ namespace Pacman
             isMoving = true;
             movementFrame = 0;
         }
+
+        /*
+         * Checks if the location of a cell is reachable for this object in the proposed direction (after wrapping the coordinates)
+         */
+        protected bool CanGoInDirection(Map map, Direction proposedDirection)
+        {
+            int nextGridX = map.GetWrappedXCoordinate(GetGridX() + proposedDirection.X);
+            int nextGridY = map.GetWrappedYCoordinate(GetGridY() + proposedDirection.Y);
+            return IsReachableCell(nextGridX, nextGridY, map);
+        }
+
         /*
          * Because each movable object needs to end a tweening cycle at a precise grid location, we need the 
          * cell size to be a multiple of the speed. This funciton takes care of readjusting the speed corectly.
@@ -236,6 +224,23 @@ namespace Pacman
         {
             pixelX = map.GetWrappedPixelXCoordinate(pixelX);
             pixelY = map.GetWrappedPixelYCoordinate(pixelY);
+        }
+
+        public override int GetGridX()
+        {
+            return (pixelX + (mapCellSize / 2)) / mapCellSize;
+        }
+        public override int GetGridY()
+        {
+            return (pixelY + (mapCellSize / 2)) / mapCellSize;
+        }
+        public int GetPixelX()
+        {
+            return pixelX;
+        }
+        public int GetPixelY()
+        {
+            return pixelY;
         }
     }
     /* 
