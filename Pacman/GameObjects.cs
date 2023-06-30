@@ -391,7 +391,7 @@ namespace Pacman
         protected Point lastOccupiedCell;
         protected DateTime ghostHouseEnterTime;
         protected GhostMode currentMode;
-        protected bool leftHouse;
+        protected bool leftHouse; // track if the ghost has left the house already (we check if he crossed a fence tile)
 
         public Ghost(Bitmap image, Bitmap frightenedImage, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize)
         {
