@@ -112,7 +112,7 @@ namespace Pacman
 
         protected int mapCellSize;
 
-        protected bool isMoving;
+        protected bool isMoving; // tracks if we are currenly inside a movement cycle or just finished moving
 
         public TweeningObject(Bitmap image, int gridX, int gridY, int speed, int cellSize)
         {
@@ -127,18 +127,23 @@ namespace Pacman
         { 
             if (isMoving)
             {
-                ContinueMovement();
+                ContinueMoving();
             }
             if (!isMoving)
             {
-                TryStartNextMovement(map);
-                ContinueMovement();
+                StartNextMovementCycle(map);
+                ContinueMoving();
             }
             WraparoundIfOutOfBounds(map);
-        }
-        protected abstract void TryStartNextMovement(Map map);
+        }   
+        
+        /*
+         * Called at end of every movement cycle. Decalred abstract as every subclass 
+         * has its own way of handling this state
+         */
+        protected abstract void StartNextMovementCycle(Map map);
  
-        private void ContinueMovement()
+        private void ContinueMoving()
         {
             if (movementFrame < maxMovementFrame)
             {
@@ -177,10 +182,7 @@ namespace Pacman
         {
             return (pixelY + (mapCellSize / 2)) / mapCellSize;
         }
-        protected void ClearDirection()
-        {
-            direction = Direction.None;
-        }
+
         protected void SetNotMoving()
         {
             isMoving = false;
@@ -288,7 +290,7 @@ namespace Pacman
         {   
             nextDirection = newDirection;
         }
-        protected override void TryStartNextMovement(Map map)
+        protected override void StartNextMovementCycle(Map map)
         {
             if (CanGoInDirection(map, nextDirection))
             {
@@ -435,7 +437,7 @@ namespace Pacman
         /*
          * The target is ony taken into account if the ghost is at an intersection
          */
-        protected override void TryStartNextMovement(Map map)
+        protected override void StartNextMovementCycle(Map map)
         {
             if (currentMode == GhostMode.Preparing)
             {
