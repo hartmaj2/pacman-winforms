@@ -94,7 +94,6 @@ namespace Pacman
             InteractiveGridObject[,] interactiveGrid = new InteractiveGridObject[width, height];
             List<TweeningObject> tweeningObjects = new List<TweeningObject>();
             List<Ghost> ghosts = new List<Ghost>();
-            List<Fence> fences = new List<Fence>();
             Hero hero = null;
             Ghost redGhost = null;
 
@@ -163,7 +162,6 @@ namespace Pacman
                             break;
                         case fenceChar:
                             Fence fence = new Fence(fenceSprite,x,y);
-                            fences.Add(fence);
                             staticGrid[x, y] = fence;
                             interactiveGrid[x,y ] = new InteractiveLayerBlankSpace(null, x,y);
                             break;
@@ -177,7 +175,7 @@ namespace Pacman
                 }
             }
 
-            return new Map(cellSize,hero,redGhost,ghosts,fences,interactiveGrid,staticGrid,tweeningObjects,pelletsCount,energizersCount);
+            return new Map(cellSize,hero,redGhost,ghosts,interactiveGrid,staticGrid,tweeningObjects,pelletsCount,energizersCount);
 
 
         }

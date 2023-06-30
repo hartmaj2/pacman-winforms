@@ -67,7 +67,6 @@ namespace Pacman
         private StaticGridObject[,] staticGrid;
         private InteractiveGridObject[,] interactiveGrid;
         private List<TweeningObject> movingObjects;
-        private List<Fence> fences;
         private List<Ghost> ghosts;
         private Hero hero;
         private Ghost redGhost;
@@ -80,13 +79,12 @@ namespace Pacman
 
         private int cellSize;
 
-        public Map(int cellSize, Hero hero, Ghost redGhost, List<Ghost> ghosts, List<Fence> fences, InteractiveGridObject[,] interactiveGrid, StaticGridObject[,] staticGrid, List<TweeningObject> movingObjects, int pelletsCount, int energizersCount)
+        public Map(int cellSize, Hero hero, Ghost redGhost, List<Ghost> ghosts, InteractiveGridObject[,] interactiveGrid, StaticGridObject[,] staticGrid, List<TweeningObject> movingObjects, int pelletsCount, int energizersCount)
         {
             this.cellSize = cellSize;
             this.hero = hero;
             this.redGhost = redGhost;
             this.ghosts = ghosts;
-            this.fences = fences;
             this.interactiveGrid = interactiveGrid;
             this.staticGrid = staticGrid;
             this.movingObjects = movingObjects;
