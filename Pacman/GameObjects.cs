@@ -378,17 +378,24 @@ namespace Pacman
      * Enemies that will be chasing the player
      */
     enum GhostMode { Preparing ,Chase, Scatter, Frightened };
+
+    /*
+     * All ghosts in the game inherit from this general Ghost class.
+     * Each ghost must have some target which it is trying to reach but how this target is set depends on each ghost
+     * Every ghost also spends unique amount of time in the ghost house 
+     */
     abstract class Ghost : TweeningObject
     {
-        protected GhostMode currentMode;
-        protected Bitmap frighenedModeSprite;
 
-        protected Point startingLocation;
-        protected Point target;
+        protected readonly Bitmap frighenedModeSprite;
+        protected readonly Point startingLocation; // used to return ghost back home after being eaten by pacman
+        protected readonly TimeSpan prepareDuration;
+
+        protected Point target; // the location the ghost is trying to reach currently
         protected Point lastOccupiedCell;
-
-        protected TimeSpan prepareDuration;
         protected DateTime ghostHouseEnterTime;
+        protected GhostMode currentMode;
+
         public Ghost(Bitmap image, Bitmap frightenedImage, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize)
         {
             SetModeIfValid(GhostMode.Preparing);
@@ -401,6 +408,10 @@ namespace Pacman
             frighenedModeSprite = frightenedImage;
         }
 
+        /*
+         * Releases the ghost from preparing mode thus allowing him to leave the ghost house
+         * (that's because changing the mode changes what the IsReachable method returns)
+         */
         private void TryExitGhostHouse()
         {
             DateTime currentTime = DateTime.Now;
@@ -434,6 +445,7 @@ namespace Pacman
             direction = Direction.Up;
             SetNotMoving();
         }
+
         /*
          * Setting a new mode to preparing overrides all possible mode the ghost had previously
          * On the other hand, when the ghost is preparing its mode cannot be overriden
