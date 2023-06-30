@@ -432,15 +432,18 @@ namespace Pacman
 
         public Ghost(Bitmap image, Bitmap frightenedImage, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize)
         {
-            SetModeIfValid(GhostMode.Preparing);
-            direction = Direction.Up;
-            startingLocation = new Point(x, y);
-            target = new Point(mapCellSize - 1, mapCellSize - 1);
-            prepareDuration = TimeSpan.FromSeconds(prepareTimeInSeconds);
-            ghostHouseEnterTime = DateTime.Now;
-            lastOccupiedCell = new Point(GetGridX(),GetGridY());
             frighenedModeSprite = frightenedImage;
+            startingLocation = new Point(x, y);
+            prepareDuration = TimeSpan.FromSeconds(prepareTimeInSeconds);
+
+
+            target = new Point(mapCellSize - 1, mapCellSize - 1);
+
+            ghostHouseEnterTime = DateTime.Now;
+            SetModeIfValid(GhostMode.Preparing);
             leftHouse = false;
+            
+            direction = Direction.Up;
         }
 
         /*
@@ -515,7 +518,7 @@ namespace Pacman
         }
 
         /*
-         * The target is ony taken into account if the ghost is at an intersection
+         * The core of a general ghost decision making, the ghost specific behavior lies in UpdateTargetBasedOnMode method
          */
         protected override void StartNextMovementCycle(Map map)
         {
@@ -535,13 +538,13 @@ namespace Pacman
             {
                 List<StaticLayerBlankSpace> adjacentExits = map.GetAdjacentBlankCells(GetGridX(),GetGridY());
                 int numberOfExits = adjacentExits.Count;
-                if (numberOfExits > 2)
+                if (numberOfExits > 2) // the ghost is at an intersection
                 {
                     UpdateTargetBasedOnMode(map); // if on intersection, we want to let the ghost pick its new target
                     StaticLayerBlankSpace chosenIntersectionExit = FindExitClosestToTarget(map, adjacentExits);
                     SetDirectionTowardsExit(chosenIntersectionExit);
                 }
-                else if (numberOfExits == 2)
+                else if (numberOfExits == 2) // ghost continues straight or needs to turn on a curve
                 {
                     ChooseNonReturningExit(map, adjacentExits);
                 }
