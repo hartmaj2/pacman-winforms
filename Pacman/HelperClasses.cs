@@ -175,14 +175,7 @@ namespace Pacman
             }
             return false;
         }
-        public bool IsGhostHome(int x, int y)
-        {
-            if (staticGrid[x, y] is GhostHome)
-            {
-                return true;
-            }
-            return false;
-        }
+
         public bool IsFence(int x, int y)
         {
             return staticGrid[x, y] is Fence;

@@ -264,10 +264,6 @@ namespace Pacman
     {
         public Energizer(Bitmap image, int x, int y) : base(image, x, y) { }
     }
-    class GhostHome : StaticGridObject
-    {
-        public GhostHome(Bitmap image, int x, int y) : base(image, x, y) { }
-    }
     /* 
      * A wall that the player will collide with.
      */
@@ -395,6 +391,7 @@ namespace Pacman
         protected Point lastOccupiedCell;
         protected DateTime ghostHouseEnterTime;
         protected GhostMode currentMode;
+        protected bool leftHouse;
 
         public Ghost(Bitmap image, Bitmap frightenedImage, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize)
         {
@@ -406,13 +403,14 @@ namespace Pacman
             ghostHouseEnterTime = DateTime.Now;
             lastOccupiedCell = new Point(GetGridX(),GetGridY());
             frighenedModeSprite = frightenedImage;
+            leftHouse = false;
         }
 
         /*
          * Releases the ghost from preparing mode thus allowing him to leave the ghost house
          * (that's because changing the mode changes what the IsReachable method returns)
          */
-        private void TryExitGhostHouse()
+        private void TryStopPreparing()
         {
             DateTime currentTime = DateTime.Now;
             if (currentTime - ghostHouseEnterTime > prepareDuration)
@@ -440,6 +438,7 @@ namespace Pacman
         {
             SetModeIfValid(GhostMode.Preparing);
             ghostHouseEnterTime = DateTime.Now;
+            leftHouse = false;
             pixelX = startingLocation.X * mapCellSize;
             pixelY = startingLocation.Y * mapCellSize;
             direction = Direction.Up;
@@ -455,7 +454,6 @@ namespace Pacman
             if (newMode == GhostMode.Preparing || currentMode != GhostMode.Preparing)
             {
                 currentMode = newMode;
-                Console.WriteLine($"Mode of {this} set to {newMode}");
             }
             
         }
@@ -486,52 +484,53 @@ namespace Pacman
         {
             if (currentMode == GhostMode.Preparing)
             {
-                TryExitGhostHouse();
+                TryStopPreparing(); // checks time to see if we should change this ghost's mode
             }
-            if (IAmAtIntersection(map))
+            if (!leftHouse)
             {
-                SetTargetBasedOnMode(map);
-                SetDirectionToPreferredIntersectionExit(map);
-            }
-            else if (!CanGoInDirection(map,direction))
-            {
-                if (IAmHome(map))
+                CheckIfLeftHouse(map); // sets leftHouse to true if the ghost is standing at a fence
+                if (!CanGoInDirection(map,direction))
                 {
                     TurnAround();
                 }
-                else
+            }
+            else // normal movement behaviour when ghost is out of the house
+            {
+                if (IAmAtIntersection(map))
+                {
+                    SetTargetBasedOnMode(map);
+                    SetDirectionToPreferredIntersectionExit(map);
+                }
+                else if (!CanGoInDirection(map,direction))
                 {
                     TryTurnOnCurve(map);
-                } 
-                if (!CanGoInDirection(map,direction)) // we must be at a dead end if this happens (can't happen on a usual pacman map)
+                }
+                if (!CanGoInDirection(map,direction)) // this happends only when the ghost reached a dead end (doesn't happen on the classic pacman map)
                 {
                     TurnAround();
                 }
             }
-            UpdateLastOccupied();
-            SetMoving(); // at this point the ghost has decided on some valid direction so we know we can start his movement
+            UpdateLastOccupied(map);
+            SetMoving();
             
         }
 
-        //HACK: even though the ghosts could theoretically enter ghost home again when they
-        // are in chase/scatter/frightened mode this doesn't happen because the ghost home
-        // is surrounded by fence tiles which are not taken into account when the ghost is 
-        // deciding where to go at an intersection
+        /*
+         * The ghosts decides which cells are reachable depending on his current mode and the fact that it has left the house
+         */
         protected override bool IsReachableCell(int x, int y, Map map)
         {
-            switch (currentMode)
-            {
-                case GhostMode.Preparing:
-                    return (map.IsBlankCell(x, y) || map.IsGhostHome(x, y));
-                case GhostMode.Chase:
-                case GhostMode.Frightened:
-                case GhostMode.Scatter:
-                    return (map.IsBlankCell(x, y) || map.IsGhostHome(x, y) || map.IsFence(x,y));
-                   
-            }
-            return false;
-                
+            // if the ghost is preparing in the house or it is not preparing anymore but it has left the house already then it can't pass through fences
+            if (leftHouse || currentMode == GhostMode.Preparing) return map.IsBlankCell(x, y);
+            else return (map.IsBlankCell(x,y) || map.IsFence(x,y));
+        }
 
+        private void CheckIfLeftHouse(Map map)
+        {
+            if (map.IsFence(GetGridX(),GetGridY()))
+            {
+                leftHouse = true;
+            }
         }
         private bool WasLastOccupied(StaticLayerBlankSpace neighbour)
         {
@@ -566,7 +565,7 @@ namespace Pacman
             SetDirectionTowardsNeighbor(chosenIntersectionExit);
         }
 
-        private void UpdateLastOccupied()
+        private void UpdateLastOccupied(Map map)
         {
             lastOccupiedCell.X = GetGridX();
             lastOccupiedCell.Y = GetGridY();
@@ -593,11 +592,7 @@ namespace Pacman
             }
             return closestNeighbour;
         }
-        private bool IAmHome(Map map)
-        {
-            return map.IsGhostHome(GetGridX(), GetGridY());
 
-        }
         private bool IAmAtIntersection(Map map)
         {
             return map.IsAnIntersection(GetGridX(), GetGridY());

@@ -17,8 +17,8 @@ namespace Pacman
 
         private const int cellSize = 48;
 
-        private const int heroSpeed = 10; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
-        private const int ghostSpeed = 5;
+        private const int heroSpeed = 12; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
+        private const int ghostSpeed = 6;
 
         private const int redGhostPrepareTime = 5;
         private const int pinkGhostPrepareTime = 10;
@@ -38,13 +38,12 @@ namespace Pacman
          */
         private const char blankChar = '-';
         private const char wallChar = '#';
-        private const char heroChar = 'C';
+        private const char heroChar = 'H';
         private const char pelletChar = '.';
         private const char ghostRedChar = 'R';
         private const char ghostPinkChar = 'P';
         private const char ghostBlueChar = 'B';
         private const char ghostOrangeChar = 'O';
-        private const char ghostHomeChar = 'H';
         private const char fenceChar = 'F';
         private const char energizerChar = 'E';
 
@@ -133,33 +132,29 @@ namespace Pacman
                             redGhost = new RedGhost(ghostRedSprite, ghostFrightenedSprite,x, y, ghostSpeed, cellSize, redGhostPrepareTime);
                             tweeningObjects.Add(redGhost);
                             ghosts.Add(redGhost);
-                            staticGrid[x, y] = new GhostHome(null, x,y);
+                            staticGrid[x, y] = new StaticLayerBlankSpace(null, x, y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x,y);
                             break;
                         case ghostPinkChar:
                             PinkGhost pinkGhost = new PinkGhost(ghostPinkSprite, ghostFrightenedSprite, x, y, ghostSpeed, cellSize, pinkGhostPrepareTime);
                             tweeningObjects.Add(pinkGhost);
                             ghosts.Add(pinkGhost);
-                            staticGrid[x, y] = new GhostHome(null, x, y);
+                            staticGrid[x, y] = new StaticLayerBlankSpace(null, x, y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
                             break;
                         case ghostBlueChar:
                             BlueGhost blueGhost = new BlueGhost(ghostBlueSprite, ghostFrightenedSprite, x, y, ghostSpeed, cellSize, blueGhostPrepareTime);
                             tweeningObjects.Add(blueGhost);
                             ghosts.Add(blueGhost);
-                            staticGrid[x, y] = new GhostHome(null, x, y);
+                            staticGrid[x, y] = new StaticLayerBlankSpace(null, x, y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
                             break;
                         case ghostOrangeChar:
                             OrangeGhost orangeGhost = new OrangeGhost(ghostOrangeSprite, ghostFrightenedSprite, x, y, ghostSpeed, cellSize, orangeGhostPrepareTime);
                             tweeningObjects.Add(orangeGhost);
                             ghosts.Add(orangeGhost);
-                            staticGrid[x, y] = new GhostHome(null, x, y);
+                            staticGrid[x, y] = new StaticLayerBlankSpace(null, x, y);
                             interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x, y);
-                            break;
-                        case ghostHomeChar:
-                            staticGrid[x, y] = new GhostHome(null, x,y);
-                            interactiveGrid[x, y] = new InteractiveLayerBlankSpace(null, x,y);
                             break;
                         case fenceChar:
                             Fence fence = new Fence(fenceSprite,x,y);
