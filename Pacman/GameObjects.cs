@@ -406,18 +406,11 @@ namespace Pacman
         /*
          * I need to check if the mode is scatter because otherwise if the ghosts preparing I don't want to change the mode
          */
-        public void SetChaseModeIfValid()
+        public void SetModeIfValid(GhostMode newMode)
         {
-            if (currentMode != GhostMode.Preparing) currentMode = GhostMode.Chase;
+            if (currentMode != GhostMode.Preparing) currentMode = newMode;
         }
-        public void SetScatterModeIfValid()
-        {
-            if (currentMode != GhostMode.Preparing) currentMode = GhostMode.Scatter;
-        }
-        public void SetFrightenedModeIfValid()
-        {
-            if (currentMode != GhostMode.Preparing) currentMode = GhostMode.Frightened;
-        }
+
         private void SetTargetBasedOnMode(Map map)
         {
             switch(currentMode) 

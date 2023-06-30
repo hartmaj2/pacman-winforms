@@ -199,7 +199,7 @@ namespace Pacman
         {
             foreach (Ghost ghost in map.GetGhosts())
             {
-                ghost.SetFrightenedModeIfValid();
+                ghost.SetModeIfValid(GhostMode.Frightened);
             }
             currentGhostMode = GhostMode.Frightened;
             lastModeChange = DateTime.Now;
@@ -233,7 +233,7 @@ namespace Pacman
                         // (we can't always change the mode for example if they are preparing in the house we don't want them to become frightened)
                         foreach (Ghost ghost in map.GetGhosts())
                         {
-                            ghost.SetChaseModeIfValid();
+                            ghost.SetModeIfValid(GhostMode.Chase);
                         }
                         lastModeChange = currentTime;
                         currentGhostMode = GhostMode.Chase;
@@ -244,7 +244,7 @@ namespace Pacman
                     {
                         foreach (Ghost ghost in map.GetGhosts())
                         {
-                            ghost.SetScatterModeIfValid();
+                            ghost.SetModeIfValid(GhostMode.Scatter);
                         }
                         lastModeChange = currentTime;
                         currentGhostMode = GhostMode.Scatter;
@@ -255,7 +255,7 @@ namespace Pacman
                     {
                         foreach (Ghost ghost in map.GetGhosts())
                         {
-                            ghost.SetChaseModeIfValid();
+                            ghost.SetModeIfValid(GhostMode.Chase);
                         }
                         lastModeChange = currentTime;
                         currentGhostMode = GhostMode.Chase;
