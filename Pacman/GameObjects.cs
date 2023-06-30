@@ -94,41 +94,7 @@ namespace Pacman
         }
 
     }
-    /*
-     * This is an object that can move but only in discrete steps ending somewhere on the game grid
-     */
-    abstract class DiscreteMovingObject : MovingObject
-    {
-        protected int gridX;
-        protected int gridY;
-
-        public DiscreteMovingObject(Bitmap image, int x, int y)
-        {
-            this.sprite = image;
-            gridX = x;
-            gridY = y;
-        }
-        public override void Move(Map map)
-        {
-            int newX = gridX + direction.X;
-            int newY = gridY + direction.Y;
-
-            if (map.IsBlankCell(newX, newY))
-            {
-                gridX += direction.X;
-                gridY += direction.Y;
-            }
-        }
-        public override int GetGridX()
-        {
-            return gridX;
-        }
-        public override int GetGridY()
-        {
-            return gridY;
-        }
-
-    }
+  
     /* 
      * These objects can move independently of the game grid but are able to tell you what would be their 
      * corresponding location on the game grid
