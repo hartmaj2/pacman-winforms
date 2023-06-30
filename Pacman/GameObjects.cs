@@ -549,6 +549,7 @@ namespace Pacman
                 }
             }
         }
+
         private void SetCurrentLocationLastOccupied()
         {
             lastOccupiedCell.X = GetGridX();
@@ -574,20 +575,18 @@ namespace Pacman
         }
         private bool IAmHome(Map map)
         {
-            if(map.IsGhostHome(GetGridX(), GetGridY()))
-            {
-                return true;
-            }
-            return false;
+            return map.IsGhostHome(GetGridX(), GetGridY());
+
         }
         private bool IAmAtIntersection(Map map)
         {
-            if (map.IsAnIntersection(GetGridX(), GetGridY()))
-            {
-                return true;
-            }
-            return false;
+            return map.IsAnIntersection(GetGridX(), GetGridY());
+
         }
+
+        /*
+         * This can be used to set the target directly on hero if tilesAhead = 0
+         */
         protected void SetTargetAheadOfHero(Map map, int tilesAhead)
         {
             Direction heroDirection = map.GetHero().GetDirection();
@@ -596,6 +595,9 @@ namespace Pacman
             target = new Point(xAhead, yAhead);
         }
 
+        /*
+         * We nedd to draw different image if ghost is frightened
+         */
         public override Bitmap GetImageToDraw()
         {
             if (currentMode == GhostMode.Frightened) return frighenedModeSprite;
