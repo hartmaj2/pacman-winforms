@@ -48,9 +48,9 @@ namespace Pacman
      */
     class Map
     {
-        private readonly int gridWidth;
-        private readonly int gridHeight;
-        private readonly int cellSize;
+        public readonly int gridWidth;
+        public readonly int gridHeight;
+        public readonly int cellSize;
 
         private StaticGridObject[,] staticGrid;
         private InteractiveGridObject[,] interactiveGrid;
@@ -92,10 +92,7 @@ namespace Pacman
         { 
             return hero; 
         }
-        public int GetCellSize()
-        { 
-            return cellSize; 
-        }
+
         public int GetRemainingPelletsCount()
         {
             return pelletsRemaining;
@@ -134,14 +131,6 @@ namespace Pacman
         public int GetPixelHeight()
         {
             return gridHeight * cellSize;
-        }
-        public int GetGridWidth()
-        {
-            return gridWidth;
-        }
-        public int GetGridHeight()
-        {
-            return gridHeight;
         }
         public StaticGridObject GetStaticGridObject(int x, int y)
         {
@@ -268,7 +257,7 @@ namespace Pacman
 
         public Painter(Form form, Map map)
         {
-            spriteSize = map.GetCellSize();
+            spriteSize = map.cellSize;
             formWidth = map.GetPixelWidth();
             formHeight = map.GetPixelHeight();
             form.ClientSize = new Size(map.GetPixelWidth(), map.GetPixelHeight());
@@ -304,9 +293,9 @@ namespace Pacman
         }
         private void PaintGrids(Map map)
         {
-            for (int dy = 0; dy < map.GetGridHeight();dy++)
+            for (int dy = 0; dy < map.gridHeight;dy++)
             {
-                for (int dx = 0; dx < map.GetGridWidth(); dx++)
+                for (int dx = 0; dx < map.gridWidth; dx++)
                 {
                     PaintStaticGridObjectAtCoordinate(map, dx, dy);
                     PaintInteractiveGridObjectAtCoordinate(map, dx, dy);

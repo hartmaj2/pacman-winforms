@@ -496,8 +496,8 @@ namespace Pacman
         private void SetTargetToRandom(Map map)
         {
             Random rand = new Random();
-            int randomGridX = rand.Next(map.GetGridWidth());
-            int randomGridY = rand.Next(map.GetGridHeight());
+            int randomGridX = rand.Next(map.gridWidth);
+            int randomGridY = rand.Next(map.gridHeight);
             target = new Point(randomGridX, randomGridY);
         }
 
@@ -699,7 +699,7 @@ namespace Pacman
         }
         protected override void SetTargetToScatterTarget(Map map)
         {
-            target = new Point(map.GetGridWidth(), 0); // sets target to upper right corner in scatter mode
+            target = new Point(map.gridWidth, 0); // sets target to upper right corner in scatter mode
         }
 
     }
@@ -737,7 +737,7 @@ namespace Pacman
         }
         protected override void SetTargetToScatterTarget(Map map)
         {
-            target = new Point(map.GetGridWidth(), map.GetGridHeight()); // scatter target location bottom right corner
+            target = new Point(map.gridWidth, map.gridHeight); // scatter target location bottom right corner
         }
         private void MoveTargetAwayFromRedGhost(Map map)
         {
@@ -762,7 +762,7 @@ namespace Pacman
         }
         protected override void SetTargetToScatterTarget(Map map)
         {
-            target = new Point(0, map.GetGridHeight()); // in scatter mode sets target to lower left corner
+            target = new Point(0, map.gridHeight); // in scatter mode sets target to lower left corner
         }
 
         private void SetTargetBasedOnHeroDistance(Map map, double distanceLimit)
