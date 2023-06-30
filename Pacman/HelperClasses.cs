@@ -50,6 +50,10 @@ namespace Pacman
     {
         public readonly int gridWidth;
         public readonly int gridHeight;
+
+        public readonly int pixelWidth;
+        public readonly int pixelHeight;
+
         public readonly int cellSize;
 
         private StaticGridObject[,] staticGrid;
@@ -70,6 +74,9 @@ namespace Pacman
             gridWidth = staticGrid.GetLength(0);
             gridHeight = staticGrid.GetLength(1);
             this.cellSize = cellSize;
+
+            pixelWidth = gridWidth * cellSize;
+            pixelHeight = gridHeight * cellSize;
 
             this.staticGrid = staticGrid;
             this.interactiveGrid = interactiveGrid;
@@ -124,14 +131,6 @@ namespace Pacman
             return interactiveGrid[gridX, gridY] is Energizer;
    
         }
-        public int GetPixelWidth()
-        {
-            return gridWidth * cellSize;
-        }
-        public int GetPixelHeight()
-        {
-            return gridHeight * cellSize;
-        }
         public StaticGridObject GetStaticGridObject(int x, int y)
         {
             return staticGrid[x,y];
@@ -166,7 +165,7 @@ namespace Pacman
             {
                 return true;
             }
-            if (pixelX > GetPixelWidth() - cellSize)
+            if (pixelX > pixelWidth - cellSize)
             {
                 return true;
             }
@@ -178,7 +177,7 @@ namespace Pacman
             {
                 return true;
             }
-            if (pixelY > GetPixelHeight() - cellSize)
+            if (pixelY > pixelHeight - cellSize)
             {
                 return true;
             }
@@ -188,11 +187,11 @@ namespace Pacman
         {
             if (pixelX < 0)
             {
-                pixelX = GetPixelWidth() - cellSize + pixelX;
+                pixelX = pixelWidth - cellSize + pixelX;
             }
-            if (pixelX > GetPixelWidth() - cellSize)
+            if (pixelX > pixelWidth - cellSize)
             {
-                pixelX = pixelX - (GetPixelWidth() - cellSize);
+                pixelX = pixelX - (pixelWidth - cellSize);
             }
             return pixelX;
         }
@@ -200,11 +199,11 @@ namespace Pacman
         {
             if (pixelY < 0)
             {
-                pixelY = GetPixelHeight() - cellSize + pixelY;
+                pixelY = pixelHeight - cellSize + pixelY;
             }
-            if (pixelY > GetPixelHeight() - cellSize)
+            if (pixelY > pixelHeight - cellSize)
             {
-                pixelY = pixelY - (GetPixelHeight() - cellSize);
+                pixelY = pixelY - (pixelHeight - cellSize);
             }
             return pixelY;
         }
@@ -258,11 +257,11 @@ namespace Pacman
         public Painter(Form form, Map map)
         {
             spriteSize = map.cellSize;
-            formWidth = map.GetPixelWidth();
-            formHeight = map.GetPixelHeight();
-            form.ClientSize = new Size(map.GetPixelWidth(), map.GetPixelHeight());
+            formWidth = map.pixelWidth;
+            formHeight = map.pixelHeight;
+            form.ClientSize = new Size(formWidth, formHeight);
             formGraphics = form.CreateGraphics();
-            bufferBitmap = new Bitmap(map.GetPixelWidth(), map.GetPixelHeight());
+            bufferBitmap = new Bitmap(formWidth, formHeight);
             bufferGraphics = Graphics.FromImage(bufferBitmap);
         }
         private void ClearBuffer()
