@@ -6,7 +6,12 @@
 
 namespace Pacman
 {
-    enum GameState { MainScreen, Running, GameOver};
+    /*
+     * GameState is used by the GameManager to decide, how to handle Update and Render methods called from
+     * the main game loop depending on what state the game is currently in
+     */
+    enum GameState { StartScreen, Running, GameOverScreen};
+
      /*
      * Takes care of all the game logic. Holds the Map, has access to the Painter and all the variables that 
      * shouldn't be own by some specific object but that should be visible in the entire game as a whole
@@ -40,7 +45,7 @@ namespace Pacman
             currentGhostMode = GhostMode.Scatter;
             gameLost = false;
             painter = new Painter(form, map);
-            gameState = GameState.MainScreen;
+            gameState = GameState.StartScreen;
             gameForm = form;
             score = 0;
             frightenedGhostsEaten = 0;
@@ -49,7 +54,7 @@ namespace Pacman
         {
             switch(gameState)
             {
-                case GameState.MainScreen:
+                case GameState.StartScreen:
                     CheckStartScreenKeyPresses(keyPressed);
                     break;
                 case GameState.Running:
@@ -60,7 +65,7 @@ namespace Pacman
                     TryEat();
                     CheckGameWon();
                     break;
-                case GameState.GameOver:
+                case GameState.GameOverScreen:
                     CheckGameOverKeyPresses(keyPressed);
                     break;
                     
@@ -71,13 +76,13 @@ namespace Pacman
         {
             switch (gameState)
             {
-                case GameState.MainScreen:
+                case GameState.StartScreen:
                     painter.PaintStartScreen();
                     break;
                 case GameState.Running:
                     painter.PaintRunningGame(map, score);
                     break;
-                case GameState.GameOver:
+                case GameState.GameOverScreen:
                     if (gameLost)
                     {
                         painter.PaintGameOverScreen(FormConstants.GetGameLostText(score));
@@ -156,7 +161,7 @@ namespace Pacman
         {
             if (map.GetRemainingPelletsCount() == 0 && map.GetRemainingEnergizersCount() == 0)
             {
-                gameState = GameState.GameOver;
+                gameState = GameState.GameOverScreen;
             }
         }
         private void ChangeModeIfTime()
@@ -218,7 +223,7 @@ namespace Pacman
                 else
                 {
                     gameLost = true;
-                    gameState = GameState.GameOver;
+                    gameState = GameState.GameOverScreen;
                 }
                     
             }
