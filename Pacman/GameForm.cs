@@ -1,6 +1,12 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+/*
+ * Jan Hartman, 1st year, group 38
+ * Summer Semester 2022/23
+ * Programming NPRG031
+*/
+
 namespace Pacman
 {
     public static class FormConstants
@@ -81,7 +87,7 @@ namespace Pacman
         /* 
          *  Because I am using the built in enum Keys, I don't have to create my own enum
          */
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             keyPressed = keyData;
             return true;

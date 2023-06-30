@@ -1,5 +1,8 @@
-﻿using Accessibility;
-using System.Net.Http.Headers;
+﻿/*
+ * Jan Hartman, 1st year, group 38
+ * Summer Semester 2022/23
+ * Programming NPRG031
+*/
 
 namespace Pacman
 {
