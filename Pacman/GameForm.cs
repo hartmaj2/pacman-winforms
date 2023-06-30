@@ -96,12 +96,12 @@ namespace Pacman
         
         /*
          * Calls the PeekMessage function. We are only interested in getting true or false and not in the
-         * message itself
+         * message itself.
          */
         private bool IsApplicatoinIdle()
         {
-            NativeMessage result;
-            return PeekMessage(out result, IntPtr.Zero, (uint)0, (uint)0, (uint)0) == 0;
+            NativeMessage result; // this variable is passed to PeekMessage as an `out` parameter which means PeekMessage can modify it
+            return PeekMessage(out result, IntPtr.Zero, 0, 0, 0) == 0;
         }
 
         /*
@@ -116,6 +116,7 @@ namespace Pacman
                 Loop();
             }
         }
+
         /*
          * .NET doesn't allow for direct access of Windows APIs so we need to define the structure ourselves. 
          * It represents a Windows OS message (the native windows equivalent is called MSG)
@@ -130,7 +131,9 @@ namespace Pacman
             public uint Time;
             public Point Location;
         }
-        [DllImport("user32.dll")]
+
+        [DllImport("user32.dll")] // this tells .NET that the PeekMessage method is implemented in the user32.dll library
+        //PeekMessage is a method implemented externally (it is unmanaged/not implemented in C#) thus the word extern
         public static extern int PeekMessage(out NativeMessage message, IntPtr window, uint filterMin, uint filterMax, uint remove);
     }
         
