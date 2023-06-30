@@ -311,25 +311,34 @@ namespace Pacman
     {
         public InteractiveLayerBlankSpace(Bitmap image, int x, int y) : base(image, x, y) { }
     }
+
+    /*
+     * A fence to prevent ghosts from leaving the ghost house too soon (and prevent player and ghosts to enter the ghost house later)
+     */
     class Fence : StaticGridObject
     {
         public Fence(Bitmap image, int x, int y) : base(image, x, y) { }
 
     }
+
+    /*
+     * Energizer that allows player to eat ghosts for a limited time interval
+     */
     class Energizer : InteractiveGridObject
     {
         public Energizer(Bitmap image, int x, int y) : base(image, x, y) { }
     }
+
     /* 
-     * A wall that the player will collide with.
+     * A wall that all moving objects (player and ghosts) collide with.
      */
     class Wall : StaticGridObject
     {
         public Wall(Bitmap image, int x, int y) : base(image, x, y) { }
     }
+
     /*
-     * Main playable character of the game. So far I will make it non playable but will
-     * add controls later.
+     * The main character that is controlled by the player.
      */
     class Hero : TweeningObject
     {
@@ -419,6 +428,7 @@ namespace Pacman
             return direction;
         }
     }
+    
     /*
      * Things that player eats and gets points for that
      */
@@ -426,15 +436,17 @@ namespace Pacman
     {
         public Pellet(Bitmap image, int x, int y) : base(image, x, y) { }
     }
+
     /* 
-     * Enemies that will be chasing the player
+     * Enemies that kill the player when they collide with him all have modes
+     * These modes get changed mostly with respect to time except for frightened mode which is set when hero eats and energizer
      */
     enum GhostMode { Preparing ,Chase, Scatter, Frightened };
 
     /*
-     * All ghosts in the game inherit from this general Ghost class.
-     * Each ghost must have some target which it is trying to reach but how this target is set depends on each ghost
-     * Every ghost also spends unique amount of time in the ghost house 
+     * All ghosts in the game inherit from this general Ghost class. They try to eat the player except when frightened
+     * Each ghost must have a target which it is trying to reach at all times but how this target is set depends on each ghost
+     * Every ghost also spends unique amount of time in the ghost house before leaving it 
      */
     abstract class Ghost : TweeningObject
     {
