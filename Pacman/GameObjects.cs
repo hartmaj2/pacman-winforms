@@ -283,9 +283,7 @@ namespace Pacman
     {
         private Direction nextDirection; // allows player to preset direction of pacman before it is possible to go that way
 
-        public Hero(Bitmap image, int x, int y, int speed, int mapCellSize) : base(image, x, y, speed, mapCellSize)
-        {        
-        }
+        public Hero(Bitmap image, int x, int y, int speed, int mapCellSize) : base(image, x, y, speed, mapCellSize) {}
         public bool TryEatPellet(Map map)
         {
             if (map.ContainsPellet(GetGridX(), GetGridY())) 
@@ -308,6 +306,12 @@ namespace Pacman
         {   
             nextDirection = newDirection;
         }
+
+        /*
+         * If pacman can go in the next direction proposed by the player, the current direction is 
+         * updated to this new direction. Then pacman starts moving in the direction it 
+         * actually has if he can
+         */
         protected override void StartNextMovementCycle(Map map)
         {
             if (CanGoInDirection(map, nextDirection))
@@ -331,6 +335,10 @@ namespace Pacman
             return false;
         }
 
+        /*
+         * Returns the first nearby Ghost object encountered when searching for nearby ghosts
+         * If there are no ghosts nearby returns null
+         */
         public Ghost GetOneNearbyGhost(List<Ghost> ghosts)
         {
             foreach (Ghost ghost in ghosts)
@@ -342,6 +350,10 @@ namespace Pacman
             }
             return null;
         }
+
+        /*
+         * Sets which cells should appear to pacman as reachable
+         */
         protected override bool IsReachableCell(int x, int y, Map map)
         {
             if (map.IsBlankCell(x,y))
