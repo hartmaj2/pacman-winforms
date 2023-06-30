@@ -60,7 +60,7 @@ namespace Pacman
         {
             gameForm = form;
 
-            map = InputManager.PrepareAndReturnMap();
+            map = GamePresets.PrepareAndReturnMap();
             painter = new Painter(form, map);
 
             gameState = GameState.StartScreen;
@@ -68,9 +68,9 @@ namespace Pacman
             currentGhostMode = GhostMode.Scatter;
 
             lastModeChange = DateTime.Now;
-            scatterModeDuration = TimeSpan.FromSeconds(InputManager.scatterModeDuration);
-            chaseModeDuration = TimeSpan.FromSeconds(InputManager.chaseModeDuration);
-            frightenedModeDuration = TimeSpan.FromSeconds(InputManager.frightenedModeDuration);
+            scatterModeDuration = TimeSpan.FromSeconds(GamePresets.scatterModeDuration);
+            chaseModeDuration = TimeSpan.FromSeconds(GamePresets.chaseModeDuration);
+            frightenedModeDuration = TimeSpan.FromSeconds(GamePresets.frightenedModeDuration);
 
             frightenedGhostsEaten = 0;
             score = 0;
@@ -87,7 +87,7 @@ namespace Pacman
                     CheckRunningGameKeyPresses(keyPressed);
                     MoveAllMovingObjects();
                     CheckGhostCollisions();
-                    ChangeModeIfTime();
+                    ChangeGhostModeIfTime();
                     TryEat();
                     CheckGameWon();
                     break;
@@ -168,21 +168,29 @@ namespace Pacman
         {
             if (map.GetHero().TryEatPellet(map))
             {
-                score += 10;
+                score += GamePresets.scorePerPellet;
             }
             if (map.GetHero().TryEatEnergizer(map))
             {
-                score += 50;
-                //Console.WriteLine("Ghosts set to frightened mode");
-                foreach (Ghost ghost in map.GetGhosts())
-                {
-                    ghost.SetFrightenedModeIfValid();
-                }
-                currentGhostMode = GhostMode.Frightened;
-                lastModeChange = DateTime.Now;
-                frightenedGhostsEaten = 0;
+                score += GamePresets.scorePerEnergizer;
+                SetAllGhostsToFrightenedIfPossible();
             }
         }
+
+        private void SetAllGhostsToFrightenedIfPossible()
+        {
+            foreach (Ghost ghost in map.GetGhosts())
+            {
+                ghost.SetFrightenedModeIfValid();
+            }
+            currentGhostMode = GhostMode.Frightened;
+            lastModeChange = DateTime.Now;
+            frightenedGhostsEaten = 0;
+        }
+
+        /*
+         * The game is won if there are no more pellets and energizers to be eaten
+         */
         private void CheckGameWon()
         {
             if (map.GetRemainingPelletsCount() == 0 && map.GetRemainingEnergizersCount() == 0)
@@ -190,7 +198,12 @@ namespace Pacman
                 gameState = GameState.GameOverScreen;
             }
         }
-        private void ChangeModeIfTime()
+
+        /*
+         * Depending on what mode the ghosts should be currently in globally, we examine the time passed
+         * since last change to see if we should change their mode again
+         */
+        private void ChangeGhostModeIfTime()
         {
             DateTime currentTime = DateTime.Now;
             switch (currentGhostMode)
@@ -198,7 +211,8 @@ namespace Pacman
                 case GhostMode.Scatter:
                     if (currentTime - lastModeChange > scatterModeDuration)
                     {
-                        //Console.WriteLine("Mode changed to chase");
+                        // iterate through all ghosts in the game and try to change their mode to chase if we can
+                        // (we can't always change the mode for example if they are preparing in the house we don't want them to become frightened)
                         foreach (Ghost ghost in map.GetGhosts())
                         {
                             ghost.SetChaseModeIfValid();
@@ -210,7 +224,6 @@ namespace Pacman
                 case GhostMode.Chase:
                     if (currentTime - lastModeChange > chaseModeDuration)
                     {
-                        //Console.WriteLine("Mode changed to scatter");
                         foreach (Ghost ghost in map.GetGhosts())
                         {
                             ghost.SetScatterModeIfValid();
@@ -222,7 +235,6 @@ namespace Pacman
                 case GhostMode.Frightened:
                     if (currentTime - lastModeChange > frightenedModeDuration) 
                     {
-                        // set all ghosts to chase mode if I can (if they are preparing, we don't want to change the mode)
                         foreach (Ghost ghost in map.GetGhosts())
                         {
                             ghost.SetChaseModeIfValid();
@@ -235,6 +247,11 @@ namespace Pacman
             
             
         }
+
+        /*
+         * Checks if the hero is colliding with some of the ghosts which can result in different
+         * outcomes based on which mode the ghosts are in
+         */
         private void CheckGhostCollisions()
         {
             if (map.GetHero().IsTouchingAnyGhost(map.GetGhosts()))
@@ -244,7 +261,7 @@ namespace Pacman
                 {
                     ghostTouched.BeEaten();
                     frightenedGhostsEaten++;
-                    score += 200 * frightenedGhostsEaten;
+                    score += GamePresets.scoreIncreasePerGhostEaten * frightenedGhostsEaten;
                 }
                 else
                 {
@@ -263,7 +280,7 @@ namespace Pacman
         }
         private void InitializeGame()
         {
-            map = InputManager.PrepareAndReturnMap();
+            map = GamePresets.PrepareAndReturnMap();
             painter = new Painter(gameForm, map);
             gameLost = false;
             gameState = GameState.Running;
