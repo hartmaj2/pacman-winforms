@@ -519,7 +519,6 @@ namespace Pacman
          */
         protected override void StartNextMovementCycle(Map map)
         {
-            Console.WriteLine($"My location is {GetGridX()} {GetGridY()}");
             if (currentMode == GhostMode.Preparing)
             {
                 TryStopPreparing(); // checks time to see if we should change this ghost's mode
