@@ -173,7 +173,7 @@ namespace Pacman
             if (map.GetHero().TryEatEnergizer(map))
             {
                 score += 50;
-                Console.WriteLine("Ghosts set to frightened mode");
+                //Console.WriteLine("Ghosts set to frightened mode");
                 foreach (Ghost ghost in map.GetGhosts())
                 {
                     ghost.SetFrightenedModeIfValid();
@@ -198,7 +198,7 @@ namespace Pacman
                 case GhostMode.Scatter:
                     if (currentTime - lastModeChange > scatterModeDuration)
                     {
-                        Console.WriteLine("Mode changed to chase");
+                        //Console.WriteLine("Mode changed to chase");
                         foreach (Ghost ghost in map.GetGhosts())
                         {
                             ghost.SetChaseModeIfValid();
@@ -210,7 +210,7 @@ namespace Pacman
                 case GhostMode.Chase:
                     if (currentTime - lastModeChange > chaseModeDuration)
                     {
-                        Console.WriteLine("Mode changed to scatter");
+                        //Console.WriteLine("Mode changed to scatter");
                         foreach (Ghost ghost in map.GetGhosts())
                         {
                             ghost.SetScatterModeIfValid();
