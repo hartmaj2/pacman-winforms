@@ -177,6 +177,9 @@ namespace Pacman
             }
         }
 
+        /*
+         * Gets called when we eat an energizer power-up
+         */
         private void SetAllGhostsToFrightenedIfPossible()
         {
             foreach (Ghost ghost in map.GetGhosts())
@@ -271,6 +274,10 @@ namespace Pacman
                     
             }
         }
+
+        /*
+         * Move player and all the ghosts
+         */
         private void MoveAllMovingObjects()
         {
             foreach (TweeningObject objectToMove in map.GetMovingObjects())
@@ -278,14 +285,23 @@ namespace Pacman
                 objectToMove.Move(map);
             }
         }
+
+        /*
+         * Rereads the game field so it can reset the game state to the starting state
+         * Resets all the variables that keep track of the current game state
+         */
         private void InitializeGame()
         {
             map = GamePresets.PrepareAndReturnMap();
             painter = new Painter(gameForm, map);
-            gameLost = false;
             gameState = GameState.Running;
-            score = 0;
+
+            lastModeChange = DateTime.Now;
             currentGhostMode = GhostMode.Scatter;
+
+            frightenedGhostsEaten = 0;
+            score = 0;
+            gameLost = false;
         }
     }
 }
