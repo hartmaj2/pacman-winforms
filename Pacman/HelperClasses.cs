@@ -259,8 +259,9 @@ namespace Pacman
     class Painter
     {
         private readonly Graphics formGraphics; // the actual graphics elements that gets painted on the form
-        private readonly Graphics bufferGraphics; // the buffer that we paint on before propagating change to formGraphics
-        private readonly Bitmap bufferBitmap;
+        
+        private readonly Graphics bufferGraphics; // the buffer that we paint onto before propagating change to formGraphics
+        private readonly Bitmap bufferBitmap; // the bitmap that we link to the buffer Graphics object
 
         private readonly int spriteSize;
         private readonly int formWidth;
@@ -273,8 +274,9 @@ namespace Pacman
             formHeight = map.pixelHeight;
             form.ClientSize = new Size(formWidth, formHeight);
             formGraphics = form.CreateGraphics();
+
             bufferBitmap = new Bitmap(formWidth, formHeight);
-            bufferGraphics = Graphics.FromImage(bufferBitmap);
+            bufferGraphics = Graphics.FromImage(bufferBitmap); // link our bitmap to the corresponding Graphics object
         }
         private void ClearBuffer()
         {
