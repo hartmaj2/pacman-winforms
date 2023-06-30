@@ -366,7 +366,7 @@ namespace Pacman
         protected DateTime ghostHouseEnterTime;
         public Ghost(Bitmap image, Bitmap frightenedImage, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize)
         {
-            currentMode = GhostMode.Preparing;
+            SetModeIfValid(GhostMode.Preparing);
             direction = Direction.Up;
             startingLocation = new Point(x, y);
             target = new Point(mapCellSize - 1, mapCellSize - 1);
@@ -381,9 +381,13 @@ namespace Pacman
             DateTime currentTime = DateTime.Now;
             if (currentTime - ghostHouseEnterTime > prepareDuration)
             {
-                currentMode = GhostMode.Chase;
+                currentMode = GhostMode.Chase; // here we cannot use SetModeIfValid because we have to override the preparing mode
             }
         }
+
+        /*
+         * Used when ghost is in scatter mode
+         */
         private void SetTargetToRandom(Map map)
         {
             Random rand = new Random();
@@ -396,7 +400,7 @@ namespace Pacman
         
         public void BeEaten()
         {
-            currentMode = GhostMode.Preparing;
+            SetModeIfValid(GhostMode.Preparing);
             ghostHouseEnterTime = DateTime.Now;
             pixelX = startingLocation.X * mapCellSize;
             pixelY = startingLocation.Y * mapCellSize;
@@ -404,11 +408,17 @@ namespace Pacman
             SetNotMoving();
         }
         /*
-         * I need to check if the mode is scatter because otherwise if the ghosts preparing I don't want to change the mode
+         * Setting a new mode to preparing overrides all possible mode the ghost had previously
+         * On the other hand, when the ghost is preparing its mode cannot be overriden
          */
         public void SetModeIfValid(GhostMode newMode)
         {
-            if (currentMode != GhostMode.Preparing) currentMode = newMode;
+            if (newMode == GhostMode.Preparing || currentMode != GhostMode.Preparing)
+            {
+                currentMode = newMode;
+                Console.WriteLine($"Mode of {this} set to {newMode}");
+            }
+            
         }
 
         private void SetTargetBasedOnMode(Map map)
