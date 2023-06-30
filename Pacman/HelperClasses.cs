@@ -222,13 +222,13 @@ namespace Pacman
         }
         public bool IsAnIntersection(int x, int y)
         {
-            if (GetNeighboringCellsCount(x,y) > 2)
+            if (GetNeighboringBlankCellsCount(x,y) > 2)
             {
                 return true;
             }
             return false;
         }
-        public int GetNeighboringCellsCount(int currentX, int currentY)
+        public int GetNeighboringBlankCellsCount(int currentX, int currentY)
         {
             Direction direction = Direction.Up;
             int blankSpacesCount = 0;
@@ -245,7 +245,7 @@ namespace Pacman
             }
             return blankSpacesCount;
         }
-        public List<StaticLayerBlankSpace> GetNeighboringBlankCells(int x, int y)
+        public List<StaticLayerBlankSpace> GetAdjacentBlankCells(int x, int y)
         {
             List<StaticLayerBlankSpace> neighbours = new List<StaticLayerBlankSpace>();
             Direction direction = Direction.Up;

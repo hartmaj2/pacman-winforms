@@ -391,7 +391,7 @@ namespace Pacman
         protected Point lastOccupiedCell;
         protected DateTime ghostHouseEnterTime;
         protected GhostMode currentMode;
-        protected bool leftHouse; // track if the ghost has left the house already (we check if he crossed a fence tile)
+        protected bool leftHouse; // track if the ghost has left the house already (we check if he crossed a fence)
 
         public Ghost(Bitmap image, Bitmap frightenedImage, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, x, y, speed, mapCellSize)
         {
@@ -496,21 +496,24 @@ namespace Pacman
             }
             else // normal movement behaviour when ghost is out of the house
             {
-                if (IAmAtIntersection(map))
+                List<StaticLayerBlankSpace> adjacentExits = map.GetAdjacentBlankCells(GetGridX(),GetGridY());
+                int numberOfExits = adjacentExits.Count;
+                if (numberOfExits > 2)
                 {
                     SetTargetBasedOnMode(map);
-                    SetDirectionToPreferredIntersectionExit(map);
+                    StaticLayerBlankSpace chosenIntersectionExit = FindExitClosestToTarget(map, adjacentExits);
+                    SetDirectionTowardsNeighbor(chosenIntersectionExit);
                 }
-                else if (!CanGoInDirection(map,direction))
+                else if (numberOfExits == 2)
                 {
-                    TryTurnOnCurve(map);
+                    TryTurnOnCurve(map, adjacentExits);
                 }
-                if (!CanGoInDirection(map,direction)) // this happends only when the ghost reached a dead end (doesn't happen on the classic pacman map)
+                else // this happends only when the ghost reached a dead end (doesn't happen on the classic pacman map)
                 {
                     TurnAround();
                 }
             }
-            UpdateLastOccupied(map);
+            UpdateLastOccupied();
             SetMoving();
             
         }
@@ -525,6 +528,10 @@ namespace Pacman
             else return (map.IsBlankCell(x,y) || map.IsFence(x,y));
         }
 
+        /*
+         * We need to check this in case the ghost is out of the house already because we don't want it
+         * to cross the fence and go back home again after leaving once
+         */
         private void CheckIfLeftHouse(Map map)
         {
             if (map.IsFence(GetGridX(),GetGridY()))
@@ -532,6 +539,10 @@ namespace Pacman
                 leftHouse = true;
             }
         }
+
+        /*
+         * Checks whether the ghost has just left this blank tile in the last movement cycle
+         */
         private bool WasLastOccupied(StaticLayerBlankSpace neighbour)
         {
             if (neighbour.GetGridX() == lastOccupiedCell.X && neighbour.GetGridY() == lastOccupiedCell.Y)
@@ -541,31 +552,22 @@ namespace Pacman
             return false;
 
         }
-        private void TryTurnOnCurve(Map map)
+
+        /*
+         * If there are exactly two exits the ghost can choose, he picks the one that he didn't came from
+         */
+        private void TryTurnOnCurve(Map map, List<StaticLayerBlankSpace> adjacentExits)
         {
-            if (map.GetNeighboringCellsCount(GetGridX(), GetGridY()) == 2)
-            {
-                foreach (StaticLayerBlankSpace neighbour in map.GetNeighboringBlankCells(GetGridX(), GetGridY()))
+                foreach (StaticLayerBlankSpace neighbour in adjacentExits)
                 {
                     if (!WasLastOccupied(neighbour))
                     {
                         SetDirectionTowardsNeighbor(neighbour);
                     }
-                }
-            }
+                } 
         }
 
-        /*
-         * Implements ghost pathfinding behavior. The ghost just picks the exit closest to the target cell.
-         * THE GHOST NEVER CHOOSES TO GO BACK FROM WHERE HE CAME FROM
-         */
-        private void SetDirectionToPreferredIntersectionExit(Map map)
-        {
-            StaticLayerBlankSpace chosenIntersectionExit = FindNeighbourClosestToTarget(map);
-            SetDirectionTowardsNeighbor(chosenIntersectionExit);
-        }
-
-        private void UpdateLastOccupied(Map map)
+        private void UpdateLastOccupied()
         {
             lastOccupiedCell.X = GetGridX();
             lastOccupiedCell.Y = GetGridY();
@@ -574,11 +576,11 @@ namespace Pacman
         /*
          * Picks a neighbouring tile that is closest to this ghost's target
          */
-        private StaticLayerBlankSpace FindNeighbourClosestToTarget(Map map)
+        private StaticLayerBlankSpace FindExitClosestToTarget(Map map, List<StaticLayerBlankSpace> neighbouringCells)
         {
             double closestDistance = Double.MaxValue;
             StaticLayerBlankSpace closestNeighbour = null;
-            foreach (StaticLayerBlankSpace neighbour in map.GetNeighboringBlankCells(GetGridX(),GetGridY()))
+            foreach (StaticLayerBlankSpace neighbour in neighbouringCells)
             {
                 if (!WasLastOccupied(neighbour))
                 {
@@ -593,11 +595,6 @@ namespace Pacman
             return closestNeighbour;
         }
 
-        private bool IAmAtIntersection(Map map)
-        {
-            return map.IsAnIntersection(GetGridX(), GetGridY());
-
-        }
 
         /*
          * This can be used to set the target directly on hero if tilesAhead = 0
