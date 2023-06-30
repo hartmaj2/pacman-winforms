@@ -82,23 +82,34 @@ namespace Pacman
         protected abstract bool IsReachableCell(int x, int y, Map map);
 
         /*
-         * Sets the direction towards a neighboring cell. DOESN'T WORK ON DIAGONAL PIECES
+         * Sets the direction towards a neighboring cell. 
+         * DOESN'T WORK IF USED ON A NON NEIGHBORING TILE! (except when the tile gets wrapped because it is out of bounds)
          */
         protected void SetDirectionTowardsExit(StaticGridObject neighbor)
         {
             Direction newDirection = Direction.None;
-            newDirection.X = neighbor.GetGridX() - GetGridX();
-            if (newDirection.X < -1)
-            {
-                newDirection.X = 1;
-            }
-            else if (newDirection.X > 1)
-            {
-                newDirection.X = -1;
-            }
-            newDirection.Y = neighbor.GetGridY() - GetGridY();
+            newDirection.X = GetFixedOutOfBoundsCoordinate(neighbor.GetGridX() - GetGridX());
+            newDirection.Y = GetFixedOutOfBoundsCoordinate(neighbor.GetGridY() - GetGridY());
+
             direction = newDirection;
 
+        }
+
+        /*
+         * Fixes a bug when the adjacent tile gets to the other side of the map, that would result in 
+         * a direction coordinate value greater than 1 or smaller than -1
+         */
+        private int GetFixedOutOfBoundsCoordinate(int coordinate)
+        {
+            if (coordinate < -1)
+            {
+                coordinate = 1;
+            }
+            else if (coordinate > 1)
+            {
+                coordinate = -1;
+            }
+            return coordinate;
         }
 
     }
@@ -118,7 +129,8 @@ namespace Pacman
         protected int movementFrame;
         protected int movementSpeed;
 
-        protected Point lastOccupiedCell;
+        // keeps track of what was the last gridX and gridY location (is updated only at start of next movement cycle or when the ghost went out of bounds and reappeared on the other side)
+        protected Point lastOccupiedCell; 
 
         protected int mapCellSize;
 
@@ -593,8 +605,6 @@ namespace Pacman
             } 
         }
 
-
-
         /*
          * Picks a neighbouring tile that is closest to this ghost's target
          */
@@ -635,7 +645,7 @@ namespace Pacman
         public override Bitmap GetImageToDraw()
         {
             if (currentMode == GhostMode.Frightened) return frighenedModeSprite;
-            return sprite;
+            else return sprite;
         }
 
         public GhostMode GetCurrentMode()
