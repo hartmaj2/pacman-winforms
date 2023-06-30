@@ -4,8 +4,6 @@
  * Programming NPRG031
 */
 
-using System.Reflection.Metadata.Ecma335;
-
 namespace Pacman
 {
     /*
@@ -13,6 +11,7 @@ namespace Pacman
      */
     struct Direction
     {
+        // aliases for all possible directions we will use
         public static Direction Up { get; } = new Direction(0, -1);
         public static Direction Right { get; } = new Direction(1, 0);
         public static Direction Down { get; } = new Direction(0, 1);
@@ -248,7 +247,7 @@ namespace Pacman
         }
         public List<StaticLayerBlankSpace> GetAdjacentBlankCells(int x, int y)
         {
-            List<StaticLayerBlankSpace> neighbours = new List<StaticLayerBlankSpace>();
+            List<StaticLayerBlankSpace> adjacentExits = new List<StaticLayerBlankSpace>();
             Direction direction = Direction.Up;
             for (int i = 0; i < 4; i++)
             {
@@ -257,11 +256,11 @@ namespace Pacman
                 StaticGridObject neighboringCell = GetStaticGridObject(adjacentX, adjacentY);
                 if (neighboringCell is StaticLayerBlankSpace)
                 {
-                    neighbours.Add((StaticLayerBlankSpace)neighboringCell);
+                    adjacentExits.Add((StaticLayerBlankSpace)neighboringCell);
                 }
                 direction.RotateRight();
             }
-            return neighbours;
+            return adjacentExits;
         }
         public Point GetHeroGridLocation()
         {

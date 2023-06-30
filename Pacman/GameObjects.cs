@@ -498,7 +498,7 @@ namespace Pacman
         /*
          * Calls mostly ghost specific target setting methods except when this ghost is frightened (frightened behavior is same for all ghosts)
          */
-        private void SetTargetBasedOnMode(Map map)
+        private void UpdateTargetBasedOnMode(Map map)
         {
             switch(currentMode) 
             {
@@ -531,13 +531,13 @@ namespace Pacman
                     TurnAround();
                 }
             }
-            else // normal movement behaviour when ghost is out of the house
+            else // normal movement behaviour when ghost is out of the house and not preparing
             {
                 List<StaticLayerBlankSpace> adjacentExits = map.GetAdjacentBlankCells(GetGridX(),GetGridY());
                 int numberOfExits = adjacentExits.Count;
                 if (numberOfExits > 2)
                 {
-                    SetTargetBasedOnMode(map);
+                    UpdateTargetBasedOnMode(map); // if on intersection, we want to let the ghost pick its new target
                     StaticLayerBlankSpace chosenIntersectionExit = FindExitClosestToTarget(map, adjacentExits);
                     SetDirectionTowardsExit(chosenIntersectionExit);
                 }
@@ -580,9 +580,9 @@ namespace Pacman
         /*
          * Checks whether the ghost has just left this blank tile in the last movement cycle
          */
-        private bool WasLastOccupied(StaticLayerBlankSpace neighbour)
+        private bool WasLastOccupied(StaticLayerBlankSpace adjacentCell)
         {
-            if (neighbour.GetGridX() == lastOccupiedCell.X && neighbour.GetGridY() == lastOccupiedCell.Y)
+            if (adjacentCell.GetGridX() == lastOccupiedCell.X && adjacentCell.GetGridY() == lastOccupiedCell.Y)
             {
                 return true;
             }
@@ -595,11 +595,11 @@ namespace Pacman
          */
         private void ChooseNonReturningExit(Map map, List<StaticLayerBlankSpace> adjacentExits)
         {
-            foreach (StaticLayerBlankSpace neighbour in adjacentExits)
+            foreach (StaticLayerBlankSpace neighbor in adjacentExits)
             {
-                if (!WasLastOccupied(neighbour))
+                if (!WasLastOccupied(neighbor))
                 {
-                    SetDirectionTowardsExit(neighbour);
+                    SetDirectionTowardsExit(neighbor);
                 }
             } 
         }
@@ -607,11 +607,11 @@ namespace Pacman
         /*
          * Picks a neighbouring tile that is closest to this ghost's target
          */
-        private StaticLayerBlankSpace FindExitClosestToTarget(Map map, List<StaticLayerBlankSpace> neighbouringCells)
+        private StaticLayerBlankSpace FindExitClosestToTarget(Map map, List<StaticLayerBlankSpace> adjacentExits)
         {
             double closestDistance = Double.MaxValue;
-            StaticLayerBlankSpace closestNeighbour = null;
-            foreach (StaticLayerBlankSpace neighbour in neighbouringCells)
+            StaticLayerBlankSpace closestToTarget = null;
+            foreach (StaticLayerBlankSpace neighbour in adjacentExits)
             {
                 if (!WasLastOccupied(neighbour))
                 {
@@ -619,11 +619,11 @@ namespace Pacman
                     if (distanceToTarget < closestDistance)
                     {
                         closestDistance = distanceToTarget;
-                        closestNeighbour = neighbour;
+                        closestToTarget = neighbour;
                     }
                 }
             }
-            return closestNeighbour;
+            return closestToTarget;
         }
 
 
