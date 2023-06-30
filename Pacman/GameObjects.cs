@@ -176,11 +176,7 @@ namespace Pacman
         {
             int nextGridX = map.GetWrappedXCoordinate(GetGridX() + proposedDirection.X);
             int nextGridY = map.GetWrappedYCoordinate(GetGridY() + proposedDirection.Y);
-            if (IsReachableCell(nextGridX, nextGridY,map))
-            {
-                return true;
-            }
-            return false;
+            return IsReachableCell(nextGridX, nextGridY, map);
         }
         public override int GetGridX()
         {
@@ -210,6 +206,10 @@ namespace Pacman
             movementSpeed = newSpeed;
             maxMovementFrame = mapCellSize / movementSpeed;
         }
+
+        /*
+         * Used to correct this characters speed so it always ends its movement cycle exactly in the middle of a cell
+         */
         private int ReduceToDivisibleWithoutRemainder(int newSpeed)
         {
             while (mapCellSize % newSpeed != 0)
@@ -228,6 +228,10 @@ namespace Pacman
             return Math.Abs(other.pixelX - pixelX) < mapCellSize && Math.Abs(other.pixelY - pixelY) < mapCellSize;
 
         }
+
+        /*
+         * Changes this objects location if it would be out of bounds
+         */
         private void WraparoundIfOutOfBounds(Map map)
         {
             pixelX = map.GetWrappedPixelXCoordinate(pixelX);
