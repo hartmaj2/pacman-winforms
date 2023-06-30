@@ -133,7 +133,7 @@ namespace Pacman
         }
 
         [DllImport("user32.dll")] // this tells .NET that the PeekMessage method is implemented in the user32.dll library
-        //PeekMessage is a method implemented externally (it is unmanaged/not implemented in C#) thus the word extern
+        //PeekMessage is a method implemented externally (it is unmanaged/not in C#) thus the word extern
         public static extern int PeekMessage(out NativeMessage message, IntPtr window, uint filterMin, uint filterMax, uint remove);
     }
         
