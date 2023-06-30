@@ -91,6 +91,7 @@ namespace Pacman
             energizersRemaining = energizersCount;
 
         }
+
         public List<Ghost> GetGhosts()
         {
             return ghosts;
@@ -99,7 +100,6 @@ namespace Pacman
         { 
             return hero; 
         }
-
         public Ghost GetRedGhost() 
         {
             return redGhost;
@@ -246,8 +246,11 @@ namespace Pacman
         }
 
     }
+
     /*
-     * Takes care of drawing to the form. Implements double buffering to get rid of the flickering.
+     * Takes care of drawing to the form. Implements double buffering to get rid of flickering 
+     * when trying to render objects right to the active graphics element.
+     * 
      * The objects are painted in three different layers. 
      * First, the statc objects on the grid are painted.
      * Second, the interactive objects on the grid.
@@ -299,6 +302,11 @@ namespace Pacman
             }
             
         }
+
+        /*
+         * Paints both grids. First the static grid, then the interactive grid. To save time
+         * each cell is only processed once but the order of painting is as mentioned
+         */
         private void PaintGrids(Map map)
         {
             for (int dy = 0; dy < map.gridHeight;dy++)
@@ -324,6 +332,10 @@ namespace Pacman
                 }
             }
         }
+
+        /*
+         * The following three methods are called to paint the game depending on the game state
+         */
         public void PaintStartScreen()
         {
             ClearBuffer();
@@ -344,6 +356,10 @@ namespace Pacman
             DisplayGameOverText(gameOverText);
             WriteBuffer();
         }
+
+        /*
+         * The following three take care of displaying text elements
+         */
         private void DisplayScore(int score)
         {
             bufferGraphics.DrawString(FormText.scoreText + " " + score, FormText.scoreTextFont, FormText.textBrush, 0, 0);
