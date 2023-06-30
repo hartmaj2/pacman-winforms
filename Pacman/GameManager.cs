@@ -76,6 +76,10 @@ namespace Pacman
             score = 0;
             gameLost = false;
         }
+
+        /*
+         * Updates the game according to the current game state and also the latest key press registered 
+         */
         public void Update(Keys keyPressed)
         {
             switch(gameState)
@@ -92,12 +96,16 @@ namespace Pacman
                     CheckGameWon();
                     break;
                 case GameState.GameOverScreen:
-                    CheckGameOverKeyPresses(keyPressed);
+                    CheckGameOverScreenKeyPresses(keyPressed);
                     break;
                     
             }
             
         }
+
+        /*
+         * Paints what needs to be painted according to the current state of the game
+         */
         public void Render()
         {
             switch (gameState)
@@ -108,7 +116,7 @@ namespace Pacman
                 case GameState.Running:
                     painter.PaintRunningGame(map, score);
                     break;
-                case GameState.GameOverScreen:
+                case GameState.GameOverScreen: // if game is over, we display text based on if the game was won or lost
                     if (gameLost)
                     {
                         painter.PaintGameOverScreen(FormText.GetGameLostText(score));
@@ -122,6 +130,7 @@ namespace Pacman
             
             
         }
+
         private void CheckStartScreenKeyPresses(Keys keyPressed)
         {
             switch (keyPressed)
@@ -133,6 +142,7 @@ namespace Pacman
             }
              
         }
+
         private void CheckRunningGameKeyPresses(Keys keyPressed)
         {
 
@@ -152,7 +162,8 @@ namespace Pacman
                     break;
             }
         }
-        private void CheckGameOverKeyPresses(Keys keyPressed)
+
+        private void CheckGameOverScreenKeyPresses(Keys keyPressed)
         {
             switch(keyPressed)
             {
@@ -164,6 +175,10 @@ namespace Pacman
                     break;
             }
         }
+
+        /*
+         * Calls corresponding hero methods that make the hero try eat pellets and energizers
+         */
         private void TryEat()
         {
             if (map.GetHero().TryEatPellet(map))
