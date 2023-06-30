@@ -98,6 +98,8 @@ namespace Pacman
     /* 
      * These objects can move independently of the game grid but are able to tell you what would be their 
      * corresponding location on the game grid
+     * Their movement consists of movement cycles when they are just moving to the next grid cell.
+     * In between those cycles these objects are deciding what to do next using the TryStartNextMovement
      */
     abstract class TweeningObject : MovingObject
     {
@@ -134,17 +136,8 @@ namespace Pacman
             }
             WraparoundIfOutOfBounds(map);
         }
-        protected virtual void TryStartNextMovement(Map map)
-        {
-            if (CanGoInDirection(map, direction))
-            {
-                SetMoving();
-            }
-            else
-            {
-                ClearDirection();
-            }
-        }
+        protected abstract void TryStartNextMovement(Map map);
+ 
         private void ContinueMovement()
         {
             if (movementFrame < maxMovementFrame)
