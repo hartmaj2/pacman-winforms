@@ -7,11 +7,11 @@
 namespace Pacman
 {
     /*
-     * Represents a 2D integer vector with unit size or a zero vector
+     * Represents either a cardinal direction vector with unit size or a zero vector
      */
     struct Direction
     {
-        // aliases for all possible directions we will use
+        // aliases for all cardinal directions and the zero vector
         public static Direction Up { get; } = new Direction(0, -1);
         public static Direction Right { get; } = new Direction(1, 0);
         public static Direction Down { get; } = new Direction(0, 1);
@@ -30,14 +30,10 @@ namespace Pacman
             return new Direction(-X, -Y);
         }
 
-        public bool Equals(Direction other)
-        {
-            if (other.X == X && other.Y == Y)
-            {
-                return true;
-            }
-            return false;
-        }
+        /*
+         * Rotating a cardinal direciotn always switches the x and y component.
+         * Sometimes we also have to flip the sign of the components (flipped zero stays zero)
+         */
         public void RotateRight()
         {
             int temp = X; X = Y; Y = temp;
@@ -48,17 +44,8 @@ namespace Pacman
             }
         }
 
-        public void RotateLeft()
-        {
-            int temp = X; X = Y; Y = temp;
-            if (X == 0)
-            {
-                Y = -Y;
-                X = -X;
-            }
-        }
-
     }
+
     /*
      * Represents the topological space in which everything in the game lives. Has both a grid like map
      * implemented by two types of grids. Also enables the movable characters to move independently of the grid.
