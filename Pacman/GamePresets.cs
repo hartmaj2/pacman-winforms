@@ -81,7 +81,7 @@ namespace Pacman
          * Takes care of reading all the data from the map.txt text file that holds the layout of the map
          * after reading this data it creates and returns a corresponding Map object
          */
-        public static Map PrepareAndReturnMap()
+        public static Map LoadAndReturnMap()
         {
 
             string mapString = File.ReadAllText(Path.Combine(Application.StartupPath,mapFolder,mapFile));

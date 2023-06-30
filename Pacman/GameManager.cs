@@ -60,7 +60,7 @@ namespace Pacman
         {
             gameForm = form;
 
-            map = GamePresets.PrepareAndReturnMap();
+            map = GamePresets.LoadAndReturnMap();
             painter = new Painter(form, map);
 
             gameState = GameState.StartScreen;
@@ -307,7 +307,7 @@ namespace Pacman
          */
         private void InitializeGame()
         {
-            map = GamePresets.PrepareAndReturnMap();
+            map = GamePresets.LoadAndReturnMap();
             painter = new Painter(gameForm, map);
             gameState = GameState.Running;
 
