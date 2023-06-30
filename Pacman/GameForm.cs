@@ -36,20 +36,23 @@ namespace Pacman
 
         readonly TimeSpan gameTickInterval = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / 60);
 
-        Keys keyPressed = Keys.None;
-        Stopwatch stopWatch = Stopwatch.StartNew();
-        TimeSpan accumulatedTime;
-        TimeSpan lastTime;
+        private Keys keyPressed = Keys.None;
+        private Stopwatch stopWatch = Stopwatch.StartNew();
+        private TimeSpan accumulatedTime;
+        private TimeSpan lastTime;
 
         private GameManager gameManager;
         public GameForm()
         {
             
             InitializeComponent();
+
+            // following two lines of code allow me to manually set the location of the form to the upper left corner
             StartPosition = FormStartPosition.Manual;
             Location = new Point(0, 0);
+
             gameManager = new GameManager(this);
-            Application.Idle += HandleApplicationIdle;
+            Application.Idle += HandleApplicationIdle; // add event handler when application becomes idle (receives no messages but we still want to process the game)
 
         }
 
@@ -83,7 +86,7 @@ namespace Pacman
         private void Update()
         {
             gameManager.Update(keyPressed);
-            keyPressed = Keys.None;
+            keyPressed = Keys.None; // after game manager processed the key, we need to reset the key signal to none (this would actually not matter with these game mechanics but could be a problem later on)
         }
         private void Render()
         {
