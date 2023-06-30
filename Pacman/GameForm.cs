@@ -65,7 +65,7 @@ namespace Pacman
             // If there was lots of accumulated time, the game ticks many times without rendering
             while (accumulatedTime >= TargetElapsedTime)
             {
-                Tick();
+                Update();
                 accumulatedTime -= TargetElapsedTime;
                 updated = true;
             }
@@ -76,7 +76,7 @@ namespace Pacman
                 Render();
             }
         }
-        private void Tick()
+        private void Update()
         {
             gameManager.Update(keyPressed);
             keyPressed = Keys.None;
