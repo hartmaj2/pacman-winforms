@@ -25,9 +25,9 @@ namespace Pacman
         private const int blueGhostPrepareTime = 7;
         private const int orangeGhostPrepareTime = 12;
 
-        public const double scatterModeDuration = 6;
-        public const double chaseModeDuration = 10;
-        public const double frightenedModeDuration = 10;
+        public const double scatterModeDuration = 7;
+        public const double chaseModeDuration = 15;
+        public const double frightenedModeDuration = 8;
 
         public const int scorePerPellet = 10;
         public const int scorePerEnergizer = 50;
