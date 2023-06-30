@@ -115,27 +115,32 @@ namespace Pacman
         }
 
         /*
-         * Writes the corresponding BlankSpace object to the interactive grid thus effectively removing the object
+         * The two following check whether the interactive grid contains pellet/energizer
+         * If yes, the methods decrease the current pellet/energizer counter, remove the pellet/energizer from the cell
+         * Finally they return true if the pellet/energizer was removed and false otherwise
          */
-        public void RemovePellet(int gridX,  int gridY)
+        public bool TryRemovePellet(int gridX, int gridY)
         {
-            pelletsRemaining--;
-            interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace(null,gridX,gridY);
+            if (interactiveGrid[gridX, gridY] is Pellet)
+            {
+                pelletsRemaining--;
+                interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace(null, gridX, gridY);
+                return true;
+            }
+            return false;
         }
-        public void RemoveEnergizer(int gridX, int gridY)
+        public bool TryRemoveEnergizer(int gridX, int gridY)
         {
-            energizersRemaining--;
-            interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace(null, gridX, gridY);
-        }
-        public bool ContainsPellet(int gridX, int gridY)
-        {
-            return interactiveGrid[gridX, gridY] is Pellet;
-        }
-        public bool ContainsEnergizer(int gridX, int gridY)
-        {
-            return interactiveGrid[gridX, gridY] is Energizer;
+            if (interactiveGrid[gridX, gridY] is Energizer)
+            {
+                energizersRemaining--;
+                interactiveGrid[gridX, gridY] = new InteractiveLayerBlankSpace(null, gridX, gridY);
+                return true;
+            }
+            return false;
    
         }
+
         public StaticGridObject GetStaticGridObject(int gridX, int gridY)
         {
             return staticGrid[gridX,gridY];

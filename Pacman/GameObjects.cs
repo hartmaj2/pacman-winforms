@@ -347,21 +347,11 @@ namespace Pacman
         public Hero(Bitmap image, int x, int y, int speed, int mapCellSize) : base(image, x, y, speed, mapCellSize) {}
         public bool TryEatPellet(Map map)
         {
-            if (map.ContainsPellet(GetGridX(), GetGridY())) 
-            {
-                map.RemovePellet(GetGridX(), GetGridY());
-                return true;
-            }
-            return false;
+            return map.TryRemovePellet(GetGridX(), GetGridY());
         }
         public bool TryEatEnergizer(Map map)
         {
-            if (map.ContainsEnergizer(GetGridX(), GetGridY())) 
-            {
-                map.RemoveEnergizer(GetGridX(), GetGridY());
-                return true;
-            }
-            return false;
+            return map.TryRemoveEnergizer(GetGridX(), GetGridY());
         }
         public void SetNextDirection(Direction newDirection)
         {   
