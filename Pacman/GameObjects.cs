@@ -16,19 +16,35 @@ namespace Pacman
         protected Bitmap sprite;
         public abstract int GetGridX();
         public abstract int GetGridY();
+
+        /*
+         * Used by all ghosts pathfinding AI and also by orange ghost's targetting scheme
+         */
         public double GetDistanceToCell(int x, int y)
         {
             return Math.Sqrt(Math.Pow(Math.Abs(x - GetGridX()), 2) + Math.Pow(Math.Abs(y - GetGridY()), 2));
         }
+
+        /*
+         * Used by painter to draw this GameObject's corresponding Bitmap/sprite
+         */
         public virtual Bitmap GetImageToDraw()
         {
             return sprite;
         }
+
+        /*
+         * This gets called by the Painter class to determine whether the given object should be rendered at all
+         */
         public virtual bool IsDrawable()
         {
             return sprite != null;
         }
     } 
+
+    /*
+     * An object that occupies an exact place on the grid and cannot move in between cells (walls, pellets, energizers, fences etc)
+     */
     abstract class GridObject : GameObject
     {
         private int gridX;
@@ -48,38 +64,41 @@ namespace Pacman
             return gridY; 
         }
     }
+
     /*
-     * This is a game object that occupies a certain place on the grid but the player cannot interact with like walls
-     * fences etc.
+     * This is a game object that occupies a certain place on the grid but the player cannot interact with (except by collding with it)
+     * these are (walls, fences or blank spaces)
      */
     abstract class StaticGridObject : GridObject
     {
         public StaticGridObject(Bitmap image, int x, int y) : base(image, x, y) { }
     }
+
     /*
-     * These objects are not moving but can be eaten or otherwise interacted with by some kind of a player. 
-     * They live on a different layer on the map
+     * These objects are not moving but can be eaten or otherwise interacted with by the moving characters (player or ghosts) 
+     * They live on a different layer on the map and get painted after all static grid objects are painted
      */
     abstract class InteractiveGridObject : GridObject
     {
         public InteractiveGridObject(Bitmap image, int x, int y) : base(image, x, y) { }
     }
+
     /* 
-     * This is anything in the game that can move its position. It may be both something that can move 
-     * on the grid or something that moves independently of the grid.
+     * This is anything in the game that can move its position. It could in theory be something that moves
+     * a whole cell at a time but I din't implement that behavior as both ghosts and pacman move in smaller steps.
      */
     abstract class MovingObject : GameObject
     {       
 
         protected Direction direction;
 
+        public abstract void Move(Map map);
+        protected abstract bool IsReachableCell(int x, int y, Map map);
+
         public void TurnAround()
         {
             direction = direction.OppositeDirection();
         }
-        public abstract void Move(Map map);
-
-        protected abstract bool IsReachableCell(int x, int y, Map map);
 
         /*
          * Sets the direction towards a neighboring cell. 
@@ -96,8 +115,8 @@ namespace Pacman
         }
 
         /*
-         * Fixes a bug when the adjacent tile gets to the other side of the map, that would result in 
-         * a direction coordinate value greater than 1 or smaller than -1
+         * Fixes a bug when the adjacent tile is on the other side of the map, that would result in 
+         * a ghost direction coordinate value greater than 1 or smaller than -1 when calling SetDirectionTowardsExit
          */
         private int GetFixedOutOfBoundsCoordinate(int coordinate)
         {
@@ -436,7 +455,6 @@ namespace Pacman
             startingLocation = new Point(x, y);
             prepareDuration = TimeSpan.FromSeconds(prepareTimeInSeconds);
 
-
             target = new Point(mapCellSize - 1, mapCellSize - 1);
 
             ghostHouseEnterTime = DateTime.Now;
@@ -664,11 +682,11 @@ namespace Pacman
         }
         protected override void SetTargetToChaseTarget(Map map)
         {
-            SetTargetAheadOfHero(map,0);
+            SetTargetAheadOfHero(map,0); // sets target directly on hero in chase mode
         }
         protected override void SetTargetToScatterTarget(Map map)
         {
-            target = new Point(map.GetGridWidth(), 0);
+            target = new Point(map.GetGridWidth(), 0); // sets target to upper right corner in scatter mode
         }
 
     }
@@ -680,11 +698,11 @@ namespace Pacman
         }
         protected override void SetTargetToChaseTarget(Map map)
         {
-            SetTargetAheadOfHero(map, 4);
+            SetTargetAheadOfHero(map, 4); // sets target 4 tiles ahead of hero in chase mode
         }
         protected override void SetTargetToScatterTarget(Map map)
         {
-            target = new Point(0, 0);
+            target = new Point(0, 0); // sets target to upper left corner in scatter mode
         }
 
     }
@@ -694,20 +712,27 @@ namespace Pacman
         public BlueGhost(Bitmap image, Bitmap frightenedImage, int x, int y, int speed, int mapCellSize, int prepareTimeInSeconds) : base(image, frightenedImage, x, y, speed, mapCellSize, prepareTimeInSeconds)
         {
         }
+
+        /*
+         * Blue ghost uses pacmans location as well as the red ghosts location to determine the target position
+         */
         protected override void SetTargetToChaseTarget(Map map)
         {
-            SetTargetAheadOfHero(map, 2);
-            MoveTargetAwayFromRedGhost(map);
+            SetTargetAheadOfHero(map, 2); // first it sets the target 2 tiles ahead of pacman
+            MoveTargetAwayFromRedGhost(map); // after that it moves the target by the distance between pacman and red ghost in the direction away from red ghost
 
         }
         protected override void SetTargetToScatterTarget(Map map)
         {
-            target = new Point(map.GetGridWidth(), map.GetGridHeight());
+            target = new Point(map.GetGridWidth(), map.GetGridHeight()); // scatter target location bottom right corner
         }
         private void MoveTargetAwayFromRedGhost(Map map)
         {
+            // calculate components of the vector pointing from red ghost to pacman
             int vectorXToAdd = (target.X - map.GetRedGhostGridLocation().X);
             int vectorYToAdd = (target.Y - map.GetRedGhostGridLocation().Y);
+
+            // add this vector to the current target location and wrap the coordinates on over/underflow
             target = new Point(map.GetWrappedXCoordinate(vectorXToAdd+target.X),map.GetWrappedYCoordinate(vectorYToAdd+target.Y));
         }
     }
@@ -719,11 +744,12 @@ namespace Pacman
         }
         protected override void SetTargetToChaseTarget(Map map)
         {
-            SetTargetBasedOnHeroDistance(map, 8);
+            // if pacman is less than 8 tiles away, he sets the target to his scatter location, otherwise directly on hero
+            SetTargetBasedOnHeroDistance(map, 8); 
         }
         protected override void SetTargetToScatterTarget(Map map)
         {
-            target = new Point(0, map.GetGridHeight());
+            target = new Point(0, map.GetGridHeight()); // in scatter mode sets target to lower left corner
         }
 
         private void SetTargetBasedOnHeroDistance(Map map, double distanceLimit)
@@ -731,7 +757,7 @@ namespace Pacman
             double distanceToHero = GetDistanceToCell(map.GetHeroGridLocation().X, map.GetHeroGridLocation().Y);
             if (distanceToHero > distanceLimit) 
             {
-                SetTargetAheadOfHero(map, 0);
+                SetTargetAheadOfHero(map, 0); // set target directly on hero 
             }
             else
             {
