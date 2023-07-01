@@ -8,15 +8,15 @@
 \setlength{\parskip}{1em}
 \setlength{\parindent}{0pt}
 
-\hypersetup{colorlinks=true,linkcolor=black,pdftitle={Vážení kaštanů - Doprovodný dokument},}
+\hypersetup{colorlinks=true,linkcolor=black,pdftitle={Vážení kaštanů - Doprovodný dokument}}
 
 \graphicspath{{images/}}
 
 \title{Czech-Man
-\\Doprovodný dokument}
+Doprovodný dokument}
 \author{Autor: Jan Hartman
 \\Garant: RNDr. Tomáš Holan, Ph.D.
-Studium: bakalářské, 1. ročník, letní semestr 2022/2023
+\\Studium: bakalářské, 1. ročník, letní semestr 2022/2023
 \\Předmět: Programování 2}
 
 \date{\today}
@@ -76,7 +76,9 @@ V prvotních fázích programu si objekty tyto svoje interní informace načíta
 To, že si později každý objekt pamatoval všechna data jenž se ho týkala, vedlo i k tomu, že jsem nemusel ve třídě \textbf{Painter} provádět složité kontrolování toho, jaký objekt se to vlastně teď snažím nakreslit pomocí \verb|if|ů, jak popisuji v následující sekci.
 
 \subsubsection{Základní grafika} \label{staticgraphics}
-Dále bylo nutné se postarat o to, abych dokázal vykreslit herní pole se všemi objekty které v něm žijí. Bez toho by vůbec nemělo smysl implementovat nějaké chování objektů. Zde jsem se inspiroval kódem, který jsme využívali na cvičeních z Programování 2. (konkrétně při modifikaci hry s padajícími balvany a diamanty) Rozhodl jsem se však pro větší obecnost a tudíž místo aby si informace o tom, jaké obrázky je potřeba vykreslit držela třída \textbf{Painter}, tak má každý herní objekt metodu \textbf{GetImageToDraw()}, která vrátí jeho aktuální bitmapu (tedy objekt třídy \verb|Bitmap|) k vykreslení. To mi umožní, aby objekt sám mohl podle svého stavu vykreslit bitmapu kterou potřebuje a \textbf{Painter} se o to tedy vůbec nemusí starat a nemusím mít žádný \verb|switch|, který by rozhodoval, jaký objekt to je a co mám tedy vlastně vykreslit. To se mi konkrétně hodilo při vykreslování duchů v závislosti na jejich aktuálním módu. Pokud duchové byli vyděšení a měli prchat, tak stačilo přepsat rodičovskou metodu \textbf{GetImageToDraw()} a rozhodnout se, jakou bitmapu vrátit na základě aktuálního nastaveného módu (\textbf{currentMode}).
+Dále bylo nutné se postarat o to, abych dokázal vykreslit herní pole se všemi objekty které v něm žijí. Bez toho by vůbec nemělo smysl implementovat nějaké chování objektů. Zde jsem se inspiroval kódem, který jsme využívali na cvičeních z Programování 2. (konkrétně při modifikaci hry s padajícími balvany a diamanty) a nejprve jsem tedy kreslení různých objektů rozhodoval přímo ve třídě \textbf{Painter}, která obsahovala také všechny možné obrázky jednotlivých objektů. Když pak bylo potřeba nějaký objekt vykreslit, tak jsem se zeptal na jeho typ a dle toho jsem vykreslil odpovídající bitmapu. To však vedlo k nutnosti mít v kódu přehršel \textbf{if}ů a celé to bylo velmi nepřehledné
+
+Rozhodl jsem se tedy později pro větší obecnost a tudíž místo aby si informace o tom, jaké obrázky je potřeba vykreslit držela třída \textbf{Painter}, tak má každý herní objekt metodu \textbf{GetImageToDraw()}, která vrátí jeho aktuální bitmapu (tedy objekt třídy \verb|Bitmap|) k vykreslení. To mi umožní, aby objekt sám mohl podle svého stavu vykreslit bitmapu kterou potřebuje a \textbf{Painter} se o to tedy vůbec nemusí starat a nemusím mít žádný \verb|switch|, který by rozhodoval, jaký objekt to je a co mám tedy vlastně vykreslit. To se mi konkrétně hodilo při vykreslování duchů v závislosti na jejich aktuálním módu (více o módech v sekci \ref{generalmodes}). Pokud duchové byli vyděšení a měli prchat (viz. \ref{frightenedmode}), tak stačilo přepsat rodičovskou metodu \textbf{GetImageToDraw()} a rozhodnout se, jakou bitmapu vrátit na základě aktuálního nastaveného módu (\textbf{currentMode}).
 
 \subsubsection{Vykreslování pohybujících se objektů} \label{buffering}
 Poté co jsem zprovoznil vykreslování nehybných objektů přišlo na řadu vyzkoušet, jak si program povede s vykreslováním pohybujících se objektů. Zde jsem v první řadě zapomněl vždy vyčistit komponentu \verb|Graphics| a tudíž se mi kreslily další vrstvy přes sebe. Nabízelo se snadné řešení: Před každým dalším vykreslením všech objektů smazat celé plátno. S tím se však objevil nový problém, jelikož celá obrazovka při každém přepsání blikala. Zde mi hodně pomohla ChatGPT, která mi poradila, že to nejspíš bude tím, že program nestíhá tak rychle občerstvovat plátno a že bych měl kreslit jednotlivé obrázky do bufferu (reprezentován objekty \textbf{bufferBitmap} a \textbf{bufferGraphics}) teprve až budou všechny připravené, tak výsledek překreslit na plátno. (K tomu slouží příkaz \verb|formGraphics.DrawImageUnscaled(bufferBitmap,0,0)|, kde \textbf{formGraphics} je \verb|Graphics| komponenta našeho herního okénka vytvořená příkazem \verb|CreateGraphics()|.) O vyčištění bufferu před dalším malováním se stará funkce \textbf{ClearBuffer()} a o překopírování bufferu do herního okénka pak \textbf{WriteBuffer()}.
@@ -178,6 +180,11 @@ Charaktery jednotlivých duchů v módech \textbf{Scatter} a \textbf{Chase} jsem
 \textbf{OrangeGhost} posledním z duchů je duch oranžový, který má také poměrně zvláštní chování. V módu \textbf{Chase} se rozhoduje podle vzdálenosti od hráče. Pokud je o hráče vzdálen o méně než osm políček, tak se snaží prchnout do svého rohu, který je pro něj stejný jako během módu \textbf{Scatter}. Naopak pokud je od hráče dále, tak si nastavuje \textbf{target} přímo na hráče stejným způsobem, jako to dělá první z duchů. Pro zjišťování vzdálenosti od hráče využívá metody \textbf{GetDistanceToCell()}, kterou zmiňuji v sekci \ref{ghostpathfinding} ve druhém odstavci.
 
 \subsubsection{Časování globálních módů duchů} \label{globalmodetiming}
-Jak jsem již zmínil tak mezi některými módy je nutné přepínat v závislosti na čase nebo jiných podmínkách globálně, aby byli všichni duchové co možná nejvíce synchronizovaní.
+Jak jsem již zmínil tak mezi některými módy je nutné přepínat v závislosti na čase nebo jiných podmínkách globálně, aby byli všichni duchové co možná nejvíce synchronizovaní. Nyní, když už jsem měl zhotovené konkrétní chování pro jednotlivé duchy, tak jsem mohl toto časování pěkně testovat. Jelikož toto přepínání je řízeno samotnou hrou, bylo mi hned jasné, že bude potřeba upravit kód třídy \textbf{GameManager}. Konkrétně bylo nutné přidat této třídě časovač, kterými by mohla zkoumat, kolik času uběhlo od poslední globální změny duchovského módu. Tento čas je uložen jako atribut \textbf{lastModeChange} typu \verb|DateTime|. O případnou změnu módu pokud nastane čas se stará metoda \textbf{ChangeModeIfTime()}, která pomocí \textbf{switch}e přes aktuální globální mód duchů (\textbf{currentGhostMode}) rozhodne, jaký časový interval má zrovna testovat testuje se vždy jeden z \textbf{scatterModeDuration}, \textbf{chaseModeDuration} nebo \textbf{frightenedModeDuration}, které jsou všechny typu \verb|TimeSpan|. 
+
+\subsubsection{Implementace zmodrání duchů ve frightened módu} \label{frightenedmode}
+Hra po dokončení předchozí fáze již pěkně fungovala. Samozřejmě jsem ještě opomenul počítání skóre, avšak to bylo tak triviální, že by bylo zbytečné mu věnovat samostatnou sekci. Zbývalo tedy už jen způsobit, aby duchové pokud jsou v módu \textbf{Frightened} přeměnili svůj obrázek na modrý, čímž hráči jasně signalizují, že se dají sníst. 
+
+Rozhodl jsem se vyřešit toto chování tím, že jsem do třídy \textbf{Ghost} přidal navíc atribut typu \textbf{Bitmap}, který duchům umožní držet si odkaz na modrý obrázek, který pak v případě zavolání metody \textbf{GetImageToDraw()} vrátí místo svého klasického pokud jsou právě v módu \textbf{Frightened}. Zbytek pak delegují na \textbf{Painter} která je popsána blíže v sekci \ref{staticgraphics}.
 
 \end{document}
