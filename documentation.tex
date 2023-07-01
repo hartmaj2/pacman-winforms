@@ -187,4 +187,38 @@ Hra po dokončení předchozí fáze již pěkně fungovala. Samozřejmě jsem j
 
 Rozhodl jsem se vyřešit toto chování tím, že jsem do třídy \textbf{Ghost} přidal navíc atribut typu \textbf{Bitmap}, který duchům umožní držet si odkaz na modrý obrázek, který pak v případě zavolání metody \textbf{GetImageToDraw()} vrátí místo svého klasického pokud jsou právě v módu \textbf{Frightened}. Zbytek pak delegují na \textbf{Painter} která je popsána blíže v sekci \ref{staticgraphics}.
 
+\subsection{Poslední kosmetické úpravy a komentování kódu}
+V této fázi už byla hra hratelná a tedy hotová. Rád bych samozřejmě přidal ještě třeba možnost více životů hráče, nebo další úrovně či animování postaviček, ale bohužel mě již tlačil čas (a stále tlačí i během psaní této dokumentace). 
+
+I přesto jsem však věnoval vlastně jeden celý den komentování kódu, přejmenovávání a dalšího. Tolik času mi to trvalo i z toho důvodu, že pokud já začnu svůj kód komentovat, tak to má za následky, že zpozoruji, co vše by se dalo napsat lépe a nakonec třeba ještě nějaký kód pozměním. Výsledkem však je čitelnější a občas i optimalizovanější kód. 
+
+Takto jsem například už hotové hře přepsal tělo metody \textbf{StartNextMovementCycle()} tak, aby byla přehlednější. Původně jsem se spokojil s tím, že to „nějak fungovalo“ a přehlednost jsem tolik neřešil (čímž jsem porušil svůj zmiňovaný princip, ale jak říkám, už mě začal tlačit čas a chtěl jsem vidět rychlé výsledky). Když jsem však začal tuto metodu komentovat, tak jsem si uvědomil, že i pro mě to je celkem „blackbox“ a vlastně ji částečně zprovoznil metodou pokus omyl. Během její analýzy jsem narazil na chybu, při které se duchové v případě, že zašli do slepé uličky (což se na klasickém herním poli hry Pac-Man nemůže stát), tak pokračovali dále a procházeli zdí. Tento bug jsem rychle opravil a do budoucna je moje hra robustnější, pokud bych se rozhodl nějak upravovat herní mapu.
+
+\section{Závěr}
+\subsection{Co by se dalo vylepšit}
+\subsubsection{Životy hráče}
+Jak jsem již zmínil, tak by bylo hezké. Kdybych do hry naimplementoval ubírání životů hráče. To by nemělo být příliš složité. Potřeboval bych přidat funkci, která by resetovala duchy na své místo v domečku a všechny časovače, ale zároveň ponechala všechny objekty, které může hráč sníst a ještě mu zbývají na herním poli. Také by bylo nutné buď přidat stav, ve kterém hra dává chvilku času hráči se rozkoukat pokud byl zrovna polapen. Tento čas by se také dal zavést přímo do stavu \textbf{Running} přidáním podmínky.
+
+\subsubsection{Přidání dalších levelů a počítání highscore}
+Aby hra byla trochu kompetitivnější, tak by se hodilo přidat jak další levely, ve kterých by se duchové například mohli zrychlovat, tak i přidat pamatování highscore. Přidat další levely by mohlo být časově celkem náročné. Nevím, jak přesně bych naipmlementoval různé zvětšování rychlostí duchů a ztěžování obtížnosti hry. Přidat highscore by však naopak složité nebylo. Stačilo by zavést nový textový soubor, do kterého bych si toto highscore ukládal a nebo z něj četl.
+
+\subsubsection{Animace otevírání pusy hráče a očí duchů}
+Dalším vylepšením by mohlo být přidat animace pohybujících se postaviček. Zde by se dalo například poskytnout každému objektu namísto jedné bitmapy (nebo dvou) celé pole bitmap. Podle svého aktuálního směru by se pak postavička rozhodla, jakou bitmapu má při zavolání metody \textbf{GetImageToDraw()} vrátit.
+
+U otevírání pusy hráče by pak chtělo ještě přidat nějaký časovač objektu \textbf{Hero}, který by umožnil volit snímky také v závislosti na aktuálním čase.
+
+Uvažoval jsem také, že by nebylo nutné přidávat pro různé směry otočení hráče nové snímky, ale po krátké analýze jsem zjistil, že otáčet bitmapy v C\# je poměrně náročný proces.
+
+\subsection{Závěrečný povzdech}
+Tvorba této hry pro mě byla něčím úplně novým. Sám moc počítačové hry nehraji, ale dostal jsem chuť konečně vytvořit nějaký grafický interaktivní program, čehož je počítačová hra dobrým příkladem. Nakonec bylo vtipné si uvědomit, že se mi občas hodily poznatky z kroužku tvorby počítačových her ve Scratchi, který jsem minulý rok vedl. Chtěl jsem totiž dětem nějak zábavně naučit základy programování a tak jsem zvolil téma počítačových her, které mě samotnému není tak blízké. To mě však vedlo k tomu, že jsem si načetl mnoho materiálů o herních smyčkách, renderování obrázků atd. což mi pak pomohlo se v těchto termínech při tvorbě této hry orientovat. 
+
+Zprvu jsem si myslel, že využiji nějakého vývojového prostředí určeného přímo pro vývoj her, ale nakonec převládl nedostatek času se s nějakým takovým učit a také to, že jsem chtěl mít co největší kontrolu nad tím, jak si hru naprogramuji a nebýt závislý na nějakém herním enginu.
+
+Během programování hry jsem si také zamiloval práci s GitHubem. Líbí se mi možnost, vidět chronologicky všechny své změny provedené v programu a také mít tu možnost se k nim kdykoliv vrátit. Člověku má také klid v duši když ví, že může cokoliv ve hře porouchat a má možnost se jednoduše vrátit zpět. Také mi však Git pomohl k psaní této dokumentace, jelikož umožňuje koukat se, jak se projekt vyvíjel v čase a tedy vidět logické návaznosti na sebe, jak se jednotlivé komponenty programu postupně skládaly jako dílky stavebnice.
+
+GitHub mě oslnil natolik, že jsem se rozhodl verzovat si i tento doprovodný dokument, takže můžu hezky vidět, jak se mi tato dokumentace měnila v čase a vidět drobné úpravy, které jsem na ní dělal. Skutečnost, že Git si drží časy jednotlivých commitů mi také prospěla v tom, že jsem si lépe uvědomil, kolik času čím trávím. Je zajímavé mít tyto informace k dispozici.
+
+Samotného mě překvapilo, jak moc mě samotná dokumentace programu pohltila. Měl jsem radost z toho, uhlazovat svůj program a odplevelovat ho od zbytečného kódu, který tam neměl co dělat a třeba se dal i zjednodušit. (Tyto nápady totiž často přicházely právě během psaní dokumentace.) Skutečnost, že mám teď jakousi verzi dokumentace sepsanou mi také otevřela dveře, abych ve volném času během prázdnil mohl hru ještě doladit o nějaké nové mechanismy. 
+
+Na závěr bych chtěl hlavně projevit obdiv nad tím, že někdo tak propracovanou hru jako Pac-Man vytvořil už před čtyřiceti lety. Je úžasné, že toto někdo zvládnul vytvořit bez všech těch vymožeností, které nám dnes pomáhají psát kód, jako třeba skákání na reference či definice v kódu. Chytré přejmenovávání proměnných, foreach cykly a mnoho dalších zjednodušení, které mi už přijdou naprosto přirozené. No a ta umělá inteligence, která je vytvořena algoritmicky tak jednoduše, ale vede k velmi komplexně vypadajícímu chování je také úžasná. Opravdu musím říci, že původní hra Pac-Man je krásné programátorské i herně designové dílo.
 \end{document}
