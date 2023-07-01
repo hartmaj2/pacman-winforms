@@ -13,7 +13,7 @@
 \graphicspath{{images/}}
 
 \title{Czech-Man
-Doprovodný dokument}
+\\Doprovodný dokument}
 \author{Autor: Jan Hartman
 \\Garant: RNDr. Tomáš Holan, Ph.D.
 \\Studium: bakalářské, 1. ročník, letní semestr 2022/2023
@@ -114,7 +114,7 @@ Na druhou stranu je tato redukce rychlosti provedena další pomocnou funkcí \t
 \subsubsection{Přednastavování hráčova směru}
 Dále jsem chtěl zprovoznit herní mechaniku, která hráči umožňuje přednastavit, kterým směrem se hráčova postavička vydá na příští odbočce, hned jak to bude možné, i když aktuálně to zrovna nelze. Pokud tedy například stisknu šipku nahoru, tak si postavička tento směr zapamatuje a pokusí se v nejbližší možné době tímto směrem vydat. To však nebylo nijak složité. Stačilo přidat atribut \textbf{nextDirection}, který umožňuje si daný směr do příště zapamatovat a využít to pokud možno při testování, kudy by se měla postavička z aktuální buňky pohnout dále. (To se děje uvnitř metody \textbf{StartNextMovementCycle()} patřící třídě \textbf{Hero}.)
 
-\subsubsection{Směry obecně} \label{directions}
+\subsubsection{Práce se směry} \label{directions}
 Bylo by v tomto momentu dobré zmínit, jak se tento směr v programu reprezentuje. Rozhodl jsem se pro vytvoření vlastní struktury jménem \textbf{Direction}, která má dvě datové položky \textbf{X} a \textbf{Y}, reprezentující jednotlivé složky 2D vektoru. Dohodou se sebou samým jsem si stanovil, že takovému vektoru budu přiřazovat pouze pět možných hodnot, tedy vektory jednotkové délky do čtyř světových stran a nulový vektor. Využil jsem také možnosti zavést si \verb|properties| k tomu, abych například voláním \textbf{Direction.Left} mohl získat referenci na vektor (-1,0).
 
 Každý pohybující objekt tedy musí obsahovat atribut \textbf{direction}, který se pak využívá k určení, kterým směrem bude pokračovat v pohybu a o kolik se má přesně pohnout. (Konkrétně se tento výpočet provádí v metodě \textbf{ContinueMoving()} objektu \textbf{TweeningObject}.) Atribut \textbf{direction} objektu \textbf{Hero} se také hojně využívá při nastavování cílů duchů, jak popisuji v sekci \ref{concretemodes}.
@@ -191,7 +191,7 @@ Hra po dokončení mechanismů zmiňovaných v předchozí sekci již pěkně fu
 
 Rozhodl jsem se vyřešit toto chování tím, že jsem do třídy \textbf{Ghost} přidal navíc atribut typu \textbf{Bitmap}, který duchům umožní držet si odkaz na modrý obrázek, který pak v případě zavolání metody \textbf{GetImageToDraw()} vrátí místo svého klasického pokud jsou právě v módu \textbf{Frightened}. Zbytek pak delegují na objekt třídy \textbf{Painter} která je popsána blíže v sekci \ref{staticgraphics}.
 
-\subsection{Poslední kosmetické úpravy a komentování kódu}
+\subsubsection{Kosmetické úpravy a komentování kódu}
 V této fázi už byla hra hratelná a tedy hotová. Rád bych samozřejmě přidával další vylepšení jako třeba více životů hráče, další úrovně či animování postaviček, ale bohužel mě již tlačil čas (a stále tlačí i během psaní této dokumentace). 
 
 I přesto jsem však věnoval vlastně jeden celý den komentování kódu, přejmenovávání a dalším činnostem s tím souvisejícím. Tolik času mi to trvalo i z toho důvodu, že pokud já začnu svůj kód komentovat, tak to má za následky, že zpozoruji, co vše by se dalo napsat lépe a nakonec třeba ještě nějaký kód pozměním. Výsledkem však je čitelnější a občas i optimalizovanější kód. 
