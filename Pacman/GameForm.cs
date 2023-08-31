@@ -20,7 +20,7 @@ namespace Pacman
         public const string fontStyle = "Arial";
         public static Color fontColor = Color.Yellow;
         
-        public const int scoreTextFontSize = (int)(GamePresets.cellSize*0.5);
+        public const int scoreTextFontSize = (int)(GamePresets.cellSize * 0.5);
         public const string scoreText = "Score: ";
 
         public const int startScreenTextFontSize = (int)(GamePresets.cellSize * 0.5);

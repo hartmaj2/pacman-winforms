@@ -15,10 +15,10 @@ namespace Pacman
     static class GamePresets
     {
 
-        public const int cellSize = 48;
+        public const int cellSize = 24;
 
-        private const int heroSpeed = 10; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
-        private const int ghostSpeed = 6;
+        private const int heroSpeed = 6; // if this is not a multiple of cellSize, it gets automatically readjusted to first smallest mutliple
+        private const int ghostSpeed = 4;
 
         private const int redGhostPrepareTime = 1;
         private const int pinkGhostPrepareTime = 4;
