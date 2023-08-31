@@ -20,10 +20,10 @@ namespace Pacman
         public const string fontStyle = "Arial";
         public static Color fontColor = Color.Yellow;
         
-        public const int scoreTextFontSize = 20;
+        public const int scoreTextFontSize = (int)(GamePresets.cellSize*0.5);
         public const string scoreText = "Score: ";
 
-        public const int startScreenTextFontSize = 25;
+        public const int startScreenTextFontSize = (int)(GamePresets.cellSize * 0.5);
         public const string startScreenText = "Press \"enter\" to start the game";
 
         public const string playAgainOrQuitText = "\nPress \"enter\" to play again or \"q\" to quit";
